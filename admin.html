@@ -3,213 +3,2254 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin — Yummy's Donut Palace</title>
+<title>Admin Editor — Yummy's Donut Palace</title>
 <meta name="robots" content="noindex,nofollow"/>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍩</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --pink:#F9A8C9;--pink-deep:#C2185B;--yellow:#FFD966;--yellow-dark:#F4B400;
-  --brown:#4A2C0A;--brown-mid:#7B4C1E;--cream:#FFF8F0;--cream2:#FEF0E3;--white:#FFFFFF;
+  --pink:#F9A8C9;--pink-dark:#E8579A;--pink-deep:#C2185B;
+  --yellow:#FFD966;--yellow-dark:#F4B400;
+  --brown:#4A2C0A;--brown-mid:#7B4C1E;
+  --cream:#FFF8F0;--cream2:#FEF0E3;--white:#FFFFFF;
   --text:#2D1B09;--text-mid:#6B3F1A;--text-light:#A06030;
+  --edit-blue:#2563EB;--edit-blue-light:rgba(37,99,235,0.08);
+  --edit-red:#DC2626;
 }
-body{font-family:'Nunito',sans-serif;background:var(--cream2);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
 
-/* ── LOGIN ── */
-#login-screen{width:min(420px,100%);background:var(--white);border-radius:24px;padding:2.5rem;box-shadow:0 8px 40px rgba(45,27,9,0.12);text-align:center;}
-#login-screen .donut{font-size:3.5rem;margin-bottom:0.5rem;display:block;animation:spin 8s linear infinite;}
-#login-screen h1{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--pink-deep);margin-bottom:0.25rem;}
-#login-screen p{font-size:0.88rem;color:var(--text-light);margin-bottom:1.75rem;}
-.field{text-align:left;margin-bottom:1rem;}
-.field label{display:block;font-weight:800;font-size:0.78rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;}
-.field input{width:100%;padding:0.75rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.5);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);outline:none;transition:border-color 0.2s;}
-.field input:focus{border-color:var(--pink-deep);}
-.btn-login{width:100%;background:var(--pink-deep);color:#fff;border:none;padding:0.9rem;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:background 0.2s;margin-top:0.5rem;}
+/* ════════════════════════════════════════
+   ADMIN TOOLBAR (fixed top bar)
+════════════════════════════════════════ */
+#admin-toolbar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  background:var(--brown);
+  padding:0.6rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  box-shadow:0 2px 20px rgba(0,0,0,0.3);
+}
+.toolbar-left{display:flex;align-items:center;gap:0.75rem;}
+.toolbar-logo{font-family:'Fredoka One',cursive;color:var(--yellow);font-size:1rem;}
+.toolbar-badge{background:rgba(255,217,102,0.2);border:1px solid var(--yellow);color:var(--yellow);font-size:0.7rem;font-weight:800;letter-spacing:0.1em;padding:0.2rem 0.6rem;border-radius:20px;text-transform:uppercase;}
+.toolbar-right{display:flex;align-items:center;gap:0.6rem;}
+.btn-toolbar{padding:0.5rem 1.2rem;border-radius:25px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.82rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-publish{background:var(--pink-deep);color:#fff;}
+.btn-publish:hover{background:#a01048;transform:scale(1.03);}
+.btn-preview{background:transparent;color:rgba(255,255,255,0.8);border:1.5px solid rgba(255,255,255,0.3);}
+.btn-preview:hover{border-color:#fff;color:#fff;}
+.btn-changepw{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1.5px solid rgba(255,255,255,0.15);font-size:0.85rem;padding:0.5rem 0.75rem;}
+.btn-changepw:hover{background:rgba(255,255,255,0.15);color:#fff;}
+.unsaved-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);display:none;flex-shrink:0;}
+.unsaved-dot.visible{display:block;}
+
+/* ════════════════════════════════════════
+   LOGIN SCREEN
+════════════════════════════════════════ */
+#login-screen{
+  position:fixed;inset:0;z-index:99999;
+  background:var(--cream2);
+  display:flex;align-items:center;justify-content:center;padding:2rem;
+}
+.login-card{width:min(420px,100%);background:var(--white);border-radius:24px;padding:2.5rem;box-shadow:0 8px 40px rgba(45,27,9,0.15);text-align:center;}
+.login-donut{font-size:3.5rem;display:block;margin-bottom:0.5rem;animation:spin 8s linear infinite;}
+.login-card h1{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--pink-deep);margin-bottom:0.25rem;}
+.login-card p{font-size:0.88rem;color:var(--text-light);margin-bottom:1.75rem;}
+.login-field label{display:block;font-weight:800;font-size:0.75rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;text-align:left;}
+.login-field input{width:100%;padding:0.75rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.5);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);outline:none;transition:border-color 0.2s;}
+.login-field input:focus{border-color:var(--pink-deep);}
+.btn-login{width:100%;background:var(--pink-deep);color:#fff;border:none;padding:0.9rem;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;margin-top:1rem;transition:background 0.2s;}
 .btn-login:hover{background:var(--brown-mid);}
 .login-error{color:#c0392b;font-size:0.85rem;font-weight:700;margin-top:0.75rem;display:none;}
 
-/* ── ADMIN PANEL ── */
-#admin-screen{display:none;width:min(620px,100%);}
-.admin-header{text-align:center;margin-bottom:2rem;}
-.admin-header .donut{font-size:2.5rem;display:block;margin-bottom:0.25rem;animation:spin 8s linear infinite;}
-.admin-header h1{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--pink-deep);}
-.admin-header p{font-size:0.9rem;color:var(--text-light);margin-top:0.25rem;}
-.card{background:var(--white);border-radius:20px;padding:1.75rem 2rem;box-shadow:0 4px 20px rgba(45,27,9,0.08);margin-bottom:1.25rem;}
-.card-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--brown);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
-.admin-group{margin-bottom:1.1rem;}
-.admin-group label{display:block;font-weight:800;font-size:0.78rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;}
-.admin-group input,.admin-group textarea{width:100%;padding:0.7rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);outline:none;transition:border-color 0.2s;}
-.admin-group input:focus,.admin-group textarea:focus{border-color:var(--pink-deep);}
-.admin-group textarea{resize:vertical;min-height:75px;}
-.toggle-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.9rem;padding:0.75rem 1rem;background:var(--cream2);border-radius:12px;}
-.toggle-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--pink-deep);cursor:pointer;flex-shrink:0;}
-.toggle-row span{font-weight:700;font-size:0.92rem;color:var(--brown);}
-.save-bar{position:sticky;bottom:1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;padding:1rem 0;}
-.btn-save{background:var(--pink-deep);color:#fff;border:none;padding:0.9rem 2.5rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:background 0.2s,transform 0.15s;box-shadow:0 4px 20px rgba(194,24,91,0.3);}
-.btn-save:hover{background:var(--brown-mid);transform:translateY(-2px);}
-.btn-logout{background:transparent;color:var(--text-mid);border:2px solid rgba(249,168,201,0.6);padding:0.9rem 1.8rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:all 0.2s;}
-.btn-logout:hover{border-color:var(--pink-deep);color:var(--pink-deep);}
-.success-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--brown);color:#fff;padding:0.75rem 2rem;border-radius:30px;font-weight:800;font-size:0.95rem;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
-.success-toast.show{opacity:1;}
-.divider{border:none;border-top:1.5px dashed var(--pink);margin:1rem 0;}
-.hint{font-size:0.8rem;color:var(--text-light);margin-top:0.35rem;}
-.view-site{display:inline-block;margin-top:0.5rem;font-size:0.85rem;color:var(--pink-deep);font-weight:700;text-decoration:none;}
-.view-site:hover{text-decoration:underline;}
+/* ════════════════════════════════════════
+   EDIT OVERLAY — shown when body in edit mode
+════════════════════════════════════════ */
+body.edit-mode{padding-top:48px;}
 
+/* Editable text elements */
+[contenteditable="true"]{
+  outline:none;
+  border-radius:4px;
+  transition:background 0.15s,box-shadow 0.15s;
+  cursor:text;
+}
+[contenteditable="true"]:hover{
+  background:var(--edit-blue-light);
+  box-shadow:0 0 0 2px rgba(37,99,235,0.25);
+}
+[contenteditable="true"]:focus{
+  background:rgba(37,99,235,0.07);
+  box-shadow:0 0 0 2px var(--edit-blue);
+}
+
+/* Edit hint tooltip */
+.edit-hint{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  background:var(--brown);color:rgba(255,255,255,0.9);
+  padding:0.55rem 1.2rem;border-radius:25px;
+  font-size:0.8rem;font-weight:700;
+  pointer-events:none;opacity:0;transition:opacity 0.3s;
+  white-space:nowrap;z-index:1000;
+}
+.edit-hint.show{opacity:1;}
+
+/* ── INSERT DIVIDER ──────────────────────────────── */
+.insert-divider{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.5rem 2rem;cursor:pointer;
+  opacity:0;transition:opacity 0.25s;position:relative;z-index:50;
+}
+.insert-divider:hover{opacity:1;}
+.insert-divider.drag-over{opacity:1;}
+.insert-divider.drag-over .insert-line{background:linear-gradient(to right,transparent,var(--pink-deep),transparent);opacity:1;}
+.insert-divider.drag-over .insert-btn{background:var(--brown-mid);transform:scale(1.08);}
+.insert-line{flex:1;height:2px;background:linear-gradient(to right,transparent,var(--pink-deep),transparent);border-radius:2px;}
+.insert-btn{
+  background:var(--pink-deep);color:#fff;border:none;
+  padding:0.35rem 1rem;border-radius:20px;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:0.78rem;
+  cursor:pointer;white-space:nowrap;transition:transform 0.15s,background 0.2s;flex-shrink:0;
+  pointer-events:none;
+}
+.insert-divider:hover .insert-btn{transform:scale(1.05);}
+
+/* ── PHOTO GALLERY SECTION ───────────────────────── */
+.photo-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;margin-top:1.5rem;}
+.photo-card{background:var(--cream2);border-radius:20px;border:1.5px solid rgba(249,168,201,0.3);overflow:hidden;position:relative;transition:transform 0.2s,box-shadow 0.2s;}
+.photo-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(194,24,91,0.1);}
+.photo-slot{width:100%;aspect-ratio:4/3;background:var(--cream2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;position:relative;overflow:hidden;}
+.photo-slot:hover{background:rgba(194,24,91,0.05);}
+.photo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-slot-placeholder{display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--text-light);pointer-events:none;}
+.photo-slot-placeholder span:first-child{font-size:2.5rem;}
+.photo-slot-placeholder span:last-child{font-size:0.8rem;font-weight:700;}
+.photo-card-body{padding:0.9rem 1rem 1rem;}
+.photo-card-title{font-weight:800;font-size:0.98rem;color:var(--brown);margin-bottom:0.3rem;outline:none;min-height:1.2em;border-radius:4px;display:block;}
+.photo-card-title:empty:before{content:'Add a title...';color:var(--text-light);font-style:italic;pointer-events:none;}
+.photo-card-desc{font-size:0.85rem;color:var(--text-light);line-height:1.5;outline:none;min-height:1em;border-radius:4px;display:block;}
+.photo-card-desc:empty:before{content:'Add a description...';color:var(--text-light);font-style:italic;pointer-events:none;}
+.photo-card-del-btn{position:absolute;top:0.5rem;left:0.5rem;background:rgba(220,38,38,0.88);color:#fff;border:none;border-radius:20px;padding:0.25rem 0.6rem;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.72rem;cursor:pointer;display:none;z-index:5;}
+.photo-card:hover .photo-card-del-btn{display:block;}
+.photo-slot-change{position:absolute;bottom:0.5rem;right:0.5rem;background:rgba(45,27,9,0.65);color:#fff;border:none;border-radius:16px;padding:0.25rem 0.65rem;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.72rem;cursor:pointer;display:none;z-index:5;}
+.photo-card:hover .photo-slot-change{display:block;}
+.photo-add-slot{border-radius:20px;border:2px dashed rgba(194,24,91,0.3);background:transparent;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;color:var(--pink-deep);transition:background 0.2s,border-color 0.2s;}
+.photo-add-slot:hover{background:rgba(194,24,91,0.05);border-color:var(--pink-deep);}
+.photo-add-slot span:first-child{font-size:2rem;}
+.photo-add-slot span:last-child{font-size:0.85rem;font-weight:800;}
+
+/* ════════════════════════════════════════
+   DRAG & DROP — custom sections only
+════════════════════════════════════════ */
+.drag-handle{
+  position:absolute;top:0.6rem;left:50%;transform:translateX(-50%);
+  background:rgba(45,27,9,0.12);color:var(--brown-mid);
+  border-radius:20px;padding:0.25rem 0.75rem;
+  font-size:1rem;letter-spacing:0.15em;cursor:grab;
+  user-select:none;z-index:20;transition:background 0.2s;
+  display:flex;align-items:center;gap:0.4rem;
+}
+.drag-handle:hover{background:rgba(194,24,91,0.15);color:var(--pink-deep);}
+.drag-handle:active{cursor:grabbing;}
+.drag-handle-label{font-family:'Nunito',sans-serif;font-size:0.7rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}
+.custom-section{position:relative;}
+.custom-section.dragging{opacity:0.4;outline:2px dashed var(--pink-deep);}
+.drop-indicator{
+  height:4px;background:var(--pink-deep);border-radius:4px;
+  margin:0 2rem;opacity:0;transition:opacity 0.15s;pointer-events:none;
+}
+.drop-indicator.active{opacity:1;}
+.btn-undo{background:transparent;color:rgba(255,255,255,0.6);border:1.5px solid rgba(255,255,255,0.2);padding:0.5rem 1rem;border-radius:25px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.82rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;opacity:0.4;}
+.btn-undo.active{opacity:1;color:var(--yellow);border-color:rgba(255,217,102,0.5);}
+.btn-undo.active:hover{background:rgba(255,217,102,0.15);}
+
+/* ── HIDE SECTION BUTTON ─────────────────────────── */
+.btn-hide-section{
+  position:absolute;top:0.6rem;left:1rem;z-index:20;
+  background:rgba(45,27,9,0.55);color:rgba(255,255,255,0.85);
+  border:1px solid rgba(255,255,255,0.2);border-radius:20px;
+  padding:0.25rem 0.8rem;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:0.72rem;cursor:pointer;
+  display:none;transition:background 0.2s;white-space:nowrap;
+  gap:0.35rem;align-items:center;
+}
+.btn-hide-section:hover{background:rgba(220,38,38,0.75);border-color:rgba(220,38,38,0.5);}
+section:hover .btn-hide-section,
+.stats-ribbon:hover .btn-hide-section,
+#announcement-bar:hover .btn-hide-section,
+#specials-section:hover .btn-hide-section{display:inline-flex;}
+
+/* ── HIDDEN SECTIONS DRAWER ──────────────────────── */
+#hidden-drawer{
+  position:fixed;top:48px;right:0;z-index:8000;
+  background:var(--brown);border-left:2px solid rgba(249,168,201,0.2);
+  border-bottom:2px solid rgba(249,168,201,0.2);
+  border-radius:0 0 0 16px;padding:0;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.35s ease,padding 0.35s ease;
+  min-width:260px;
+}
+#hidden-drawer.open{max-height:500px;padding:1rem;}
+.hidden-drawer-title{font-family:'Fredoka One',cursive;color:var(--yellow);font-size:1rem;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
+.hidden-section-item{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.07);border-radius:12px;
+  padding:0.6rem 0.9rem;margin-bottom:0.5rem;gap:0.75rem;
+}
+.hidden-section-name{color:rgba(255,255,255,0.85);font-size:0.88rem;font-weight:700;}
+.btn-restore{background:var(--pink-deep);color:#fff;border:none;
+  border-radius:20px;padding:0.3rem 0.85rem;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:0.75rem;cursor:pointer;transition:background 0.2s;white-space:nowrap;}
+.btn-restore:hover{background:var(--brown-mid);}
+.hidden-drawer-empty{color:rgba(255,255,255,0.4);font-size:0.85rem;text-align:center;padding:0.5rem 0;}
+
+/* ── BADGE TOGGLE ────────────────────────────────── */
+.badge-row{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.25rem;}
+.badge-toggle{border:none;border-radius:20px;padding:0.2rem 0.65rem;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.72rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.badge-toggle.off{background:rgba(45,27,9,0.07);color:var(--text-light);}
+.badge-toggle.off:hover{background:rgba(255,217,102,0.3);color:var(--brown-mid);}
+.badge-toggle.on{background:rgba(255,217,102,0.25);color:var(--brown-mid);border:1px solid var(--yellow-dark);}
+.badge-toggle.on:hover{background:rgba(220,38,38,0.1);color:var(--edit-red);border-color:var(--edit-red);}
+.badge-editor{display:flex;align-items:center;}
+.badge-editor .menu-badge{cursor:text;min-width:60px;outline:none;}
+.badge-editor .menu-badge:focus{box-shadow:0 0 0 2px var(--edit-blue);border-radius:4px;}
+
+.item-controls{
+  position:absolute;top:0.5rem;right:0.5rem;
+  display:flex;gap:0.3rem;opacity:0;
+  transition:opacity 0.2s;
+  z-index:10;
+}
+.menu-card{position:relative;}
+.menu-card:hover .item-controls{opacity:1;}
+.about-pill{position:relative;}
+.about-pill:hover .item-controls{opacity:1;}
+.review-card{position:relative;}
+.review-card:hover .item-controls{opacity:1;}
+.stat{position:relative;}
+.stat:hover .item-controls{opacity:1;}
+
+.btn-ic{
+  width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;
+  font-size:0.8rem;display:flex;align-items:center;justify-content:center;
+  transition:transform 0.15s,background 0.15s;font-style:normal;
+}
+.btn-ic-del{background:rgba(220,38,38,0.9);color:#fff;}
+.btn-ic-del:hover{background:var(--edit-red);transform:scale(1.15);}
+.btn-ic-emoji{background:rgba(37,99,235,0.85);color:#fff;font-size:0.7rem;}
+.btn-ic-emoji:hover{background:var(--edit-blue);transform:scale(1.15);}
+
+/* Add item row */
+.add-item-row{
+  display:flex;align-items:center;justify-content:center;
+  padding:0.75rem;border:2px dashed rgba(194,24,91,0.25);
+  border-radius:16px;cursor:pointer;color:var(--pink-deep);
+  font-weight:800;font-size:0.85rem;gap:0.4rem;
+  transition:background 0.2s,border-color 0.2s;
+  margin-top:0.5rem;
+}
+.add-item-row:hover{background:rgba(194,24,91,0.05);border-color:var(--pink-deep);}
+
+/* Add section row */
+.add-section-row{
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem 2rem;border:2px dashed rgba(194,24,91,0.2);
+  border-radius:20px;cursor:pointer;color:var(--pink-deep);
+  font-weight:800;font-size:0.9rem;gap:0.5rem;
+  transition:background 0.2s,border-color 0.2s;
+  max-width:1100px;margin:0 auto 2rem;
+}
+.add-section-row:hover{background:rgba(194,24,91,0.05);border-color:var(--pink-deep);}
+
+/* Emoji picker modal */
+#emoji-modal{
+  position:fixed;inset:0;z-index:99998;
+  background:rgba(45,27,9,0.5);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;
+}
+#emoji-modal.open{display:flex;}
+.emoji-picker{
+  background:var(--white);border-radius:20px;padding:1.5rem;
+  width:min(380px,95vw);box-shadow:0 20px 60px rgba(0,0,0,0.2);
+}
+.emoji-picker h3{font-family:'Fredoka One',cursive;color:var(--pink-deep);margin-bottom:1rem;font-size:1.1rem;}
+.emoji-picker input{width:100%;padding:0.6rem 0.9rem;border-radius:12px;border:2px solid rgba(249,168,201,0.5);font-family:'Nunito',sans-serif;font-size:1.2rem;text-align:center;margin-bottom:0.75rem;outline:none;}
+.emoji-picker input:focus{border-color:var(--pink-deep);}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:0.3rem;margin-bottom:1rem;max-height:160px;overflow-y:auto;}
+.emoji-opt{font-size:1.4rem;cursor:pointer;padding:0.3rem;border-radius:8px;text-align:center;transition:background 0.15s;}
+.emoji-opt:hover{background:var(--cream2);}
+.emoji-btns{display:flex;gap:0.5rem;justify-content:flex-end;}
+.btn-em-ok{background:var(--pink-deep);color:#fff;border:none;padding:0.55rem 1.3rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:800;cursor:pointer;}
+.btn-em-cancel{background:transparent;color:var(--text-mid);border:1.5px solid rgba(249,168,201,0.5);padding:0.55rem 1rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;}
+
+/* Section modal */
+#section-modal{
+  position:fixed;inset:0;z-index:99998;
+  background:rgba(45,27,9,0.5);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;
+}
+#section-modal.open{display:flex;}
+.section-picker{background:var(--white);border-radius:20px;padding:1.75rem;width:min(440px,95vw);box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.section-picker h3{font-family:'Fredoka One',cursive;color:var(--pink-deep);margin-bottom:0.5rem;font-size:1.2rem;}
+.section-picker p{font-size:0.85rem;color:var(--text-light);margin-bottom:1.25rem;}
+.section-opts{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;}
+.section-opt{padding:1rem;border-radius:14px;border:2px solid rgba(249,168,201,0.3);cursor:pointer;text-align:center;transition:all 0.2s;background:var(--cream2);}
+.section-opt:hover{border-color:var(--pink-deep);background:rgba(194,24,91,0.05);}
+.section-opt-icon{font-size:1.8rem;display:block;margin-bottom:0.3rem;}
+.section-opt-label{font-weight:800;font-size:0.85rem;color:var(--brown);}
+.section-modal-btns{display:flex;justify-content:flex-end;}
+.btn-sm-cancel{background:transparent;color:var(--text-mid);border:1.5px solid rgba(249,168,201,0.5);padding:0.55rem 1.2rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;}
+
+/* Toast */
+.toast{position:fixed;top:4rem;left:50%;transform:translateX(-50%);background:var(--brown);color:#fff;padding:0.65rem 1.75rem;border-radius:30px;font-weight:800;font-size:0.88rem;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;z-index:99999;}
+.toast.show{opacity:1;}
+
+/* ════════════════════════════════════════
+   ALL ORIGINAL WEBSITE STYLES BELOW
+════════════════════════════════════════ */
+nav{position:fixed;top:48px;left:0;right:0;z-index:200;background:rgba(255,248,240,0.96);backdrop-filter:blur(10px);border-bottom:2px dashed rgba(249,168,201,0.5);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none;}
+.nav-donut{font-size:1.8rem;animation:spin 6s linear infinite;}
+.nav-name{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--pink-deep);}
+.nav-name span{color:var(--yellow-dark);}
+.nav-links{display:flex;gap:1.5rem;list-style:none;}
+.nav-links a{text-decoration:none;color:var(--text-mid);font-weight:700;font-size:0.9rem;transition:color 0.2s;}
+.nav-links a:hover{color:var(--pink-deep);}
+.nav-order{background:var(--pink-deep);color:#fff;padding:0.55rem 1.4rem;border-radius:30px;font-weight:800;font-size:0.85rem;text-decoration:none;display:inline-block;}
+.nav-call{display:flex;align-items:center;gap:0.4rem;background:var(--yellow-dark);color:var(--brown);padding:0.5rem 1.1rem;border-radius:30px;font-weight:800;font-size:0.82rem;text-decoration:none;transition:background 0.2s;}
+.nav-call:hover{background:var(--yellow);}
+/* !! IMPORTANT: nav-call must ONLY be hidden at 480px, NOT at 768px !! */
+.special-badge{display:inline-block;background:var(--yellow-dark);color:var(--brown);font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.35rem 1rem;border-radius:20px;margin-bottom:1rem;}
+.special-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--yellow);line-height:1.15;margin-bottom:.75rem;}
+.special-price{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--pink);margin-bottom:1.5rem;}
+.special-visual{background:rgba(255,255,255,.06);border-radius:24px;border:2px dashed rgba(249,168,201,.3);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:7rem;}
+.catering-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.catering-text .section-eyebrow{color:rgba(255,255,255,.65);}
+.catering-perks{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem;}
+.catering-perk{display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;}
+.catering-visual{background:rgba(255,255,255,.08);border-radius:24px;border:2px dashed rgba(255,255,255,.2);padding:2rem;display:flex;flex-direction:column;gap:1rem;}
+.catering-stat{background:rgba(255,255,255,.1);border-radius:16px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;}
+.catering-stat-n{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);flex-shrink:0;}
+.catering-stat-l{font-size:.85rem;color:rgba(255,255,255,.8);font-weight:600;}
+.newsletter-inner{max-width:600px;margin:0 auto;text-align:center;}
+.newsletter-form{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;}
+.newsletter-input{flex:1;min-width:220px;padding:.9rem 1.25rem;border-radius:40px;border:2px solid rgba(249,168,201,.5);background:var(--white);font-family:'Nunito',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s;}
+.btn-newsletter{background:var(--pink-deep);color:#fff;border:none;padding:.9rem 2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:background .2s,transform .15s;white-space:nowrap;}
+.newsletter-note{font-size:.78rem;color:var(--text-light);margin-top:.75rem;}
+.call-cta{display:flex;align-items:center;justify-content:center;gap:.75rem;background:var(--yellow-dark);color:var(--brown);padding:1.1rem 2rem;border-radius:16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;text-decoration:none;transition:background .2s,transform .15s;margin-top:.5rem;}
+.call-cta:hover{background:var(--yellow);transform:translateY(-2px);}
+.google-badge{display:inline-flex;align-items:center;gap:.5rem;margin-top:.75rem;background:rgba(255,255,255,.15);border-radius:20px;padding:.4rem 1rem;font-size:.78rem;font-weight:700;color:rgba(255,255,255,.9);text-decoration:none;border:1px solid rgba(255,255,255,.2);transition:background .2s;}
+.google-badge:hover{background:rgba(255,255,255,.25);}
+.social-btn-fb{display:inline-flex;align-items:center;gap:.6rem;background:#fff;color:#1877F2;padding:.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:opacity .2s;}
+.social-btn-ig{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,#F09433,#E6683C,#DC2743,#CC2366,#BC1888);color:#fff;padding:.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:opacity .2s;}
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 3rem;background:radial-gradient(circle at 15% 20%,rgba(249,168,201,.35) 0%,transparent 40%),radial-gradient(circle at 85% 80%,rgba(255,217,102,.3) 0%,transparent 40%),radial-gradient(circle at 80% 15%,rgba(94,200,242,.2) 0%,transparent 30%),var(--cream);position:relative;overflow:hidden;}
+.sprinkles{position:absolute;inset:0;pointer-events:none;}
+.sprinkle{position:absolute;width:6px;height:20px;border-radius:3px;animation:fall linear infinite;opacity:.7;}
+.hero-inner{position:relative;z-index:2;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,217,102,.3);border:2px solid var(--yellow-dark);color:var(--brown-mid);font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1.2rem;border-radius:30px;margin-bottom:1.5rem;}
+.hero-title{font-family:'Fredoka One',cursive;font-size:clamp(3.5rem,9vw,7.5rem);line-height:1;color:var(--brown);margin-bottom:.5rem;}
+.hero-title .pop{color:var(--pink-deep);}
+.hero-title .pop2{color:var(--yellow-dark);}
+.hero-tagline{font-size:clamp(1rem,2.5vw,1.35rem);color:var(--text-mid);font-weight:600;margin-bottom:.5rem;}
+.hero-sub{font-size:1rem;color:var(--text-light);font-weight:400;max-width:500px;margin:0 auto 2.5rem;}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-pink{background:var(--pink-deep);color:#fff;border:none;padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;cursor:pointer;display:inline-block;transition:background .2s,transform .15s;}
+.btn-pink:hover{background:var(--brown-mid);transform:translateY(-3px);}
+.btn-ghost{background:transparent;color:var(--brown);border:2.5px solid var(--pink);padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;cursor:pointer;display:inline-block;}
+.hero-call{display:inline-flex;align-items:center;gap:.5rem;background:var(--yellow-dark);color:var(--brown);font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;padding:.85rem 2rem;border-radius:40px;text-decoration:none;margin-bottom:1.25rem;transition:background .2s,transform .15s;}
+.hero-call:hover{background:var(--yellow);transform:translateY(-2px);}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--text-light);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
+.hero-scroll::after{content:'↓';font-size:1.2rem;}
+.stats-ribbon{background:var(--pink-deep);padding:1.5rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;}
+.stat{text-align:center;cursor:default;}
+.stat-n{font-family:'Fredoka One',cursive;font-size:2.4rem;color:var(--yellow);display:block;}
+.stat-l{font-size:.78rem;color:rgba(255,255,255,.8);font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+section{padding:5.5rem 2rem;}
+.container{max-width:1100px;margin:0 auto;}
+.section-eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-dark);margin-bottom:.6rem;display:block;}
+.section-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--brown);line-height:1.15;margin-bottom:.8rem;}
+.section-lead{color:var(--text-mid);font-size:1rem;font-weight:400;max-width:560px;margin-bottom:2.5rem;}
+#menu{background:var(--cream2);}
+.menu-tabs{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.tab{padding:.5rem 1.3rem;border-radius:30px;border:2px solid var(--pink);background:transparent;color:var(--brown-mid);font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;}
+.tab.active,.tab:hover{background:var(--pink-deep);border-color:var(--pink-deep);color:#fff;}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;}
+.menu-section{display:none;}
+.menu-section.active{display:grid;}
+.menu-card{background:var(--white);border-radius:20px;border:2px solid rgba(249,168,201,.3);padding:1.5rem;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;gap:.5rem;position:relative;}
+.menu-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(194,24,91,.12);}
+.menu-emoji{font-size:2.5rem;margin-bottom:.3rem;}
+.menu-name{font-weight:800;font-size:1.05rem;color:var(--brown);}
+.menu-desc{font-size:.88rem;color:var(--text-light);line-height:1.5;flex:1;}
+.menu-price{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--pink-deep);margin-top:.5rem;}
+.menu-badge{display:inline-block;background:rgba(255,217,102,.3);border:1px solid var(--yellow-dark);color:var(--brown-mid);font-size:.7rem;font-weight:800;letter-spacing:.08em;padding:.2rem .6rem;border-radius:20px;text-transform:uppercase;}
+#about{background:var(--white);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.about-visual{background:radial-gradient(circle at 30% 40%,rgba(249,168,201,.4),transparent 60%),radial-gradient(circle at 75% 70%,rgba(255,217,102,.3),transparent 50%),var(--cream2);border-radius:24px;border:2px dashed rgba(249,168,201,.6);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:8rem;flex-direction:column;gap:.5rem;position:relative;}
+.about-big-emoji{animation:wobble 3s ease-in-out infinite;}
+.about-pills{display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem;}
+.about-pill{background:var(--cream2);border-radius:16px;padding:1rem 1.25rem;border:1.5px solid rgba(249,168,201,.3);display:flex;align-items:flex-start;gap:1rem;position:relative;}
+.pill-icon{font-size:1.6rem;flex-shrink:0;}
+.pill-title{font-weight:800;font-size:.95rem;color:var(--brown);margin-bottom:.15rem;}
+.pill-text{font-size:.85rem;color:var(--text-light);}
+#reviews{background:var(--cream2);}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;}
+.review-card{background:var(--white);border-radius:20px;padding:1.5rem;border:2px solid rgba(249,168,201,.25);transition:transform .2s;position:relative;}
+.review-card:hover{transform:translateY(-3px);}
+.stars{color:var(--yellow-dark);font-size:1rem;margin-bottom:.75rem;}
+.review-text{font-size:.92rem;color:var(--text-mid);line-height:1.65;margin-bottom:1rem;font-style:italic;}
+.review-author{font-weight:800;font-size:.85rem;color:var(--brown);}
+.review-source{font-size:.78rem;color:var(--text-light);}
+.rating-highlight{background:var(--pink-deep);border-radius:20px;padding:2.5rem;text-align:center;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;}
+.rating-big{font-family:'Fredoka One',cursive;font-size:5rem;color:var(--yellow);line-height:1;}
+.rating-stars{font-size:1.5rem;color:var(--yellow);}
+.rating-label{font-size:.85rem;font-weight:700;opacity:.85;letter-spacing:.08em;text-transform:uppercase;}
+#contact{background:var(--white);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.info-cards{display:flex;flex-direction:column;gap:1rem;}
+.info-card{background:var(--cream2);border-radius:16px;padding:1.25rem 1.5rem;border:1.5px solid rgba(249,168,201,.3);display:flex;align-items:flex-start;gap:1rem;}
+.info-icon{font-size:1.8rem;flex-shrink:0;}
+.info-label{font-weight:800;font-size:.8rem;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;}
+.info-val{font-weight:700;font-size:1rem;color:var(--brown);}
+.info-val a{color:var(--pink-deep);text-decoration:none;}
+.hours-grid{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.5rem;font-size:.9rem;}
+.hours-day{font-weight:700;color:var(--brown);}
+.hours-time{color:var(--text-mid);}
+.hours-closed{color:var(--text-light);font-style:italic;}
+.map-wrap{border-radius:20px;overflow:hidden;border:2px solid rgba(249,168,201,.4);aspect-ratio:4/3;}
+.map-wrap iframe{width:100%;height:100%;border:none;}
+footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;text-align:center;}
+.footer-brand{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);margin-bottom:.5rem;}
+.footer-links{display:flex;justify-content:center;gap:1.5rem;margin-bottom:.75rem;flex-wrap:wrap;}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;font-weight:700;transition:color .2s;}
+.footer-links a:hover{color:var(--yellow);}
+.footer-addr{font-size:.88rem;margin-bottom:.3rem;}
+.footer-copy{font-size:.78rem;opacity:.5;margin-top:1rem;}
+#announcement-bar{background:var(--yellow-dark);color:var(--brown);text-align:center;padding:.55rem 1rem;font-weight:800;font-size:.9rem;display:none;}
+#announcement-bar.visible{display:block;}
+#specials-section{display:none;background:var(--yellow);padding:2rem;}
+#specials-section.visible{display:block;}
+.specials-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+.specials-label{font-size:.75rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--brown-mid);margin-bottom:.2rem;}
+.specials-title{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--brown);}
+.specials-desc{font-size:.95rem;color:var(--brown-mid);}
 @keyframes spin{to{transform:rotate(360deg);}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-#admin-screen{animation:fadeIn 0.4s ease both;}
+@keyframes wobble{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:0;}10%{opacity:.7;}90%{opacity:.7;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+@media(max-width:768px){.nav-links{display:none;}.about-grid,.contact-grid{grid-template-columns:1fr;}}
+@media(max-width:480px){.nav-call{display:none;}}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* BACK TO TOP */
+#back-to-top{position:fixed;bottom:2rem;right:2rem;z-index:500;width:48px;height:48px;border-radius:50%;background:var(--pink-deep);color:#fff;border:none;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(194,24,91,0.35);opacity:0;transform:translateY(12px);transition:opacity 0.3s,transform 0.3s,background 0.2s;pointer-events:none;}
+#back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:all;}
+#back-to-top:hover{background:var(--brown-mid);}
+
+/* PRINT BUTTON */
+.print-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--text-light);border:1.5px solid rgba(249,168,201,0.5);padding:0.5rem 1.2rem;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin-top:0.75rem;}
+.print-btn:hover{border-color:var(--pink-deep);color:var(--pink-deep);}
+
+/* PRINT STYLES */
+@media print{
+  #admin-toolbar,#login-screen,nav,.insert-divider,.item-controls,.drag-handle,
+  .add-item-row,.add-section-row,.badge-toggle,.badge-editor,.photo-add-slot,
+  #back-to-top,.print-btn,.btn-pink,.btn-ghost,.hero-ctas,.hero-call,.hero-scroll,
+  .hero-badge,.hero-tagline,#about,#catering,#reviews,#newsletter,#why-us,
+  #monthly-special,#contact,footer,.stats-ribbon{display:none!important;}
+  body{background:#fff!important;padding-top:0!important;}
+  #menu{padding:0!important;}
+  .menu-tabs{display:none!important;}
+  .menu-section{display:grid!important;}
+  .menu-card{break-inside:avoid;border:1px solid #ddd!important;box-shadow:none!important;transform:none!important;}
+  h1.print-title{display:block!important;font-family:'Fredoka One',cursive;font-size:28pt;color:#C2185B;text-align:center;margin-bottom:4pt;}
+  .print-header{display:block!important;text-align:center;font-size:11pt;color:#666;margin-bottom:16pt;}
+  .print-section-title{display:block!important;font-size:16pt;font-weight:bold;margin:16pt 0 8pt;color:#4A2C0A;border-bottom:2pt solid #F9A8C9;padding-bottom:4pt;}
+}
+@media screen{h1.print-title,.print-header,.print-section-title{display:none;}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN SCREEN -->
 <div id="login-screen">
-  <span class="donut">🍩</span>
-  <h1>Admin Login</h1>
-  <p>Yummy's Donut Palace — Website Manager</p>
-  <div class="field">
-    <label>Password</label>
-    <input type="password" id="pw-input" placeholder="Enter your password..." onkeydown="if(event.key==='Enter')tryLogin()"/>
-  </div>
-  <button class="btn-login" onclick="tryLogin()">Login →</button>
-  <div class="login-error" id="login-err">❌ Incorrect password. Please try again.</div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div id="admin-screen">
-  <div class="admin-header">
-    <span class="donut">🍩</span>
-    <h1>Website Manager</h1>
-    <p>Yummy's Donut Palace · Edit your site content below</p>
-    <a href="index.html" target="_blank" class="view-site">↗ View live website</a>
-  </div>
-
-  <!-- ANNOUNCEMENT BANNER -->
-  <div class="card">
-    <div class="card-title">📢 Announcement Banner</div>
-    <div class="toggle-row">
-      <input type="checkbox" id="ann-enabled"/>
-      <span>Show banner at the top of the website</span>
+  <div class="login-card">
+    <span class="login-donut">🍩</span>
+    <h1>Admin Editor</h1>
+    <p>Yummy's Donut Palace — Live Website Editor</p>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="pw-input" placeholder="Enter your password..." onkeydown="if(event.key==='Enter')tryLogin()"/>
     </div>
-    <div class="admin-group">
-      <label>Banner Message</label>
-      <input type="text" id="ann-text" placeholder="e.g. 🎉 Buy 2 dozen, get 1 FREE — today only!"/>
-      <p class="hint">This appears as a yellow bar at the very top of your site. Great for promotions and holiday notices.</p>
-    </div>
-  </div>
-
-  <!-- DAILY SPECIAL -->
-  <div class="card">
-    <div class="card-title">⭐ Daily Special</div>
-    <div class="toggle-row">
-      <input type="checkbox" id="special-enabled"/>
-      <span>Show today's special on the website</span>
-    </div>
-    <div class="admin-group">
-      <label>Special Item Name</label>
-      <input type="text" id="special-title" placeholder="e.g. 🍩 Maple Bacon Long John"/>
-    </div>
-    <div class="admin-group">
-      <label>Description</label>
-      <textarea id="special-desc" placeholder="e.g. Only $2.99 today — crispy bacon meets sweet maple glaze. Limited quantity!"></textarea>
-    </div>
-  </div>
-
-  <!-- HOURS -->
-  <div class="card">
-    <div class="card-title">🕐 Opening Hours</div>
-    <div class="admin-group">
-      <label>Hours Text</label>
-      <input type="text" id="edit-hours" placeholder="e.g. Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays"/>
-      <p class="hint">Update this for holidays, special closures, or seasonal changes.</p>
-    </div>
-  </div>
-
-  <!-- CONTACT INFO -->
-  <div class="card">
-    <div class="card-title">📞 Contact Information</div>
-    <div class="admin-group">
-      <label>Phone Number</label>
-      <input type="text" id="edit-phone" placeholder="e.g. (660) 422-7777"/>
-    </div>
-    <div class="admin-group">
-      <label>Address</label>
-      <input type="text" id="edit-address" placeholder="e.g. 709 S Maguire St, Warrensburg, MO 64093"/>
-    </div>
-  </div>
-
-  <div class="save-bar">
-    <button class="btn-save" onclick="saveAll()">💾 Save All Changes</button>
-    <button class="btn-logout" onclick="logout()">Log Out</button>
+    <button class="btn-login" onclick="tryLogin()">Enter Editor →</button>
+    <div class="login-error" id="login-err">❌ Incorrect password. Try again.</div>
+    <button onclick="openRecovery()" style="margin-top:1rem;background:none;border:none;color:var(--text-light);font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;text-decoration:underline;">Forgot your password?</button>
   </div>
 </div>
 
-<div class="success-toast" id="toast">✅ Changes saved!</div>
+<!-- ADMIN TOOLBAR -->
+<div id="admin-toolbar">
+  <div class="toolbar-left">
+    <span class="toolbar-logo">🍩 Yummy's Editor</span>
+    <span class="toolbar-badge">Live Edit Mode</span>
+    <div class="unsaved-dot" id="unsaved-dot" title="Unsaved changes"></div>
+  </div>
+  <div class="toolbar-right">
+    <span style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Click any text to edit it</span>
+    <button class="btn-toolbar btn-undo" id="btn-undo" onclick="undoLastMove()" disabled>↩ Undo</button>
+    <button class="btn-toolbar" id="btn-hidden-sections" onclick="toggleHiddenDrawer()" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1.5px solid rgba(255,255,255,0.15);">👁 Hidden Sections <span id="hidden-count" style="display:none;background:var(--yellow-dark);color:var(--brown);border-radius:10px;padding:0 6px;font-size:0.75rem;margin-left:2px;">0</span></button>
+    <button class="btn-toolbar btn-preview" onclick="window.open('index.html','_blank')">↗ View Live Site</button>
+    <button class="btn-toolbar btn-publish" onclick="publishChanges()">💾 Save & Publish</button>
+    <button class="btn-toolbar btn-changepw" onclick="openChangePw()" title="Change password">🔒</button>
+    <button class="btn-logout-t" onclick="logout()">Log out</button>
+  </div>
+</div>
+
+<!-- HIDDEN SECTIONS DRAWER -->
+<div id="hidden-drawer">
+  <div class="hidden-drawer-title">👁 Hidden Sections</div>
+  <div id="hidden-drawer-list"></div>
+</div>
+
+<!-- ANNOUNCEMENT BANNER -->
+<div id="announcement-bar" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('announcement-bar')" title="Hide this section">✕ Hide 'Announcement Banner'</button>
+</div>
+
+<!-- DAILY SPECIALS -->
+<div id="specials-section" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('specials-section')" title="Hide this section">✕ Hide 'Daily Special Strip'</button>
+  <div class="specials-inner">
+    <span style="font-size:3rem;">⭐</span>
+    <div>
+      <div class="specials-label">Today's Special</div>
+      <div class="specials-title" id="specials-title"></div>
+      <div class="specials-desc" id="specials-desc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-brand">
+    <span class="nav-donut">🍩</span>
+    <span class="nav-name">Yummy's <span>Donut Palace</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#catering">Catering</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Find Us</a></li>
+  </ul>
+  <div style="display:flex;gap:.6rem;align-items:center;">
+    <a href="tel:+16604227777" class="nav-call">📞 Call Us</a>
+    <a href="#" class="nav-order">Order on DoorDash</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('hero')" title="Hide this section">✕ Hide 'Hero Section'</button>
+  <div class="sprinkles" id="sprinkles"></div>
+  <div class="hero-inner">
+    <div class="hero-badge" contenteditable="true">🍩 Warrensburg's Sweetest Spot</div>
+    <h1 class="hero-title">
+      <span class="pop" contenteditable="true">Yummy's</span><br>
+      <span class="pop2" contenteditable="true">Donut</span> <span contenteditable="true">Palace</span>
+    </h1>
+    <p class="hero-tagline" contenteditable="true">Fresh Donuts · Breakfast · Boba · Smoothies</p>
+    <p class="hero-sub" contenteditable="true">Handcrafted donuts made fresh every morning in the heart of Warrensburg, MO. Come early — they sell out fast!</p>
+    <a href="tel:+16604227777" class="hero-call" contenteditable="true">📞 (660) 422-7777 — Call to Order</a>
+    <div class="hero-ctas">
+      <a href="#menu" class="btn-pink">🍩 See Our Menu</a>
+      <a href="#contact" class="btn-ghost">📍 Find Us</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- INSERT DIVIDER: after hero -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- STATS RIBBON -->
+<div class="stats-ribbon" id="stats-ribbon" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('stats-ribbon')" title="Hide this section">✕ Hide 'Stats Ribbon'</button>
+  <div class="stat">
+    <span class="stat-n" contenteditable="true">4.7★</span>
+    <span class="stat-l" contenteditable="true">Average Rating</span>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="deleteStat(this)" title="Remove">✕</button></div>
+  </div>
+  <div class="stat">
+    <span class="stat-n" contenteditable="true">2,000+</span>
+    <span class="stat-l" contenteditable="true">Happy Customers</span>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="deleteStat(this)" title="Remove">✕</button></div>
+  </div>
+  <div class="stat">
+    <span class="stat-n" contenteditable="true">$1.89</span>
+    <span class="stat-l" contenteditable="true">Glazed Donut</span>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="deleteStat(this)" title="Remove">✕</button></div>
+  </div>
+  <div class="stat">
+    <span class="stat-n" contenteditable="true">#1</span>
+    <span class="stat-l" contenteditable="true">Donuts in Town</span>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="deleteStat(this)" title="Remove">✕</button></div>
+  </div>
+  <div class="add-item-row" onclick="addStat()" style="padding:0.5rem 1rem;border-radius:30px;margin-top:0;">+ Add Stat</div>
+</div>
+
+<!-- INSERT DIVIDER: after stats -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- MONTHLY SPECIAL -->
+<section id="monthly-special" style="background:var(--brown);padding:5.5rem 2rem;position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('monthly-special')" title="Hide this section">✕ Hide 'Monthly Special'</button>
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+    <div>
+      <div style="display:inline-block;background:var(--yellow-dark);color:var(--brown);font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.35rem 1rem;border-radius:20px;margin-bottom:1rem;">🌟 This Month's Special</div>
+      <h2 style="font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--yellow);line-height:1.15;margin-bottom:.75rem;" contenteditable="true" id="special-month-title">Maple Bacon Long John</h2>
+      <p style="color:rgba(253,246,236,.8);font-size:1rem;margin-bottom:1.5rem;line-height:1.7;" contenteditable="true" id="special-month-desc">Our signature Long John donut topped with rich maple glaze and crispy bacon strips. The perfect sweet-and-savory combo — available all month while supplies last.</p>
+      <div style="font-family:'Fredoka One',cursive;font-size:2rem;color:var(--pink);margin-bottom:1.5rem;" contenteditable="true" id="special-month-price">Only $2.99</div>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border-radius:24px;border:2px dashed rgba(249,168,201,.3);aspect-ratio:1;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;" id="special-month-visual" onclick="triggerSpecialPhoto()" title="Click to upload a photo">
+      <div id="special-month-visual-inner" style="display:flex;flex-direction:column;align-items:center;gap:.75rem;color:rgba(255,255,255,.6);pointer-events:none;">
+        <span style="font-size:3rem;">📷</span>
+        <span style="font-size:.85rem;font-weight:700;">Click to upload photo</span>
+        <span style="font-size:.75rem;opacity:.7;">or</span>
+        <span style="font-size:4rem;" id="special-month-emoji">🍁</span>
+        <span style="font-size:.72rem;opacity:.7;">Keep emoji if no photo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after monthly special -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+<section id="menu" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('menu')" title="Hide this section">✕ Hide 'Menu'</button>
+  <div class="container">
+    <span class="section-eyebrow" contenteditable="true">What We Serve</span>
+    <h2 class="section-title" contenteditable="true">Our Menu</h2>
+    <p class="section-lead" contenteditable="true">From melt-in-your-mouth glazed donuts to hearty breakfast sandwiches and refreshing boba — there's something for everyone.</p>
+    <div class="menu-tabs">
+      <button class="tab active" onclick="showTab('donuts',this)">🍩 Donuts</button>
+      <button class="tab" onclick="showTab('breakfast',this)">🥐 Breakfast</button>
+      <button class="tab" onclick="showTab('drinks',this)">🧋 Drinks</button>
+      <button class="print-btn" onclick="window.print()">🖨️ Print Menu</button>
+    </div>
+    <div class="print-section-title">🍩 Donuts</div>
+    <div class="menu-grid menu-section active" id="tab-donuts"></div>
+    <div class="menu-grid menu-section" id="tab-breakfast"></div>
+    <div class="menu-grid menu-section" id="tab-drinks"></div>
+    <div class="add-item-row" id="add-menu-item-btn" onclick="addMenuItem()" style="margin-top:1rem;">+ Add Item to Current Tab</div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after menu -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- WHY CHOOSE US -->
+<section id="why-us" style="background:var(--white);padding:5.5rem 2rem;position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('why-us')" title="Hide this section">✕ Hide 'Why Choose Us'</button>
+  <div class="container">
+    <span class="section-eyebrow" contenteditable="true">Why Yummy's</span>
+    <h2 class="section-title" contenteditable="true">What Makes Us Different</h2>
+    <p class="section-lead" contenteditable="true">We're not just a donut shop — we're a Warrensburg tradition.</p>
+    <div id="why-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;margin-top:1rem;">
+      <div class="about-pill" style="flex-direction:column;text-align:center;border-radius:20px;padding:1.75rem 1.5rem;background:var(--cream2);position:relative;">
+        <span class="pill-icon" style="font-size:2.5rem;margin-bottom:.75rem;cursor:pointer;" onclick="pickEmoji(this,'pill-icon')">🌅</span>
+        <div><div class="pill-title" contenteditable="true">Made Fresh Daily</div><div class="pill-text" contenteditable="true">Every donut is baked from scratch starting at 5 AM. No reheating, no frozen dough — ever.</div></div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+      </div>
+      <div class="about-pill" style="flex-direction:column;text-align:center;border-radius:20px;padding:1.75rem 1.5rem;background:var(--cream2);position:relative;">
+        <span class="pill-icon" style="font-size:2.5rem;margin-bottom:.75rem;cursor:pointer;" onclick="pickEmoji(this,'pill-icon')">⭐</span>
+        <div><div class="pill-title" contenteditable="true">4.7 Star Rating</div><div class="pill-text" contenteditable="true">Over 2,000 happy customers rated us across Google, DoorDash, TripAdvisor and more.</div></div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+      </div>
+      <div class="about-pill" style="flex-direction:column;text-align:center;border-radius:20px;padding:1.75rem 1.5rem;background:var(--cream2);position:relative;">
+        <span class="pill-icon" style="font-size:2.5rem;margin-bottom:.75rem;cursor:pointer;" onclick="pickEmoji(this,'pill-icon')">🚗</span>
+        <div><div class="pill-title" contenteditable="true">Drive-Through & Dine-In</div><div class="pill-text" contenteditable="true">Grab your order on the go or relax in our cozy space with free Wi-Fi.</div></div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+      </div>
+      <div class="about-pill" style="flex-direction:column;text-align:center;border-radius:20px;padding:1.75rem 1.5rem;background:var(--cream2);position:relative;">
+        <span class="pill-icon" style="font-size:2.5rem;margin-bottom:.75rem;cursor:pointer;" onclick="pickEmoji(this,'pill-icon')">🛵</span>
+        <div><div class="pill-title" contenteditable="true">DoorDash Delivery</div><div class="pill-text" contenteditable="true">Can't make it in? We deliver! Order online and get Yummy's to your door.</div></div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+      </div>
+      <div class="about-pill" style="flex-direction:column;text-align:center;border-radius:20px;padding:1.75rem 1.5rem;background:var(--cream2);position:relative;">
+        <span class="pill-icon" style="font-size:2.5rem;margin-bottom:.75rem;cursor:pointer;" onclick="pickEmoji(this,'pill-icon')">👨‍👩‍👧</span>
+        <div><div class="pill-title" contenteditable="true">Family Friendly</div><div class="pill-text" contenteditable="true">A welcoming spot for everyone — families, students, and early birds have called us home.</div></div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+      </div>
+      <div class="about-pill" style="flex-direction:column;text-align:center;border-radius:20px;padding:1.75rem 1.5rem;background:var(--cream2);position:relative;">
+        <span class="pill-icon" style="font-size:2.5rem;margin-bottom:.75rem;cursor:pointer;" onclick="pickEmoji(this,'pill-icon')">📍</span>
+        <div><div class="pill-title" contenteditable="true">Now in Sedalia Too!</div><div class="pill-text" contenteditable="true">Loved so much we expanded — a second location is now open in Sedalia, MO.</div></div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+      </div>
+    </div>
+    <div class="add-item-row" onclick="addWhyCard()" style="margin-top:1rem;">+ Add Card</div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after why us -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- CATERING -->
+<section id="catering" style="background:var(--pink-deep);padding:5.5rem 2rem;position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('catering')" title="Hide this section">✕ Hide 'Catering'</button>
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+    <div>
+      <span style="font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:.6rem;display:block;" contenteditable="true">Catering & Bulk Orders</span>
+      <h2 style="font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--yellow);line-height:1.15;margin-bottom:.8rem;" contenteditable="true">Feed Your Whole Crew 🍩</h2>
+      <p style="color:rgba(255,255,255,.85);font-size:1rem;margin-bottom:1.5rem;line-height:1.7;max-width:480px;" contenteditable="true">Planning an office meeting, birthday party, school event, or any occasion? Yummy's handles bulk donut orders with ease.</p>
+      <div id="catering-perks" style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem;">
+        <div style="display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;position:relative;" class="catering-perk-item">
+          <span style="font-size:1.3rem;cursor:pointer;" onclick="pickEmoji(this,'catering-perk-icon')">🏢</span>
+          <span contenteditable="true">Office meetings & corporate events</span>
+          <div class="item-controls" style="right:-1.5rem;"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-perk-item')">✕</button></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;position:relative;" class="catering-perk-item">
+          <span style="font-size:1.3rem;cursor:pointer;" onclick="pickEmoji(this,'catering-perk-icon')">🎂</span>
+          <span contenteditable="true">Birthday parties & celebrations</span>
+          <div class="item-controls" style="right:-1.5rem;"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-perk-item')">✕</button></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;position:relative;" class="catering-perk-item">
+          <span style="font-size:1.3rem;cursor:pointer;" onclick="pickEmoji(this,'catering-perk-icon')">🏫</span>
+          <span contenteditable="true">School & university events</span>
+          <div class="item-controls" style="right:-1.5rem;"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-perk-item')">✕</button></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;position:relative;" class="catering-perk-item">
+          <span style="font-size:1.3rem;cursor:pointer;" onclick="pickEmoji(this,'catering-perk-icon')">📦</span>
+          <span contenteditable="true">Custom dozen boxes available</span>
+          <div class="item-controls" style="right:-1.5rem;"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-perk-item')">✕</button></div>
+        </div>
+      </div>
+      <div class="add-item-row" onclick="addCateringPerk()" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8);margin-bottom:1.5rem;">+ Add Catering Perk</div>
+      <a href="tel:+16604227777" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--yellow-dark);color:var(--brown);padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;">📞 Call to Place a Bulk Order</a>
+    </div>
+    <div style="background:rgba(255,255,255,.08);border-radius:24px;border:2px dashed rgba(255,255,255,.2);padding:2rem;display:flex;flex-direction:column;gap:1rem;" id="catering-stats">
+      <div style="background:rgba(255,255,255,.1);border-radius:16px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;position:relative;" class="catering-stat-item">
+        <span style="font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);flex-shrink:0;" contenteditable="true">12+</span>
+        <span style="font-size:.85rem;color:rgba(255,255,255,.8);font-weight:600;" contenteditable="true">Donut varieties available for catering orders</span>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-stat-item')">✕</button></div>
+      </div>
+      <div style="background:rgba(255,255,255,.1);border-radius:16px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;position:relative;" class="catering-stat-item">
+        <span style="font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);flex-shrink:0;" contenteditable="true">$18</span>
+        <span style="font-size:.85rem;color:rgba(255,255,255,.8);font-weight:600;" contenteditable="true">Starting price per dozen — best value in town</span>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-stat-item')">✕</button></div>
+      </div>
+      <div style="background:rgba(255,255,255,.1);border-radius:16px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;position:relative;" class="catering-stat-item">
+        <span style="font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);flex-shrink:0;" contenteditable="true">24hr</span>
+        <span style="font-size:.85rem;color:rgba(255,255,255,.8);font-weight:600;" contenteditable="true">Advance notice recommended for large orders</span>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-stat-item')">✕</button></div>
+      </div>
+      <div class="add-item-row" onclick="addCateringStat()" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8);">+ Add Stat</div>
+    </div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after catering -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- MENU -->
+<section id="about" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('about')" title="Hide this section">✕ Hide 'About Us'</button>
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual">
+        <span class="about-big-emoji" id="about-emoji" style="cursor:pointer;" onclick="pickEmoji(this,'about-emoji')" title="Click to change emoji">🍩</span>
+        <span style="font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--pink-deep);" contenteditable="true">Fresh Every Morning</span>
+      </div>
+      <div>
+        <span class="section-eyebrow" contenteditable="true">Our Story</span>
+        <h2 class="section-title" contenteditable="true">Warrensburg's Favorite Donut Shop</h2>
+        <p class="section-lead" contenteditable="true">Since opening, Yummy's Donut Palace has become the go-to morning destination for locals, students, and travelers passing through. We make everything fresh, every single day.</p>
+        <div class="about-pills" id="about-pills">
+          <div class="about-pill">
+            <span class="pill-icon" style="cursor:pointer;" onclick="pickEmoji(this,'pill-icon')" title="Click to change">🌅</span>
+            <div><div class="pill-title" contenteditable="true">Baked Fresh Daily</div><div class="pill-text" contenteditable="true">Our donuts are made fresh every morning starting at 5 AM. Get there early — the best ones sell out fast!</div></div>
+            <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+          </div>
+          <div class="about-pill">
+            <span class="pill-icon" style="cursor:pointer;" onclick="pickEmoji(this,'pill-icon')" title="Click to change">😊</span>
+            <div><div class="pill-title" contenteditable="true">Famously Friendly Staff</div><div class="pill-text" contenteditable="true">Our team is known throughout Warrensburg for warm, welcoming service. We love families, students, and everyone in between.</div></div>
+            <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+          </div>
+          <div class="about-pill">
+            <span class="pill-icon" style="cursor:pointer;" onclick="pickEmoji(this,'pill-icon')" title="Click to change">🚗</span>
+            <div><div class="pill-title" contenteditable="true">Drive-Through & Dine-In</div><div class="pill-text" contenteditable="true">Grab your order on the go via our drive-through, or sit down in our clean, cozy space with free Wi-Fi.</div></div>
+            <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+          </div>
+          <div class="about-pill">
+            <span class="pill-icon" style="cursor:pointer;" onclick="pickEmoji(this,'pill-icon')" title="Click to change">📍</span>
+            <div><div class="pill-title" contenteditable="true">Now in Sedalia Too!</div><div class="pill-text" contenteditable="true">Loved so much we expanded — a second Yummy's location is now open in Sedalia, MO.</div></div>
+            <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>
+          </div>
+        </div>
+        <div class="add-item-row" onclick="addPill()" style="margin-top:0.75rem;">+ Add Feature</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after about -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- REVIEWS -->
+<section id="reviews" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('reviews')" title="Hide this section">✕ Hide 'Reviews'</button>
+  <div class="container">
+    <span class="section-eyebrow" contenteditable="true">What People Are Saying</span>
+    <h2 class="section-title" contenteditable="true">Our Customers Love Us</h2>
+    <p class="section-lead" contenteditable="true">Don't just take our word for it — Yummy's is rated 4.7 stars across thousands of reviews.</p>
+    <div class="reviews-grid" id="reviews-grid">
+      <div class="rating-highlight">
+        <div class="rating-big" contenteditable="true">4.7</div>
+        <div class="rating-stars">★★★★★</div>
+        <div class="rating-label" contenteditable="true">Out of 5 · 2,000+ Ratings</div>
+        <a href="https://www.google.com/maps/search/Yummy's+Donut+Palace+Warrensburg" target="_blank" class="google-badge">⭐ See all Google Reviews</a>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <div class="review-text" contenteditable="true">"The donuts were perfect and warm, and the biscuits and gravy were right on spot and delicious. Yummy yummy yummy!"</div>
+        <div class="review-author" contenteditable="true">Verified Customer</div>
+        <div class="review-source" contenteditable="true">via DoorDash</div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.review-card')">✕</button></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <div class="review-text" contenteditable="true">"I ordered a bacon biscuit and it was the best I have ever had. Soft biscuit, meaty bacon and perfectly cooked egg with cheese."</div>
+        <div class="review-author" contenteditable="true">TripAdvisor Reviewer</div>
+        <div class="review-source" contenteditable="true">via TripAdvisor</div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.review-card')">✕</button></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <div class="review-text" contenteditable="true">"The donuts here are absolutely amazing, and the coffee is just as good. Their maple bacon long john is exceptional!"</div>
+        <div class="review-author" contenteditable="true">Nisha T.</div>
+        <div class="review-source" contenteditable="true">via MenuPix · Feb 2025</div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.review-card')">✕</button></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <div class="review-text" contenteditable="true">"Every time I pass through Warrensburg I stop and get 2 or 3 dozen chocolate iced doughnuts. Yummy's is the best!"</div>
+        <div class="review-author" contenteditable="true">Loyal Traveler</div>
+        <div class="review-source" contenteditable="true">via TripAdvisor</div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.review-card')">✕</button></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <div class="review-text" contenteditable="true">"Amazing service every single time! 10/10 would purchase from here again!"</div>
+        <div class="review-author" contenteditable="true">Verified Customer</div>
+        <div class="review-source" contenteditable="true">via DoorDash</div>
+        <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.review-card')">✕</button></div>
+      </div>
+    </div>
+    <div class="add-item-row" onclick="addReview()" style="margin-top:1rem;">+ Add Review</div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after reviews -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- NEWSLETTER -->
+<section id="newsletter" style="background:var(--cream2);padding:5.5rem 2rem;position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('newsletter')" title="Hide this section">✕ Hide 'Newsletter'</button>
+  <div style="max-width:600px;margin:0 auto;text-align:center;">
+    <span class="section-eyebrow" contenteditable="true">Stay in the Loop</span>
+    <h2 class="section-title" contenteditable="true">Get Notified About Specials 🍩</h2>
+    <p class="section-lead" style="margin:0 auto 2rem;" contenteditable="true">Be the first to hear about daily specials, seasonal flavors, new menu items, and exclusive deals. No spam — just donuts.</p>
+
+    <!-- SUBSCRIBER LIST -->
+    <div style="background:var(--white);border-radius:16px;padding:1.25rem 1.5rem;border:1.5px solid rgba(249,168,201,.3);text-align:left;margin-bottom:1rem;">
+      <div style="font-weight:800;font-size:.82rem;color:var(--text-mid);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;">📧 Subscribers</div>
+      <div id="subscriber-list" style="font-size:.88rem;color:var(--text-light);">Loading...</div>
+    </div>
+
+    <!-- MAILCHIMP SETTINGS -->
+    <div style="background:var(--white);border-radius:16px;padding:1.25rem 1.5rem;border:1.5px solid rgba(249,168,201,.3);text-align:left;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
+        <div style="font-weight:800;font-size:.82rem;color:var(--text-mid);letter-spacing:.1em;text-transform:uppercase;">📬 Mailchimp Integration</div>
+        <span id="mc-status" style="font-size:.75rem;font-weight:700;color:var(--text-light);">Not configured</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-light);margin-bottom:.6rem;line-height:1.6;">Connect Mailchimp so subscribers are automatically added to your email list.</p>
+      <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem;line-height:1.6;"><b>How to find your form URL:</b> In Mailchimp → Audience → Signup forms → Embedded forms → copy the <b>action=""</b> URL from the form code.</p>
+      <div style="display:flex;flex-direction:column;gap:.6rem;">
+        <div>
+          <label style="font-size:.75rem;font-weight:800;color:var(--text-mid);display:block;margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.08em;">Mailchimp Form Action URL</label>
+          <input type="url" id="mc-form-url" placeholder="https://xxxxx.us1.list-manage.com/subscribe/post?u=...&id=..." oninput="markUnsaved()" style="width:100%;padding:.6rem .9rem;border-radius:10px;border:2px solid rgba(249,168,201,.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:.82rem;outline:none;"/>
+        </div>
+        <button onclick="saveMailchimpSettings()" style="background:var(--pink-deep);color:#fff;border:none;padding:.7rem 1.5rem;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer;">Save Mailchimp Settings</button>
+        <div id="mc-feedback" style="font-size:.82rem;font-weight:700;display:none;padding:.5rem;border-radius:8px;text-align:center;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after newsletter -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- CONTACT -->
+<section id="contact" style="position:relative;">
+  <button class="btn-hide-section" onclick="hideSection('contact')" title="Hide this section">✕ Hide 'Contact & Map'</button>
+  <div class="container">
+    <span class="section-eyebrow" contenteditable="true">Come Visit Us</span>
+    <h2 class="section-title" contenteditable="true">Find Yummy's</h2>
+    <p class="section-lead" contenteditable="true">We're located right in the heart of Warrensburg. Stop by for dine-in, hit the drive-through, or order delivery via DoorDash.</p>
+    <div class="contact-grid">
+      <div class="info-cards">
+        <div class="info-card"><span class="info-icon">📍</span><div><div class="info-label">Address</div><div class="info-val" contenteditable="true">709 S Maguire St, Warrensburg, MO 64093</div></div></div>
+        <div class="info-card"><span class="info-icon">📞</span><div><div class="info-label">Phone</div><div class="info-val" contenteditable="true">(660) 422-7777</div></div></div>
+        <div class="info-card"><span class="info-icon">🕐</span><div><div class="info-label">Hours</div><div class="info-val" contenteditable="true">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div></div></div>
+        <div class="info-card"><span class="info-icon">🚗</span><div><div class="info-label">Options</div><div class="info-val" contenteditable="true">Dine-In · Drive-Through · DoorDash Delivery · Free Wi-Fi</div></div></div>
+        <a href="tel:+16604227777" class="call-cta">📞 Call Now — (660) 422-7777</a>
+        <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink" style="text-align:center;margin-top:.25rem;">🛵 Order on DoorDash</a>
+      </div>
+      <div class="map-wrap">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3102.5!2d-93.7360!3d38.7630!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87c06e6c1c1c1c1c%3A0x1!2s709+S+Maguire+St%2C+Warrensburg%2C+MO+64093!5e0!3m2!1sen!2sus!4v1" allowfullscreen loading="lazy" style="width:100%;height:100%;border:none;border-radius:18px;"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSERT DIVIDER: after contact -->
+<div class="insert-divider" onclick="openSectionModal(this)"><span class="insert-line"></span><button class="insert-btn">＋ Insert section here</button><span class="insert-line"></span></div>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- PRINT-ONLY HEADER -->
+<h1 class="print-title">🍩 Yummy's Donut Palace</h1>
+<div class="print-header">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777 · Tue–Sun 6:00 AM – 1:00 PM</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand" contenteditable="true">🍩 Yummy's Donut Palace</div>
+  <div class="footer-links">
+    <a href="#menu">Menu</a>
+    <a href="#about">About</a>
+    <a href="#catering">Catering</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Find Us</a>
+  </div>
+  <div class="footer-addr" contenteditable="true">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777</div>
+  <div class="footer-addr" contenteditable="true">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div>
+  <div class="footer-copy">© 2025 Yummy's Donut Palace. All rights reserved.</div>
+</footer>
+
+<!-- EDIT HINT -->
+<div class="edit-hint" id="edit-hint">✏️ Click any text to edit it directly</div>
+
+<!-- EMOJI MODAL -->
+<div id="emoji-modal">
+  <div class="emoji-picker">
+    <h3>Choose Emoji</h3>
+    <input type="text" id="emoji-input" placeholder="Type or paste emoji here" maxlength="4"/>
+    <div class="emoji-grid" id="emoji-grid"></div>
+    <div class="emoji-btns">
+      <button class="btn-em-cancel" onclick="closeEmojiModal()">Cancel</button>
+      <button class="btn-em-ok" onclick="applyEmoji()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION MODAL -->
+<div id="section-modal">
+  <div class="section-picker">
+    <h3>Add New Section</h3>
+    <p>Choose what kind of section to add to the website:</p>
+    <div class="section-opts">
+      <div class="section-opt" onclick="addSection('promo')"><span class="section-opt-icon">🎉</span><span class="section-opt-label">Promo Banner</span></div>
+      <div class="section-opt" onclick="addSection('text')"><span class="section-opt-icon">📝</span><span class="section-opt-label">Text Block</span></div>
+      <div class="section-opt" onclick="addSection('hours')"><span class="section-opt-icon">🕐</span><span class="section-opt-label">Special Hours</span></div>
+      <div class="section-opt" onclick="addSection('photos')"><span class="section-opt-icon">📸</span><span class="section-opt-label">Photo Gallery</span></div>
+      <div class="section-opt" onclick="addSection('facebook')"><span class="section-opt-icon">👍</span><span class="section-opt-label">Facebook Banner</span></div>
+      <div class="section-opt" onclick="addSection('instagram')"><span class="section-opt-icon">📷</span><span class="section-opt-label">Instagram Banner</span></div>
+    </div>
+    <div class="section-modal-btns"><button class="btn-sm-cancel" onclick="closeSectionModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- RECOVERY MODAL — enter recovery code or master key -->
+<div id="recovery-modal" style="position:fixed;inset:0;z-index:99999;background:rgba(45,27,9,0.65);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--white);border-radius:24px;padding:2rem;width:min(420px,95vw);box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+    <h3 style="font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--pink-deep);margin-bottom:0.25rem;">🔑 Account Recovery</h3>
+    <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1.5rem;">Enter the recovery code you saved when you last changed your password.</p>
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-weight:800;font-size:0.75rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;">Recovery Code</label>
+      <input type="text" id="recovery-code-input" placeholder="e.g. DONUT-7842-PINK" onkeydown="if(event.key==='Enter')submitRecovery()" style="width:100%;padding:0.65rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;outline:none;text-align:center;"/>
+    </div>
+    <div id="recovery-error" style="color:#c0392b;font-size:0.83rem;font-weight:700;margin-bottom:0.75rem;display:none;">❌ Incorrect recovery code. Please try again.</div>
+    <div style="display:flex;gap:0.6rem;justify-content:flex-end;">
+      <button onclick="closeRecovery()" style="background:transparent;color:var(--text-mid);border:1.5px solid rgba(249,168,201,0.5);padding:0.6rem 1.3rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;">Cancel</button>
+      <button onclick="submitRecovery()" style="background:var(--pink-deep);color:#fff;border:none;padding:0.6rem 1.5rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:800;cursor:pointer;">Reset Password →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECOVERY CODE DISPLAY — shown after setting a new password -->
+<div id="recovery-display-modal" style="position:fixed;inset:0;z-index:99999;background:rgba(45,27,9,0.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--white);border-radius:24px;padding:2rem;width:min(440px,95vw);box-shadow:0 20px 60px rgba(0,0,0,0.25);text-align:center;">
+    <div style="font-size:3rem;margin-bottom:0.5rem;">🗝️</div>
+    <h3 style="font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--pink-deep);margin-bottom:0.5rem;">Save Your Recovery Code!</h3>
+    <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1.25rem;">Write this down and keep it somewhere safe. You'll need it if you ever forget your password. <strong>This code will not be shown again.</strong></p>
+    <div id="recovery-code-display" style="background:var(--cream2);border:2px dashed var(--pink);border-radius:16px;padding:1.25rem;font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--brown);letter-spacing:0.08em;margin-bottom:1rem;"></div>
+    <button onclick="copyRecoveryCode()" style="background:transparent;border:1.5px solid var(--pink);color:var(--pink-deep);padding:0.5rem 1.2rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.85rem;cursor:pointer;margin-bottom:1.25rem;">📋 Copy Code</button>
+    <p style="font-size:0.78rem;color:var(--text-light);margin-bottom:1.25rem;">Do not share this code with anyone other than your web developer.</p>
+    <button onclick="closeRecoveryDisplay()" style="width:100%;background:var(--pink-deep);color:#fff;border:none;padding:0.85rem;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;">I've saved it — Continue →</button>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div id="changepw-modal" style="position:fixed;inset:0;z-index:99998;background:rgba(45,27,9,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--white);border-radius:24px;padding:2rem;width:min(420px,95vw);box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <h3 style="font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--pink-deep);margin-bottom:0.25rem;">🔒 Change Password</h3>
+    <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1.5rem;">Choose a strong password with at least 8 characters, including a number and a special character.</p>
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-weight:800;font-size:0.75rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;">Current Password</label>
+      <input type="password" id="pw-current" placeholder="Enter current password" style="width:100%;padding:0.65rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.93rem;outline:none;"/>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-weight:800;font-size:0.75rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;">New Password</label>
+      <input type="password" id="pw-new" placeholder="At least 8 characters" style="width:100%;padding:0.65rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.93rem;outline:none;" oninput="checkPwStrength(this.value)"/>
+      <div id="pw-strength-bar" style="margin-top:0.5rem;height:4px;border-radius:4px;background:var(--cream2);overflow:hidden;"><div id="pw-strength-fill" style="height:100%;width:0%;transition:width 0.3s,background 0.3s;border-radius:4px;"></div></div>
+      <div id="pw-strength-label" style="font-size:0.75rem;font-weight:700;margin-top:0.3rem;color:var(--text-light);"></div>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <label style="display:block;font-weight:800;font-size:0.75rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;">Confirm New Password</label>
+      <input type="password" id="pw-confirm" placeholder="Repeat new password" style="width:100%;padding:0.65rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.93rem;outline:none;" onkeydown="if(event.key==='Enter')saveNewPassword()"/>
+    </div>
+    <div id="pw-error" style="color:#c0392b;font-size:0.83rem;font-weight:700;margin-bottom:0.75rem;display:none;"></div>
+    <div style="display:flex;gap:0.6rem;justify-content:flex-end;">
+      <button onclick="closeChangePw()" style="background:transparent;color:var(--text-mid);border:1.5px solid rgba(249,168,201,0.5);padding:0.6rem 1.3rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;">Cancel</button>
+      <button onclick="saveNewPassword()" style="background:var(--pink-deep);color:#fff;border:none;padding:0.6rem 1.5rem;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:800;cursor:pointer;transition:background 0.2s;">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-const ADMIN_PASSWORD = 'yummys2025';
-const STORAGE_KEY    = 'yummys_admin_data';
-const DEFAULTS = {
-  annEnabled:false, annText:'',
-  specialEnabled:false, specialTitle:'', specialDesc:'',
-  hours:'Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays',
-  phone:'(660) 422-7777',
-  address:'709 S Maguire St, Warrensburg, MO 64093',
-};
+const DEFAULT_PASSWORD='yummys2025';
+const MASTER_KEY='YUMMYS-MASTER-9X4K';
+const PW_KEY='yummys_admin_pw';
+const RC_KEY='yummys_recovery_code';
 
-function loadData(){
-  try{return Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem(STORAGE_KEY)));}
-  catch(e){return Object.assign({},DEFAULTS);}
+// ── SUPABASE CONFIG ───────────────────────────────────────
+const SB_URL='https://orywcjwoklirjipjmuhh.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yeXdjandva2xpcmppcGptdWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwODIxMzQsImV4cCI6MjA4OTY1ODEzNH0.LWWkKX-ZhOCUxoqZuOwKbKBWC5Iln_qZSQ1IIH7r64A';
+
+async function sbGet(table){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/${table}?id=eq.main`,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    const d=await r.json();
+    return d&&d[0]?d[0]:null;
+  }catch(e){return null;}
 }
 
+async function sbUpdate(table,data){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/${table}?id=eq.main`,{
+      method:'PATCH',
+      headers:{
+        'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,
+        'Content-Type':'application/json','Prefer':'return=minimal'
+      },
+      body:JSON.stringify({...data,updated_at:new Date().toISOString()})
+    });
+    return r.ok;
+  }catch(e){return false;}
+}
+// Menu and settings now stored in Supabase (see sbGet/sbUpdate functions above)
+
+function getPassword(){ return localStorage.getItem(PW_KEY)||DEFAULT_PASSWORD; }
+
+/* ── RECOVERY CODE GENERATOR ─────────────────────── */
+const RC_WORDS=['DONUT','GLAZE','SUGAR','BAKER','CREAM','MAPLE','HONEY','FROSTY','SWEET','CINNA','YUMMY','FLUFFY'];
+function genRecoveryCode(){
+  const w=RC_WORDS[Math.floor(Math.random()*RC_WORDS.length)];
+  const n=Math.floor(1000+Math.random()*9000);
+  const c=['PINK','GOLD','ROSE','MINT','BLUE','TEAL'][Math.floor(Math.random()*6)];
+  return `${w}-${n}-${c}`;
+}
+
+/* ── DEFAULT MENU DATA ─────────────────────────── */
+const DEFAULT_MENU={
+  donuts:[
+    {emoji:'✨',name:'Glazed',desc:'Our classic, melt-in-your-mouth glazed donut.',price:'$3.59',badge:'Most Popular'},
+    {emoji:'🍫',name:'Chocolate',desc:'Rich chocolate icing on our fluffy donut base.',price:'$1.89',badge:''},
+    {emoji:'🎉',name:'Sprinkle',desc:'Colorful and fun — loaded with rainbow sprinkles.',price:'$1.89',badge:''},
+    {emoji:'🍮',name:'Long Johns (Filled)',desc:'Stuffed with smooth cream or jelly filling.',price:'$2.99',badge:'Fan Favorite'},
+    {emoji:'🍩',name:'Long Johns',desc:'Classic long john — light, airy, glazed.',price:'$2.39',badge:''},
+    {emoji:'🍓',name:'Jelly Donut',desc:'Fluffy donut filled with sweet jelly.',price:'$5.79',badge:''},
+    {emoji:'🥐',name:'Cro Donut',desc:'A flaky croissant-donut hybrid.',price:'$3.25',badge:''},
+    {emoji:'🐻',name:'Bear Claws',desc:'Sweet almond filling and crispy edges.',price:'$5.79',badge:''},
+    {emoji:'🥐',name:'Filled Croissants',desc:'Buttery croissant stuffed with filling.',price:'$3.99 each',badge:''},
+    {emoji:'🌿',name:'Spinach Feta Croissant',desc:'Savory croissant with spinach and feta.',price:'$4.69',badge:''},
+    {emoji:'🍰',name:'Old Fashioned Donut',desc:'Dense cake-style donut, crispy exterior.',price:'$4.79',badge:''},
+    {emoji:'🎂',name:'Cakes',desc:'Soft cake donuts in assorted flavors.',price:'$4.80',badge:''},
+    {emoji:'🌀',name:'Cinnamon Rolls',desc:'Warm, gooey cinnamon rolls baked fresh.',price:'$5.79',badge:''},
+    {emoji:'🍬',name:'Twists',desc:'Twisted, sugary pastry with a satisfying chew.',price:'$5.79',badge:''},
+    {emoji:'🍎',name:'Apple Fritters',desc:'Chunky apple in crispy batter with cinnamon glaze.',price:'$5.79',badge:''},
+    {emoji:'⚪',name:'Donut Holes',desc:'Bite-sized donut holes — perfect for sharing.',price:'$3.89 / dozen',badge:''},
+    {emoji:'🎊',name:'All Small Donut Mix',desc:'A dozen assorted small donuts.',price:'$18.29 / dozen',badge:'Best Value'},
+    {emoji:'🎉',name:'All Large Donut Mix',desc:'A dozen assorted large donuts.',price:'$26.99 / dozen',badge:''},
+    {emoji:'🥳',name:'½ Lg ½ Sm Mix',desc:'Half large, half small — best of both worlds.',price:'$24.99 / dozen',badge:''},
+    {emoji:'🍰',name:'All Cakes Mixed Dozen',desc:'A dozen assorted cake donuts.',price:'$23.99 / dozen',badge:''},
+  ],
+  breakfast:[
+    {emoji:'🥐',name:'Sausage Roll',desc:'A savory sausage wrapped in a flaky croissant.',price:'$4.19',badge:'#1 Most Liked'},
+    {emoji:'🥓',name:'Bacon Biscuit Sandwich',desc:'Bacon, egg, and cheese on a soft biscuit.',price:'Market Price',badge:''},
+    {emoji:'🦃',name:'Turkey Egg & Cheese Croissant',desc:'Turkey, egg, and melted cheese on croissant.',price:'$6.99',badge:''},
+    {emoji:'🥣',name:'Biscuits & Gravy',desc:'Creamy gravy over fresh, fluffy biscuits.',price:'Market Price',badge:''},
+    {emoji:'🌀',name:'Cinnamon Roll',desc:'A generous cinnamon roll baked fresh.',price:'From $5.00',badge:''},
+  ],
+  drinks:[
+    {emoji:'☕',name:'Coffee',desc:'Freshly brewed cup of coffee.',price:'$3.30',badge:''},
+    {emoji:'🧋',name:'Iced Coffee',desc:'Strong, flavorful iced coffee.',price:'$6.00',badge:''},
+    {emoji:'☕',name:'Cappuccino',desc:'Smooth, frothy cappuccino made to order.',price:'$3.99',badge:''},
+    {emoji:'⭐',name:'Starbucks',desc:'Made with signature espresso.',price:'$4.90',badge:'Fan Favorite'},
+    {emoji:'🍫',name:'Nesquik',desc:'Rich, creamy chocolate milk.',price:'$3.99',badge:''},
+    {emoji:'🥛',name:'Milk',desc:'Cold, fresh milk — large size.',price:'$2.99 large',badge:''},
+    {emoji:'🟠',name:'Sunny D',desc:'Bright, citrusy drink — large.',price:'$1.59 large',badge:''},
+    {emoji:'🍊',name:'Orange Juice',desc:'Fresh orange juice — large.',price:'$2.70 large',badge:''},
+    {emoji:'🍎',name:'Apple Juice',desc:'Sweet apple juice — large.',price:'$2.50 large',badge:''},
+    {emoji:'🍇',name:"Welch's",desc:"Welch's grape juice — large.",price:'$2.70 large',badge:''},
+    {emoji:'🫐',name:'Snapple',desc:'Snapple in choice of flavors — large.',price:'$2.70 large',badge:''},
+    {emoji:'⚡',name:'Energy Drink',desc:'Large energy drink.',price:'$3.90 large',badge:''},
+    {emoji:'🏈',name:'Gatorade',desc:'Refreshing Gatorade — large.',price:'$2.70 large',badge:''},
+    {emoji:'🥤',name:'Bottle Soda',desc:'Bottled soda — large.',price:'$2.70 large',badge:''},
+    {emoji:'🥫',name:'Can Soda',desc:'Canned soda in your favorite flavors.',price:'$1.35',badge:''},
+    {emoji:'💧',name:'Bottle Water',desc:'Ice-cold bottled water.',price:'$1.25',badge:''},
+    {emoji:'🍹',name:'Capri Sun',desc:'Capri Sun in assorted fruit flavors.',price:'$1.35',badge:''},
+  ]
+};
+
+/* ── STATE ───────────────────────────────────────── */
+let currentMenu=JSON.parse(JSON.stringify(DEFAULT_MENU));
+let currentTab='donuts';
+let emojiTarget=null;
+const FOOD_EMOJIS=['🍩','🍫','🎉','🥐','🍰','🧁','🎂','🍮','🍓','🍎','🍊','☕','🧋','🥤','🍹','🥛','💧','⭐','✨','🌅','😊','🚗','📍','🎊','🥳','🍬','🍎','🐻','🌿','🌀','⚡','🫐'];
+
+/* ── LOGIN ────────────────────────────────────────── */
 function tryLogin(){
-  const pw = document.getElementById('pw-input').value;
-  if(pw === ADMIN_PASSWORD){
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    populateForm(loadData());
+  const entered=document.getElementById('pw-input').value;
+  if(entered===getPassword()){
+    document.getElementById('login-screen').style.display='none';
+    document.body.classList.add('edit-mode');
+    initEditor();
+    // Warn if still using default password
+    if(!localStorage.getItem(PW_KEY)){
+      setTimeout(()=>{
+        showToast('⚠️ You\'re using the default password. Please change it!');
+        setTimeout(()=>openChangePw(),2500);
+      },1000);
+    }
   } else {
-    document.getElementById('login-err').style.display = 'block';
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-input').focus();
+    document.getElementById('login-err').style.display='block';
+    document.getElementById('pw-input').value='';
+  }
+}
+function logout(){
+  if(document.getElementById('unsaved-dot').classList.contains('visible')){
+    if(!confirm('You have unsaved changes. Leave anyway?')) return;
+  }
+  location.reload();
+}
+
+/* ── INIT ─────────────────────────────────────────── */
+async function initEditor(){
+  // Show loading state
+  showToast('⏳ Loading your site data...');
+
+  try{
+    const [menuData,settings,special,hidden,mc]=await Promise.all([
+      sbGet('menu'),
+      sbGet('settings'),
+      sbGet('monthly_special'),
+      sbGet('hidden_sections'),
+      sbGet('mailchimp_config'),
+    ]);
+
+    // Load menu
+    if(menuData&&menuData.data&&menuData.data.donuts){
+      currentMenu=menuData.data;
+    }
+
+    // Apply settings to DOM
+    if(settings){
+      if(settings.ann_enabled&&settings.ann_text){
+        const b=document.getElementById('announcement-bar');
+        b.textContent=settings.ann_text;b.classList.add('visible');
+      }
+      if(settings.special_enabled&&settings.special_title){
+        document.getElementById('specials-title').textContent=settings.special_title;
+        document.getElementById('specials-desc').textContent=settings.special_desc||'';
+        document.getElementById('specials-section').classList.add('visible');
+      }
+      // Apply contact info
+      document.querySelectorAll('.hours-time').forEach(el=>el.textContent=settings.hours||'');
+      document.querySelectorAll('.phone-display').forEach(el=>el.textContent=settings.phone||'');
+      document.querySelectorAll('.address-display').forEach(el=>el.textContent=settings.address||'');
+    }
+
+    // Load monthly special
+    if(special){
+      specialPhotoData=special.photo||'';
+      if(document.getElementById('special-month-title'))
+        document.getElementById('special-month-title').textContent=special.title||'';
+      if(document.getElementById('special-month-desc'))
+        document.getElementById('special-month-desc').textContent=special.description||'';
+      if(document.getElementById('special-month-price'))
+        document.getElementById('special-month-price').textContent=special.price||'';
+      const visual=document.getElementById('special-month-visual');
+      if(visual){
+        if(special.photo){
+          visual.innerHTML=`<img src="${special.photo}" alt="Special" style="width:100%;height:100%;object-fit:cover;border-radius:22px;"/>
+            <button onclick="event.stopPropagation();removeSpecialPhoto()" style="position:absolute;top:.5rem;right:.5rem;background:rgba(220,38,38,.88);color:#fff;border:none;border-radius:20px;padding:.25rem .75rem;font-family:Nunito,sans-serif;font-weight:800;font-size:.75rem;cursor:pointer;">✕ Remove</button>`;
+        } else if(special.emoji){
+          const emojiEl=document.getElementById('special-month-emoji');
+          if(emojiEl) emojiEl.textContent=special.emoji;
+        }
+      }
+    }
+
+    // Restore hidden sections
+    if(hidden&&hidden.sections){
+      hidden.sections.forEach(id=>{
+        const el=document.getElementById(id);
+        if(el){el.style.display='none';el.dataset.adminHidden='true';}
+        toggleAdjacentDividers(id,false);
+        hiddenSections.add(id);
+      });
+      refreshHiddenDrawer();
+    }
+
+    // Load Mailchimp config
+    if(mc&&mc.form_url){
+      const el=document.getElementById('mc-form-url');
+      if(el) el.value=mc.form_url;
+      updateMcStatus(mc);
+    }
+
+    showToast('✅ Site data loaded!');
+  }catch(e){
+    showToast('⚠️ Could not load from database. Using defaults.');
+  }
+
+  renderMenus();
+  setupSprinkles();
+  loadSubscribers();
+
+  // Mark unsaved on any contenteditable change
+  document.querySelectorAll('[contenteditable]').forEach(el=>{
+    el.addEventListener('input',markUnsaved);
+  });
+  // Show hint
+  setTimeout(()=>{document.getElementById('edit-hint').classList.add('show');},800);
+  setTimeout(()=>{document.getElementById('edit-hint').classList.remove('show');},4000);
+}
+
+/* ── UNSAVED INDICATOR ───────────────────────────── */
+function markUnsaved(){
+  document.getElementById('unsaved-dot').classList.add('visible');
+}
+
+/* ── UNIVERSAL DELETE HELPER ─────────────────────── */
+// Called by every inline delete button: del(this, '.selector')
+function del(btn, selector){
+  const target = btn.closest(selector);
+  if(!target) return;
+  // Derive a human-readable description from the selector
+  const labels = {
+    '.stat':'Delete stat', '.about-pill':'Delete feature',
+    '.review-card':'Delete review', '.catering-perk-item':'Delete catering perk',
+    '.catering-stat-item':'Delete catering stat', '.photo-card':'Delete photo',
+    '.menu-item-card':'Delete menu item'
+  };
+  pushUndo(labels[selector]||'Delete item');
+  target.remove();
+  markUnsaved();
+}
+
+/* ── MENU RENDERING ─────────────────────────────── */
+function renderMenus(){
+  ['donuts','breakfast','drinks'].forEach(cat=>renderTab(cat));
+}
+function renderTab(cat){
+  const grid=document.getElementById('tab-'+cat);
+  grid.innerHTML='';
+  currentMenu[cat].forEach((item,i)=>{
+    const card=document.createElement('div');
+    card.className='menu-card';
+    const hasBadge=!!(item.badge&&item.badge.trim());
+    card.innerHTML=`
+      <div class="item-controls">
+        <button class="btn-ic btn-ic-emoji" onclick="pickEmojiForMenuItem('${cat}',${i})" title="Change emoji">😀</button>
+        <button class="btn-ic btn-ic-del" onclick="deleteMenuItem('${cat}',${i})" title="Delete">✕</button>
+      </div>
+      <div class="badge-row" data-cat="${cat}" data-idx="${i}">
+        <button class="badge-toggle ${hasBadge?'on':'off'}" onclick="toggleBadge('${cat}',${i},this)" title="${hasBadge?'Remove badge':'Add badge'}">
+          ${hasBadge?'🏷️ Badge on':'＋ Add badge'}
+        </button>
+        <div class="badge-editor" style="display:${hasBadge?'flex':'none'};">
+          <div class="menu-badge" contenteditable="true" data-cat="${cat}" data-idx="${i}" data-field="badge">${item.badge||''}</div>
+        </div>
+      </div>
+      <div class="menu-emoji" data-cat="${cat}" data-idx="${i}">${item.emoji}</div>
+      <div class="menu-name" contenteditable="true" data-cat="${cat}" data-idx="${i}" data-field="name">${item.name}</div>
+      <div class="menu-desc" contenteditable="true" data-cat="${cat}" data-idx="${i}" data-field="desc">${item.desc}</div>
+      <div class="menu-price" contenteditable="true" data-cat="${cat}" data-idx="${i}" data-field="price">${item.price}</div>`;
+    // Live sync on edit
+    card.querySelectorAll('[contenteditable]').forEach(el=>{
+      el.addEventListener('input',()=>{
+        const c=el.dataset.cat,idx=parseInt(el.dataset.idx),f=el.dataset.field;
+        currentMenu[c][idx][f]=el.textContent.trim();
+        markUnsaved();
+      });
+    });
+    grid.appendChild(card);
+  });
+}
+
+/* ── WHY CARDS ───────────────────────────────────── */
+function addWhyCard(){
+  pushUndo('Add why card');
+  const grid=document.getElementById('why-grid');
+  if(!grid)return;
+  const card=document.createElement('div');
+  card.className='about-pill';
+  card.style.cssText='flex-direction:column;text-align:center;border-radius:20px;padding:1.75rem 1.5rem;background:var(--cream2);position:relative;';
+  card.innerHTML=`
+    <span class="pill-icon" style="font-size:2.5rem;margin-bottom:.75rem;cursor:pointer;" onclick="pickEmoji(this,'pill-icon')">🍩</span>
+    <div><div class="pill-title" contenteditable="true">New Feature</div><div class="pill-text" contenteditable="true">Describe this feature here.</div></div>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>`;
+  card.querySelectorAll('[contenteditable]').forEach(el=>el.addEventListener('input',markUnsaved));
+  grid.appendChild(card);
+  markUnsaved();
+}
+
+/* ── CATERING PERKS & STATS ──────────────────────── */
+function addCateringPerk(){
+  pushUndo('Add catering perk');
+  const container=document.getElementById('catering-perks');
+  if(!container)return;
+  const perk=document.createElement('div');
+  perk.className='catering-perk-item';
+  perk.style.cssText='display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;position:relative;';
+  perk.innerHTML=`
+    <span style="font-size:1.3rem;cursor:pointer;" onclick="pickEmoji(this,'catering-perk-icon')">🍩</span>
+    <span contenteditable="true">New catering option</span>
+    <div class="item-controls" style="right:-1.5rem;"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-perk-item')">✕</button></div>`;
+  perk.querySelector('[contenteditable]').addEventListener('input',markUnsaved);
+  container.appendChild(perk);
+  markUnsaved();
+}
+function addCateringStat(){
+  pushUndo('Add catering stat');
+  const container=document.getElementById('catering-stats');
+  if(!container)return;
+  const addBtn=container.querySelector('.add-item-row');
+  const stat=document.createElement('div');
+  stat.className='catering-stat-item';
+  stat.style.cssText='background:rgba(255,255,255,.1);border-radius:16px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;position:relative;';
+  stat.innerHTML=`
+    <span style="font-family:Fredoka One,cursive;font-size:1.8rem;color:var(--yellow);flex-shrink:0;" contenteditable="true">New</span>
+    <span style="font-size:.85rem;color:rgba(255,255,255,.8);font-weight:600;" contenteditable="true">Describe this stat here</span>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.catering-stat-item')">✕</button></div>`;
+  stat.querySelectorAll('[contenteditable]').forEach(el=>el.addEventListener('input',markUnsaved));
+  container.insertBefore(stat,addBtn);
+  markUnsaved();
+}
+
+/* ── LOAD MONTHLY SPECIAL ────────────────────────── */
+let specialPhotoData=''; // holds base64 of uploaded photo
+
+function triggerSpecialPhoto(){
+  const input=document.createElement('input');
+  input.type='file';input.accept='image/*';
+  input.onchange=e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      specialPhotoData=ev.target.result;
+      const visual=document.getElementById('special-month-visual');
+      visual.innerHTML=`
+        <img src="${ev.target.result}" alt="Special photo" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:22px;"/>
+        <button onclick="event.stopPropagation();removeSpecialPhoto()" style="position:absolute;top:.5rem;right:.5rem;background:rgba(220,38,38,.88);color:#fff;border:none;border-radius:20px;padding:.25rem .75rem;font-family:Nunito,sans-serif;font-weight:800;font-size:.75rem;cursor:pointer;">✕ Remove</button>`;
+      markUnsaved();
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function removeSpecialPhoto(){
+  specialPhotoData='';
+  const visual=document.getElementById('special-month-visual');
+  visual.innerHTML=`
+    <div id="special-month-visual-inner" style="display:flex;flex-direction:column;align-items:center;gap:.75rem;color:rgba(255,255,255,.6);pointer-events:none;">
+      <span style="font-size:3rem;">📷</span>
+      <span style="font-size:.85rem;font-weight:700;">Click to upload photo</span>
+      <span style="font-size:.75rem;opacity:.7;">or</span>
+      <span style="font-size:4rem;" id="special-month-emoji">🍁</span>
+      <span style="font-size:.72rem;opacity:.7;">Keep emoji if no photo</span>
+    </div>`;
+  markUnsaved();
+}
+
+function loadMonthlySpecialAdmin(){
+  // Now handled inside initEditor() via Supabase — kept as no-op for safety
+}
+
+/* ── MAILCHIMP SETTINGS ──────────────────────────── */
+async function loadMailchimpSettings(){
+  try{
+    const mc=await sbGet('mailchimp_config');
+    if(mc&&mc.form_url){
+      const el=document.getElementById('mc-form-url');
+      if(el) el.value=mc.form_url;
+      updateMcStatus({formUrl:mc.form_url});
+    }
+  }catch(e){}
+}
+
+async function saveMailchimpSettings(){
+  const formUrl=(document.getElementById('mc-form-url')||{}).value||'';
+  const ok=await sbUpdate('mailchimp_config',{form_url:formUrl.trim()});
+  updateMcStatus({formUrl:formUrl.trim()});
+  showMcFeedback(ok?'✅ Mailchimp settings saved!':'❌ Save failed, check connection.',
+    ok?'#1b5e20':'#b71c1c', ok?'#e8f5e9':'#ffebee');
+}
+
+function updateMcStatus(mc){
+  const el=document.getElementById('mc-status');
+  if(!el)return;
+  if(mc.formUrl&&mc.formUrl.includes('list-manage.com')){
+    el.textContent='✅ Connected';el.style.color='#2e7d32';
+  } else {
+    el.textContent='Not configured';el.style.color='var(--text-light)';
   }
 }
 
-function populateForm(d){
-  document.getElementById('ann-enabled').checked     = d.annEnabled;
-  document.getElementById('ann-text').value           = d.annText;
-  document.getElementById('special-enabled').checked  = d.specialEnabled;
-  document.getElementById('special-title').value      = d.specialTitle;
-  document.getElementById('special-desc').value       = d.specialDesc;
-  document.getElementById('edit-hours').value         = d.hours;
-  document.getElementById('edit-phone').value         = d.phone;
-  document.getElementById('edit-address').value       = d.address;
+function showMcFeedback(msg,color,bg){
+  const el=document.getElementById('mc-feedback');
+  if(!el)return;
+  el.textContent=msg;el.style.color=color;el.style.background=bg;
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none',4000);
 }
 
-function saveAll(){
-  const d = {
-    annEnabled:     document.getElementById('ann-enabled').checked,
-    annText:        document.getElementById('ann-text').value.trim(),
-    specialEnabled: document.getElementById('special-enabled').checked,
-    specialTitle:   document.getElementById('special-title').value.trim(),
-    specialDesc:    document.getElementById('special-desc').value.trim(),
-    hours:          document.getElementById('edit-hours').value.trim() || DEFAULTS.hours,
-    phone:          document.getElementById('edit-phone').value.trim() || DEFAULTS.phone,
-    address:        document.getElementById('edit-address').value.trim() || DEFAULTS.address,
+/* ── SUBSCRIBER LIST ─────────────────────────────── */
+async function loadSubscribers(){
+  const el=document.getElementById('subscriber-list');
+  if(!el)return;
+  el.textContent='Loading...';
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/subscribers?select=email,created_at&order=created_at.desc`,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    const subs=await r.json();
+    if(!subs||!subs.length){el.textContent='No subscribers yet. The signup form is on the live site.';return;}
+    el.innerHTML=subs.map(s=>`
+      <div style="padding:.3rem 0;border-bottom:1px solid rgba(249,168,201,.2);display:flex;justify-content:space-between;">
+        <span>📧 ${s.email}</span>
+        <span style="font-size:.75rem;color:var(--text-light);">${new Date(s.created_at).toLocaleDateString()}</span>
+      </div>`).join('')
+      +`<div style="margin-top:.5rem;font-weight:700;color:var(--brown);">Total: ${subs.length} subscriber${subs.length!==1?'s':''}</div>`;
+  }catch(e){el.textContent='Could not load subscribers.';}
+}
+
+/* ── HIDDEN SECTIONS SYSTEM ──────────────────────── */
+const SECTION_NAMES={
+  'hero':'Hero Section','stats-ribbon':'Stats Ribbon',
+  'monthly-special':'Monthly Special','menu':'Menu',
+  'why-us':'Why Choose Us','catering':'Catering',
+  'about':'About Us','reviews':'Reviews',
+  'newsletter':'Newsletter','contact':'Contact & Map',
+  'announcement-bar':'Announcement Banner','specials-section':'Daily Special Strip',
+};
+
+let hiddenSections=new Set();
+
+function hideSection(id){
+  pushUndo('Hide: '+(SECTION_NAMES[id]||id));
+  const el=document.getElementById(id);
+  if(el){el.style.display='none';el.dataset.adminHidden='true';}
+  toggleAdjacentDividers(id,false);
+  hiddenSections.add(id);
+  refreshHiddenDrawer();
+  markUnsaved();
+}
+
+function restoreSection(id){
+  pushUndo('Restore: '+(SECTION_NAMES[id]||id));
+  const el=document.getElementById(id);
+  if(el){el.style.display='';delete el.dataset.adminHidden;}
+  toggleAdjacentDividers(id,true);
+  hiddenSections.delete(id);
+  refreshHiddenDrawer();
+  markUnsaved();
+  setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},100);
+}
+
+function toggleAdjacentDividers(id,show){
+  const el=document.getElementById(id);if(!el)return;
+  [el.previousElementSibling,el.nextElementSibling].forEach(sib=>{
+    if(sib&&sib.classList&&sib.classList.contains('insert-divider'))
+      sib.style.display=show?'':'none';
+  });
+}
+
+function refreshHiddenDrawer(){
+  const list=document.getElementById('hidden-drawer-list');
+  const countEl=document.getElementById('hidden-count');
+  const btn=document.getElementById('btn-hidden-sections');
+  if(!list)return;
+  if(hiddenSections.size===0){
+    list.innerHTML='<div class="hidden-drawer-empty">All sections are visible 👍</div>';
+    countEl.style.display='none';
+    if(btn)btn.style.color='rgba(255,255,255,0.7)';
+  } else {
+    list.innerHTML='';
+    hiddenSections.forEach(id=>{
+      const item=document.createElement('div');
+      item.className='hidden-section-item';
+      item.innerHTML=`<span class="hidden-section-name">👁 ${SECTION_NAMES[id]||id}</span><button class="btn-restore" onclick="restoreSection('${id}')">↩ Restore</button>`;
+      list.appendChild(item);
+    });
+    countEl.textContent=hiddenSections.size;
+    countEl.style.display='inline';
+    if(btn)btn.style.color='var(--yellow)';
+  }
+}
+
+function toggleHiddenDrawer(){
+  document.getElementById('hidden-drawer').classList.toggle('open');
+}
+
+document.addEventListener('click',e=>{
+  const drawer=document.getElementById('hidden-drawer');
+  const btn=document.getElementById('btn-hidden-sections');
+  if(drawer&&btn&&!drawer.contains(e.target)&&!btn.contains(e.target))
+    drawer.classList.remove('open');
+});
+
+/* ── BADGE TOGGLE ────────────────────────────────── */
+function toggleBadge(cat,i,btn){
+  const isOn=btn.classList.contains('on');
+  const editor=btn.nextElementSibling; // .badge-editor
+  const badgeEl=editor.querySelector('.menu-badge');
+  if(isOn){
+    // Turn off — clear badge
+    currentMenu[cat][i].badge='';
+    btn.classList.remove('on');btn.classList.add('off');
+    btn.textContent='＋ Add badge';
+    editor.style.display='none';
+  } else {
+    // Turn on — set default badge text and show editor
+    const defaultText='Most Popular';
+    currentMenu[cat][i].badge=defaultText;
+    badgeEl.textContent=defaultText;
+    btn.classList.remove('off');btn.classList.add('on');
+    btn.textContent='🏷️ Badge on';
+    editor.style.display='flex';
+    setTimeout(()=>{badgeEl.focus();document.execCommand('selectAll');},50);
+  }
+  markUnsaved();
+}
+
+/* ── MENU TAB SWITCHING ─────────────────────────── */
+function showTab(id,btn){
+  document.querySelectorAll('.menu-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  currentTab=id;
+}
+
+/* ── ADD / DELETE MENU ITEMS ────────────────────── */
+function addMenuItem(){
+  pushUndo('Add menu item');
+  currentMenu[currentTab].push({emoji:'🍩',name:'New Item',desc:'Description here',price:'$0.00',badge:''});
+  renderTab(currentTab);
+  setTimeout(()=>{
+    const grid=document.getElementById('tab-'+currentTab);
+    grid.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});
+  },100);
+}
+function deleteMenuItem(cat,i){
+  pushUndo('Delete menu item');
+  currentMenu[cat].splice(i,1);
+  renderTab(cat);
+}
+
+/* ── STATS ──────────────────────────────────────── */
+function addStat(){
+  pushUndo('Add stat');
+  const ribbon=document.getElementById('stats-ribbon');
+  const addBtn=ribbon.querySelector('.add-item-row');
+  const stat=document.createElement('div');
+  stat.className='stat';
+  stat.innerHTML=`
+    <span class="stat-n" contenteditable="true">New</span>
+    <span class="stat-l" contenteditable="true">Label</span>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="deleteStat(this)">✕</button></div>`;
+  stat.querySelectorAll('[contenteditable]').forEach(el=>el.addEventListener('input',markUnsaved));
+  ribbon.insertBefore(stat,addBtn);
+}
+function deleteStat(btn){pushUndo('Delete stat');btn.closest('.stat').remove();markUnsaved();}
+
+/* ── ABOUT PILLS ────────────────────────────────── */
+function addPill(){
+  pushUndo('Add feature pill');
+  const container=document.getElementById('about-pills');
+  const pill=document.createElement('div');
+  pill.className='about-pill';
+  pill.innerHTML=`
+    <span class="pill-icon" style="cursor:pointer;" onclick="pickEmoji(this,'pill-icon')" title="Click to change">🍩</span>
+    <div><div class="pill-title" contenteditable="true">New Feature</div><div class="pill-text" contenteditable="true">Describe this feature here.</div></div>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.about-pill')">✕</button></div>`;
+  pill.querySelectorAll('[contenteditable]').forEach(el=>el.addEventListener('input',markUnsaved));
+  container.appendChild(pill);
+  markUnsaved();
+}
+
+/* ── REVIEWS ────────────────────────────────────── */
+function addReview(){
+  pushUndo('Add review');
+  const grid=document.getElementById('reviews-grid');
+  const card=document.createElement('div');
+  card.className='review-card';
+  card.innerHTML=`
+    <div class="stars">★★★★★</div>
+    <div class="review-text" contenteditable="true">"Write the review text here."</div>
+    <div class="review-author" contenteditable="true">Customer Name</div>
+    <div class="review-source" contenteditable="true">via Source</div>
+    <div class="item-controls"><button class="btn-ic btn-ic-del" onclick="del(this,'.review-card')">✕</button></div>`;
+  card.querySelectorAll('[contenteditable]').forEach(el=>el.addEventListener('input',markUnsaved));
+  grid.appendChild(card);
+  markUnsaved();
+  card.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ── ADD SECTION ─────────────────────────────────── */
+let insertAfterEl=null;
+
+function openSectionModal(divider){
+  insertAfterEl = divider || null;
+  document.getElementById('section-modal').classList.add('open');
+}
+function closeSectionModal(){
+  document.getElementById('section-modal').classList.remove('open');
+  // NOTE: do NOT reset insertAfterEl here — addSection needs it
+}
+
+function addSection(type){
+  pushUndo('Add section: '+type);
+  const targetDivider = insertAfterEl;
+  insertAfterEl = null;
+  document.getElementById('section-modal').classList.remove('open');
+
+  const sec=document.createElement('section');
+  sec.className='custom-section';
+  sec.style.cssText='padding:4rem 2rem;position:relative;';
+  sec.dataset.customSection='true';
+  const dragHandle=`<div class="drag-handle" title="Drag to reorder"><span>⠿</span><span class="drag-handle-label">Drag to move</span></div>`;
+  const delBtn=`<button onclick="removeCustomSection(this)" style="position:absolute;top:0.6rem;right:1rem;background:rgba(220,38,38,0.9);color:#fff;border:none;border-radius:20px;padding:0.4rem 0.9rem;font-family:Nunito,sans-serif;font-weight:800;cursor:pointer;font-size:0.8rem;z-index:20;">✕ Remove</button>`;
+
+  if(type==='promo'){
+    sec.style.background='var(--pink-deep)';
+    sec.innerHTML=`${dragHandle}${delBtn}<div style="max-width:1100px;margin:0 auto;text-align:center;padding-top:1rem;"><h2 style="font-family:Fredoka One,cursive;font-size:2.5rem;color:var(--yellow);margin-bottom:0.5rem;" contenteditable="true">🎉 Special Offer!</h2><p style="font-size:1.1rem;color:rgba(255,255,255,0.9);" contenteditable="true">Edit this promotional message to announce a deal, event, or news.</p></div>`;
+  } else if(type==='text'){
+    sec.style.background='var(--white)';
+    sec.innerHTML=`${dragHandle}${delBtn}<div class="container" style="padding-top:1rem;"><h2 class="section-title" contenteditable="true">New Section Title</h2><p class="section-lead" contenteditable="true">Edit this text to add any information you'd like to share with your customers.</p></div>`;
+  } else if(type==='hours'){
+    sec.style.background='var(--cream2)';
+    sec.innerHTML=`${dragHandle}${delBtn}<div class="container" style="text-align:center;padding-top:1rem;"><h2 class="section-title" contenteditable="true">🕐 Special Holiday Hours</h2><p style="font-size:1.1rem;color:var(--text-mid);margin-bottom:1rem;" contenteditable="true">We'll be operating on special hours during the upcoming holiday season.</p><div style="display:inline-block;background:var(--white);border-radius:16px;padding:1.5rem 2.5rem;border:2px solid rgba(249,168,201,0.3);"><div style="font-size:1rem;color:var(--brown);font-weight:700;" contenteditable="true">Mon Dec 25: Closed · Tue Dec 26: 8 AM – 12 PM · Wed–Sun: Normal Hours</div></div></div>`;
+  } else if(type==='photos'){
+    sec.style.background='var(--white)';
+    const gid='gallery-'+Date.now();
+    sec.innerHTML=`${dragHandle}${delBtn}
+      <div class="container" style="padding-top:1rem;">
+        <h2 class="section-title" contenteditable="true">Our Photos</h2>
+        <p class="section-lead" contenteditable="true">A glimpse inside Yummy's Donut Palace.</p>
+        <div class="photo-gallery-grid" id="${gid}">
+          ${[1,2,3].map(()=>makePhotoSlotHTML()).join('')}
+          <div class="photo-add-slot" onclick="addPhotoSlot('${gid}')"><span>＋</span><span>Add photo</span></div>
+        </div>
+      </div>`;
+
+  } else if(type==='facebook'){
+    sec.style.background='#1877F2';
+    sec.innerHTML=`${dragHandle}${delBtn}
+      <div style="max-width:700px;margin:0 auto;text-align:center;padding-top:1rem;">
+        <div style="font-size:3.5rem;margin-bottom:0.75rem;">👍</div>
+        <h2 style="font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,4vw,2.8rem);color:#fff;margin-bottom:0.5rem;" contenteditable="true">Find Us on Facebook</h2>
+        <p style="color:rgba(255,255,255,0.85);font-size:1rem;margin-bottom:1.5rem;line-height:1.7;" contenteditable="true">Like our page for daily specials, updates, and community news. Join our growing family of donut lovers!</p>
+        <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:0.75rem;">
+          <span style="font-size:1.3rem;">🔗</span>
+          <span style="color:rgba(255,255,255,0.7);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Facebook Page URL:</span>
+          <span style="color:#fff;font-weight:800;font-size:0.95rem;" contenteditable="true">facebook.com/YummysDonutPalace</span>
+        </div>
+        <br/>
+        <a style="display:inline-flex;align-items:center;gap:0.6rem;background:#fff;color:#1877F2;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:opacity 0.2s;" href="#" onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'">
+          👍 Like Our Page
+        </a>
+        <p style="margin-top:1.5rem;color:rgba(255,255,255,0.6);font-size:0.8rem;">ℹ️ Update the Facebook URL above, then the button will link to your real page on the live site.</p>
+      </div>`;
+
+  } else if(type==='instagram'){
+    sec.style.background='var(--white)';
+    const sid='insta-'+Date.now();
+    sec.innerHTML=`${dragHandle}${delBtn}
+      <div style="max-width:700px;margin:0 auto;text-align:center;padding-top:1rem;">
+        <div style="background:linear-gradient(135deg,#F09433,#E6683C,#DC2743,#CC2366,#BC1888);width:5rem;height:5rem;border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:0.75rem;">📸</div>
+        <h2 style="font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--brown);margin-bottom:0.5rem;" contenteditable="true">Follow Us on Instagram</h2>
+        <p style="color:var(--text-mid);font-size:1rem;margin-bottom:1.5rem;line-height:1.7;" contenteditable="true">See our latest donuts, daily specials, and behind-the-scenes moments. Follow us and tag your photos!</p>
+        <div style="background:var(--cream2);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:0.75rem;border:1.5px solid rgba(249,168,201,0.4);">
+          <span style="font-size:1.3rem;">🔗</span>
+          <span style="color:var(--text-light);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Instagram handle:</span>
+          <span style="color:var(--brown);font-weight:800;font-size:0.95rem;" contenteditable="true">@yummysdonutpalace</span>
+        </div>
+        <br/>
+        <a style="display:inline-flex;align-items:center;gap:0.6rem;background:linear-gradient(135deg,#F09433,#E6683C,#DC2743,#CC2366,#BC1888);color:#fff;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;" href="#">
+          📸 Follow on Instagram
+        </a>
+        <p style="margin-top:1.5rem;color:var(--text-light);font-size:0.8rem;">ℹ️ Update the Instagram handle above — the button will link to your real profile on the live site.</p>
+
+        <div style="margin-top:2rem;border-top:1.5px dashed rgba(249,168,201,0.4);padding-top:1.5rem;text-align:left;">
+          <div style="font-weight:800;font-size:0.8rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">📌 Paste up to 6 Instagram post URLs to show real posts:</div>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;" id="${sid}">
+            ${[1,2,3,4,5,6].map(n=>`
+              <div style="display:flex;align-items:center;gap:0.6rem;">
+                <span style="font-size:0.75rem;font-weight:800;color:var(--text-light);width:40px;flex-shrink:0;">Post ${n}</span>
+                <input type="url" class="insta-custom-url" data-section="${sid}" placeholder="https://www.instagram.com/p/..." oninput="markUnsaved();previewCustomInsta(this)" style="flex:1;padding:0.55rem 0.9rem;border-radius:10px;border:2px solid rgba(249,168,201,0.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.85rem;outline:none;"/>
+              </div>`).join('')}
+          </div>
+          <div id="${sid}-preview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem;"></div>
+          <p style="font-size:0.75rem;color:var(--text-light);margin-top:0.5rem;">Leave empty to hide. Account must be public for embeds to work.</p>
+        </div>
+      </div>`;
+  }
+
+  sec.querySelectorAll('[contenteditable]').forEach(el=>el.addEventListener('input',markUnsaved));
+
+  // Insert immediately AFTER the clicked divider
+  if(targetDivider && targetDivider.parentNode){
+    targetDivider.parentNode.insertBefore(sec, targetDivider.nextSibling);
+  } else {
+    // Fallback: before footer
+    const footer=document.querySelector('footer');
+    footer.parentNode.insertBefore(sec, footer);
+  }
+
+  // Insert a drag drop-indicator just before the new section
+  insertDropIndicator(sec);
+  attachDragEvents(sec);
+  sec.scrollIntoView({behavior:'smooth', block:'center'});
+  markUnsaved();
+}
+
+// Clean remove: also removes the associated drop indicator
+function removeCustomSection(btn){
+  pushUndo('Remove section');
+  const sec=btn.closest('section');
+  const prev=sec.previousElementSibling;
+  if(prev && prev.dataset && prev.dataset.dropIndicator) prev.remove();
+  sec.remove();
+  markUnsaved();
+}
+
+/* ── EMOJI PICKER ────────────────────────────────── */
+let emojiCallback=null;
+function pickEmoji(el,type){
+  emojiTarget=el;
+  emojiCallback=null;
+  document.getElementById('emoji-input').value=el.textContent.trim();
+  populateEmojiGrid();
+  document.getElementById('emoji-modal').classList.add('open');
+}
+function pickEmojiForMenuItem(cat,i){
+  emojiTarget=null;
+  emojiCallback=(em)=>{currentMenu[cat][i].emoji=em;renderTab(cat);markUnsaved();};
+  document.getElementById('emoji-input').value=currentMenu[cat][i].emoji;
+  populateEmojiGrid();
+  document.getElementById('emoji-modal').classList.add('open');
+}
+function populateEmojiGrid(){
+  const grid=document.getElementById('emoji-grid');
+  grid.innerHTML='';
+  FOOD_EMOJIS.forEach(e=>{
+    const d=document.createElement('div');
+    d.className='emoji-opt';d.textContent=e;
+    d.onclick=()=>{document.getElementById('emoji-input').value=e;};
+    grid.appendChild(d);
+  });
+}
+function applyEmoji(){
+  const em=document.getElementById('emoji-input').value.trim();
+  if(!em){closeEmojiModal();return;}
+  if(emojiCallback){emojiCallback(em);}
+  else if(emojiTarget){emojiTarget.textContent=em;markUnsaved();}
+  closeEmojiModal();
+}
+function closeEmojiModal(){document.getElementById('emoji-modal').classList.remove('open');emojiTarget=null;emojiCallback=null;}
+
+/* ── PUBLISH / SAVE ─────────────────────────────── */
+async function publishChanges(){
+  const btn=document.getElementById('btn-publish')||document.querySelector('.btn-publish');
+  if(btn){btn.textContent='💾 Saving...';btn.disabled=true;}
+
+  try{
+    // 1. Save menu
+    await sbUpdate('menu',{data:currentMenu});
+
+    // 2. Save settings
+    const settings={
+      ann_enabled:document.getElementById('announcement-bar').classList.contains('visible'),
+      ann_text:document.getElementById('announcement-bar').textContent||'',
+      special_enabled:document.getElementById('specials-section').classList.contains('visible'),
+      special_title:document.getElementById('specials-title').textContent||'',
+      special_desc:document.getElementById('specials-desc').textContent||'',
+      hours:document.querySelector('.hours-time')?document.querySelector('.hours-time').textContent:'Tue–Sun: 6:00 AM – 1:00 PM',
+      phone:document.querySelector('.phone-display')?document.querySelector('.phone-display').textContent:'(660) 422-7777',
+      address:document.querySelector('.address-display')?document.querySelector('.address-display').textContent:'709 S Maguire St, Warrensburg, MO 64093',
+    };
+    await sbUpdate('settings',settings);
+
+    // 3. Save monthly special
+    const monthly={
+      title:document.getElementById('special-month-title')?document.getElementById('special-month-title').textContent:'',
+      description:document.getElementById('special-month-desc')?document.getElementById('special-month-desc').textContent:'',
+      price:document.getElementById('special-month-price')?document.getElementById('special-month-price').textContent:'',
+      emoji:document.getElementById('special-month-emoji')?document.getElementById('special-month-emoji').textContent:'',
+      photo:specialPhotoData||'',
+    };
+    await sbUpdate('monthly_special',monthly);
+
+    // 4. Save hidden sections
+    await sbUpdate('hidden_sections',{sections:[...hiddenSections]});
+
+    // 5. Save mailchimp config
+    const mcUrl=(document.getElementById('mc-form-url')||{}).value||'';
+    await sbUpdate('mailchimp_config',{form_url:mcUrl});
+
+    document.getElementById('unsaved-dot').classList.remove('visible');
+    showToast('✅ All changes saved! The live site is now updated for everyone.');
+  }catch(e){
+    showToast('❌ Save failed. Check your internet connection and try again.');
+  }finally{
+    if(btn){btn.textContent='💾 Save & Publish';btn.disabled=false;}
+  }
+}
+
+/* ── SPRINKLES ───────────────────────────────────── */
+function setupSprinkles(){
+  const colors=['#F9A8C9','#FFD966','#5EC8F2','#A78BFA','#F87171','#34D399'];
+  const c=document.getElementById('sprinkles');
+  for(let i=0;i<30;i++){
+    const s=document.createElement('div');s.className='sprinkle';
+    s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
+    s.style.background=colors[Math.floor(Math.random()*colors.length)];
+    s.style.transform='rotate('+Math.random()*360+'deg)';
+    s.style.animationDuration=(8+Math.random()*12)+'s';
+    s.style.animationDelay=(-Math.random()*12)+'s';
+    c.appendChild(s);
+  }
+}
+
+/* ── TOAST ───────────────────────────────────────── */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ── PHOTO GALLERY ───────────────────────────────── */
+function makePhotoSlotHTML(){
+  return `
+    <div class="photo-card">
+      <button class="photo-card-del-btn" onclick="del(this,'.photo-card')">✕ Remove</button>
+      <div class="photo-slot" onclick="triggerPhotoUpload(this)">
+        <div class="photo-slot-placeholder"><span>📷</span><span>Click to upload photo</span></div>
+        <button class="photo-slot-change" onclick="event.stopPropagation();triggerPhotoUpload(this.closest('.photo-slot'))">🔄 Change</button>
+      </div>
+      <div class="photo-card-body">
+        <div class="photo-card-title" contenteditable="true" oninput="markUnsaved()"></div>
+        <div class="photo-card-desc" contenteditable="true" oninput="markUnsaved()"></div>
+      </div>
+    </div>`;
+}
+
+function triggerPhotoUpload(slot){
+  const input=document.createElement('input');
+  input.type='file';input.accept='image/*';
+  input.onchange=e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      slot.innerHTML=`
+        <img src="${ev.target.result}" alt="Food photo"/>
+        <button class="photo-slot-change" onclick="event.stopPropagation();triggerPhotoUpload(this.closest('.photo-slot'))">🔄 Change</button>`;
+      markUnsaved();
+    };
+    reader.readAsDataURL(file);
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'), 2500);
+  input.click();
 }
 
-function logout(){
-  document.getElementById('admin-screen').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'block';
-  document.getElementById('pw-input').value = '';
-  document.getElementById('login-err').style.display = 'none';
+function addPhotoSlot(gid){
+  const grid=document.getElementById(gid);
+  const addBtn=grid.querySelector('.photo-add-slot');
+  const tmp=document.createElement('div');
+  tmp.innerHTML=makePhotoSlotHTML();
+  const card=tmp.firstElementChild;
+  grid.insertBefore(card,addBtn);
+  markUnsaved();
 }
+
+/* ── UNDO ENGINE ─────────────────────────────────── */
+let dragEl=null;
+let dragIndicator=null;
+const undoStack=[];
+const MAX_UNDO=50;
+
+function takeSnapshot(){
+  const containers=['stats-ribbon','tab-donuts','tab-breakfast','tab-drinks',
+    'about-pills','why-grid','catering-perks','catering-stats','reviews-grid'];
+  const snap={containers:{},customSections:[],menuData:null};
+  containers.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) snap.containers[id]=el.innerHTML;
+  });
+  // Snapshot all custom sections with position info
+  const allSections=[...document.querySelectorAll('.custom-section')];
+  allSections.forEach(sec=>{
+    snap.customSections.push({
+      html:sec.outerHTML,
+      nextFixedId:getNextFixedSectionId(sec),
+    });
+  });
+  snap.menuData=JSON.parse(JSON.stringify(currentMenu));
+  snap.hiddenSections=[...hiddenSections];
+  return snap;
+}
+
+function getNextFixedSectionId(sec){
+  // Walk forward from sec to find the next NON-custom sibling with an id
+  let el=sec.nextElementSibling;
+  while(el){
+    if(!el.classList.contains('custom-section')&&!el.dataset.dropIndicator&&el.id) return el.id;
+    el=el.nextElementSibling;
+  }
+  return '__footer__';
+}
+
+function restoreSnapshot(snap){
+  // 1. Restore named containers
+  Object.entries(snap.containers).forEach(([id,html])=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.innerHTML=html;
+      el.querySelectorAll('[contenteditable]').forEach(n=>n.addEventListener('input',markUnsaved));
+    }
+  });
+  // 2. Remove all existing custom sections and their indicators
+  document.querySelectorAll('.custom-section').forEach(sec=>{
+    const prev=sec.previousElementSibling;
+    if(prev&&prev.dataset&&prev.dataset.dropIndicator) prev.remove();
+    sec.remove();
+  });
+  // 3. Re-insert custom sections in correct positions
+  snap.customSections.forEach(entry=>{
+    const tmp=document.createElement('div');
+    tmp.innerHTML=entry.html;
+    const sec=tmp.firstElementChild;
+    if(!sec) return;
+    // Find the anchor element to insert before
+    let anchor=null;
+    if(entry.nextFixedId==='__footer__'){
+      anchor=document.querySelector('footer');
+    } else {
+      anchor=document.getElementById(entry.nextFixedId);
+    }
+    if(!anchor) anchor=document.querySelector('footer');
+    anchor.parentNode.insertBefore(sec,anchor);
+    // Insert drop indicator before it
+    const ind=document.createElement('div');
+    ind.className='drop-indicator';
+    ind.dataset.dropIndicator='true';
+    sec.parentNode.insertBefore(ind,sec);
+    // Re-wire events
+    attachDragEvents(sec);
+    sec.querySelectorAll('[contenteditable]').forEach(n=>n.addEventListener('input',markUnsaved));
+  });
+  // 4. Restore menu data
+  if(snap.menuData){
+    currentMenu=JSON.parse(JSON.stringify(snap.menuData));
+    renderMenus();
+  }
+  // 5. Restore hidden sections state
+  if(snap.hiddenSections){
+    // First show all fixed sections
+    Object.keys(SECTION_NAMES).forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){el.style.display='';delete el.dataset.adminHidden;}
+      toggleAdjacentDividers(id,true);
+    });
+    hiddenSections=new Set();
+    // Then re-hide the ones that were hidden in the snapshot
+    snap.hiddenSections.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){el.style.display='none';el.dataset.adminHidden='true';}
+      toggleAdjacentDividers(id,false);
+      hiddenSections.add(id);
+    });
+    refreshHiddenDrawer();
+  }
+}
+
+function pushUndo(description){
+  undoStack.push({snap:takeSnapshot(),description});
+  if(undoStack.length>MAX_UNDO) undoStack.shift();
+  refreshUndoBtn();
+  markUnsaved();
+}
+
+function refreshUndoBtn(){
+  const btn=document.getElementById('btn-undo');
+  if(!btn) return;
+  if(undoStack.length){
+    btn.disabled=false;
+    btn.classList.add('active');
+    btn.textContent='\u21a9 Undo: '+undoStack[undoStack.length-1].description;
+  } else {
+    btn.disabled=true;
+    btn.classList.remove('active');
+    btn.textContent='\u21a9 Undo';
+  }
+}
+
+function undoLastMove(){
+  if(!undoStack.length) return;
+  const {snap,description}=undoStack.pop();
+  restoreSnapshot(snap);
+  refreshUndoBtn();
+  markUnsaved();
+  showToast('\u21a9 Undid: '+description);
+}
+
+/* ── DRAG & DROP ─────────────────────────────────── */
+function insertDropIndicator(sec){
+  const ind=document.createElement('div');
+  ind.className='drop-indicator';
+  ind.dataset.dropIndicator='true';
+  sec.parentNode.insertBefore(ind,sec);
+}
+
+function attachDragEvents(sec){
+  const handle=sec.querySelector('.drag-handle');
+  if(!handle) return;
+  handle.addEventListener('mousedown',e=>{
+    if(e.button!==0) return;
+    e.preventDefault();
+    startDrag(sec,e.clientY);
+  });
+  handle.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    startDrag(sec,e.touches[0].clientY);
+  },{passive:false});
+}
+
+function startDrag(sec,startY){
+  pushUndo('Move section');
+  dragEl=sec;
+  sec.classList.add('dragging');
+  document.body.style.cursor='grabbing';
+  document.body.style.userSelect='none';
+  const onMove=e=>{updateDropTarget(e.touches?e.touches[0].clientY:e.clientY);};
+  const onEnd=()=>{
+    finishDrag();
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onEnd);
+    document.removeEventListener('touchmove',onMove);
+    document.removeEventListener('touchend',onEnd);
+  };
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onEnd);
+  document.addEventListener('touchmove',onMove,{passive:false});
+  document.addEventListener('touchend',onEnd);
+}
+
+function updateDropTarget(clientY){
+  document.querySelectorAll('.drop-indicator').forEach(d=>d.classList.remove('active'));
+  document.querySelectorAll('.insert-divider').forEach(d=>d.classList.remove('drag-over'));
+  dragIndicator=null;
+  const candidates=[...document.querySelectorAll('.insert-divider'),...document.querySelectorAll('.drop-indicator')];
+  let best=null,bestDist=Infinity;
+  candidates.forEach(el=>{
+    const rect=el.getBoundingClientRect();
+    const dist=Math.abs(clientY-(rect.top+rect.bottom)/2);
+    if(dist<bestDist){bestDist=dist;best=el;}
+  });
+  const footer=document.querySelector('footer');
+  if(footer){
+    const dist=Math.abs(clientY-footer.getBoundingClientRect().top);
+    if(dist<bestDist){bestDist=dist;best='beforeFooter';}
+  }
+  if(best&&best!=='beforeFooter'){
+    if(best.classList.contains('drop-indicator')) best.classList.add('active');
+    if(best.classList.contains('insert-divider')) best.classList.add('drag-over');
+    dragIndicator=best;
+  } else if(best==='beforeFooter'){
+    dragIndicator='beforeFooter';
+  }
+}
+
+function finishDrag(){
+  if(!dragEl) return;
+  dragEl.classList.remove('dragging');
+  document.body.style.cursor='';
+  document.body.style.userSelect='';
+  document.querySelectorAll('.drop-indicator').forEach(d=>d.classList.remove('active'));
+  document.querySelectorAll('.insert-divider').forEach(d=>d.classList.remove('drag-over'));
+  if(dragIndicator&&dragIndicator!==dragEl){
+    const myInd=dragEl.previousElementSibling&&dragEl.previousElementSibling.dataset&&dragEl.previousElementSibling.dataset.dropIndicator?dragEl.previousElementSibling:null;
+    if(dragIndicator==='beforeFooter'){
+      const footer=document.querySelector('footer');
+      if(myInd) footer.parentNode.insertBefore(myInd,footer);
+      footer.parentNode.insertBefore(dragEl,footer);
+    } else if(dragIndicator.classList.contains('insert-divider')){
+      const ref=dragIndicator.nextSibling;
+      if(myInd) dragIndicator.parentNode.insertBefore(myInd,ref);
+      dragIndicator.parentNode.insertBefore(dragEl,ref);
+    } else {
+      if(myInd) dragIndicator.parentNode.insertBefore(myInd,dragIndicator);
+      dragIndicator.parentNode.insertBefore(dragEl,dragIndicator);
+    }
+    markUnsaved();
+  } else {
+    undoStack.pop();
+    refreshUndoBtn();
+  }
+  dragEl=null;
+  dragIndicator=null;
+}
+
+/* ── RECOVERY MODAL ──────────────────────────────── */
+function openRecovery(){
+  document.getElementById('recovery-code-input').value='';
+  document.getElementById('recovery-error').style.display='none';
+  document.getElementById('recovery-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('recovery-code-input').focus(),100);
+}
+function closeRecovery(){
+  document.getElementById('recovery-modal').style.display='none';
+}
+function submitRecovery(){
+  const entered=document.getElementById('recovery-code-input').value.trim().toUpperCase();
+  const saved=(localStorage.getItem(RC_KEY)||'').toUpperCase();
+  // Accept recovery code OR master key
+  if(entered===saved||entered===MASTER_KEY){
+    closeRecovery();
+    // Reset to default password so they can log in, then force change
+    localStorage.removeItem(PW_KEY);
+    localStorage.removeItem(RC_KEY);
+    // Show a message on the login screen
+    document.getElementById('login-err').style.display='none';
+    document.getElementById('pw-input').value='';
+    const hint=document.createElement('p');
+    hint.style.cssText='font-size:0.82rem;font-weight:700;color:#27ae60;margin-top:0.75rem;';
+    hint.textContent='✅ Recovery successful! Log in with the original password: yummys2025, then set a new one.';
+    const card=document.querySelector('.login-card');
+    if(!card.querySelector('.recovery-success')){ hint.className='recovery-success'; card.appendChild(hint); }
+  } else {
+    document.getElementById('recovery-error').style.display='block';
+    document.getElementById('recovery-code-input').value='';
+    document.getElementById('recovery-code-input').focus();
+  }
+}
+function closeRecoveryDisplay(){
+  document.getElementById('recovery-display-modal').style.display='none';
+  showToast('🔒 Password updated successfully!');
+}
+function copyRecoveryCode(){
+  const code=document.getElementById('recovery-code-display').textContent;
+  navigator.clipboard.writeText(code).then(()=>showToast('📋 Code copied to clipboard!'));
+}
+
+/* ── CHANGE PASSWORD ─────────────────────────────── */
+function openChangePw(){
+  document.getElementById('pw-current').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-confirm').value='';
+  document.getElementById('pw-error').style.display='none';
+  document.getElementById('pw-strength-fill').style.width='0%';
+  document.getElementById('pw-strength-label').textContent='';
+  document.getElementById('changepw-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('pw-current').focus(),100);
+}
+function closeChangePw(){
+  document.getElementById('changepw-modal').style.display='none';
+}
+function checkPwStrength(pw){
+  const fill=document.getElementById('pw-strength-fill');
+  const label=document.getElementById('pw-strength-label');
+  let score=0;
+  if(pw.length>=8)score++;
+  if(pw.length>=12)score++;
+  if(/[0-9]/.test(pw))score++;
+  if(/[^a-zA-Z0-9]/.test(pw))score++;
+  if(/[A-Z]/.test(pw)&&/[a-z]/.test(pw))score++;
+  const levels=[
+    {w:'0%',  c:'transparent', t:''},
+    {w:'25%', c:'#e74c3c',     t:'Weak'},
+    {w:'50%', c:'#e67e22',     t:'Fair'},
+    {w:'75%', c:'#f4b400',     t:'Good'},
+    {w:'90%', c:'#27ae60',     t:'Strong'},
+    {w:'100%',c:'#1a9e50',     t:'Very strong ✓'},
+  ];
+  const l=levels[Math.min(score,5)];
+  fill.style.width=l.w;
+  fill.style.background=l.c;
+  label.textContent=l.t;
+  label.style.color=l.c;
+}
+function saveNewPassword(){
+  const current=document.getElementById('pw-current').value;
+  const newPw=document.getElementById('pw-new').value;
+  const confirm=document.getElementById('pw-confirm').value;
+  const errEl=document.getElementById('pw-error');
+  const show=(msg)=>{errEl.textContent=msg;errEl.style.display='block';};
+
+  if(current!==getPassword()){show('❌ Current password is incorrect.');return;}
+  if(newPw.length<8){show('❌ New password must be at least 8 characters.');return;}
+  if(!/[0-9]/.test(newPw)&&!/[^a-zA-Z0-9]/.test(newPw)){show('❌ Add at least one number or special character.');return;}
+  if(newPw!==confirm){show('❌ Passwords do not match.');return;}
+  if(newPw===DEFAULT_PASSWORD){show('❌ Please choose a different password from the default.');return;}
+
+  localStorage.setItem(PW_KEY,newPw);
+  const code=genRecoveryCode();
+  localStorage.setItem(RC_KEY,code);
+  closeChangePw();
+  // Show recovery code display
+  document.getElementById('recovery-code-display').textContent=code;
+  document.getElementById('recovery-display-modal').style.display='flex';
+}
+
+/* ── CLOSE MODALS ON BACKDROP CLICK ─────────────── */
+document.getElementById('emoji-modal').addEventListener('click',function(e){if(e.target===this)closeEmojiModal();});
+document.getElementById('section-modal').addEventListener('click',function(e){if(e.target===this)closeSectionModal();});
+document.getElementById('changepw-modal').addEventListener('click',function(e){if(e.target===this)closeChangePw();});
+document.getElementById('recovery-modal').addEventListener('click',function(e){if(e.target===this)closeRecovery();});
 
 document.getElementById('pw-input').focus();
 </script>
