@@ -770,22 +770,27 @@ async function loadSiteData(){
   initReveal();
 
   try{
+    console.log('📡 Fetching data from Supabase...');
     const [settings,menu,special,hidden]= await Promise.all([
       sbGet('settings'),
       sbGet('menu'),
       sbGet('monthly_special'),
       sbGet('hidden_sections'),
     ]);
+    console.log('settings:', settings);
+    console.log('menu:', menu);
+    console.log('special:', special);
+    console.log('hidden:', hidden);
     applySettings(settings);
     // Use Supabase menu only if it has actual items, otherwise keep DEFAULT_MENU
     const menuData=menu&&menu.data&&menu.data.donuts&&menu.data.donuts.length>0
       ? menu.data : DEFAULT_MENU;
+    console.log('Using menu data from:', menuData===DEFAULT_MENU?'DEFAULT':'Supabase');
     renderMenus(menuData);
     applyMonthlySpecial(special);
     applyHiddenSections(hidden);
   }catch(e){
-    // Supabase unavailable — defaults already rendered above
-    console.warn('Could not load from Supabase, using defaults.');
+    console.error('❌ Supabase load error:', e);
   }
 }
 

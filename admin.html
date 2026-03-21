@@ -450,27 +450,7 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
 #back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:all;}
 #back-to-top:hover{background:var(--brown-mid);}
 
-/* PRINT BUTTON */
-.print-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--text-light);border:1.5px solid rgba(249,168,201,0.5);padding:0.5rem 1.2rem;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin-top:0.75rem;}
-.print-btn:hover{border-color:var(--pink-deep);color:var(--pink-deep);}
 
-/* PRINT STYLES */
-@media print{
-  #admin-toolbar,#login-screen,nav,.insert-divider,.item-controls,.drag-handle,
-  .add-item-row,.add-section-row,.badge-toggle,.badge-editor,.photo-add-slot,
-  #back-to-top,.print-btn,.btn-pink,.btn-ghost,.hero-ctas,.hero-call,.hero-scroll,
-  .hero-badge,.hero-tagline,#about,#catering,#reviews,#newsletter,#why-us,
-  #monthly-special,#contact,footer,.stats-ribbon{display:none!important;}
-  body{background:#fff!important;padding-top:0!important;}
-  #menu{padding:0!important;}
-  .menu-tabs{display:none!important;}
-  .menu-section{display:grid!important;}
-  .menu-card{break-inside:avoid;border:1px solid #ddd!important;box-shadow:none!important;transform:none!important;}
-  h1.print-title{display:block!important;font-family:'Fredoka One',cursive;font-size:28pt;color:#C2185B;text-align:center;margin-bottom:4pt;}
-  .print-header{display:block!important;text-align:center;font-size:11pt;color:#666;margin-bottom:16pt;}
-  .print-section-title{display:block!important;font-size:16pt;font-weight:bold;margin:16pt 0 8pt;color:#4A2C0A;border-bottom:2pt solid #F9A8C9;padding-bottom:4pt;}
-}
-@media screen{h1.print-title,.print-header,.print-section-title{display:none;}}
 </style>
 </head>
 <body>
@@ -639,9 +619,7 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
       <button class="tab active" onclick="showTab('donuts',this)">🍩 Donuts</button>
       <button class="tab" onclick="showTab('breakfast',this)">🥐 Breakfast</button>
       <button class="tab" onclick="showTab('drinks',this)">🧋 Drinks</button>
-      <button class="print-btn" onclick="window.print()">🖨️ Print Menu</button>
     </div>
-    <div class="print-section-title">🍩 Donuts</div>
     <div class="menu-grid menu-section active" id="tab-donuts"></div>
     <div class="menu-grid menu-section" id="tab-breakfast"></div>
     <div class="menu-grid menu-section" id="tab-drinks"></div>
@@ -1063,8 +1041,15 @@ async function sbUpdate(table,data){
       },
       body:JSON.stringify({...data,updated_at:new Date().toISOString()})
     });
+    if(!r.ok){
+      const errText=await r.text();
+      console.error('Supabase error on table',table,':',r.status,errText);
+    }
     return r.ok;
-  }catch(e){return false;}
+  }catch(e){
+    console.error('Supabase fetch failed for table',table,':',e.message);
+    return false;
+  }
 }
 // Menu and settings now stored in Supabase (see sbGet/sbUpdate functions above)
 
@@ -1814,7 +1799,8 @@ async function publishChanges(){
 
   try{
     // 1. Save menu
-    await sbUpdate('menu',{data:currentMenu});
+    const r1=await sbUpdate('menu',{data:currentMenu});
+    console.log('menu save:',r1?'✅':'❌');
 
     // 2. Save settings
     const settings={
@@ -1827,7 +1813,8 @@ async function publishChanges(){
       phone:document.querySelector('.phone-display')?document.querySelector('.phone-display').textContent:'(660) 422-7777',
       address:document.querySelector('.address-display')?document.querySelector('.address-display').textContent:'709 S Maguire St, Warrensburg, MO 64093',
     };
-    await sbUpdate('settings',settings);
+    const r2=await sbUpdate('settings',settings);
+    console.log('settings save:',r2?'✅':'❌');
 
     // 3. Save monthly special
     const monthly={
