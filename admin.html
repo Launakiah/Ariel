@@ -1802,16 +1802,50 @@ async function publishChanges(){
     const r1=await sbUpdate('menu',{data:currentMenu});
     console.log('menu save:',r1?'✅':'❌');
 
-    // 2. Save settings
+    // 2. Save settings — read from actual DOM elements
+    // Hours: find the info-card that contains the clock icon
+    let hours='Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays';
+    document.querySelectorAll('.info-card').forEach(card=>{
+      if(card.querySelector('.info-icon')&&card.querySelector('.info-icon').textContent.includes('🕐')){
+        const val=card.querySelector('.info-val,[contenteditable]');
+        if(val) hours=val.textContent.trim();
+      }
+    });
+    // Also check footer hours
+    const footerHours=document.querySelector('.footer-addr[contenteditable]');
+    let phone='(660) 422-7777';
+    document.querySelectorAll('.info-card').forEach(card=>{
+      if(card.querySelector('.info-icon')&&card.querySelector('.info-icon').textContent.includes('📞')){
+        const val=card.querySelector('.info-val,[contenteditable]');
+        if(val) phone=val.textContent.trim();
+      }
+    });
+    let address='709 S Maguire St, Warrensburg, MO 64093';
+    document.querySelectorAll('.info-card').forEach(card=>{
+      if(card.querySelector('.info-icon')&&card.querySelector('.info-icon').textContent.includes('📍')){
+        const val=card.querySelector('.info-val,[contenteditable]');
+        if(val) address=val.textContent.trim();
+      }
+    });
+    // Hero text
+    const heroTitle={
+      line1:document.querySelector('.hero-title .pop')?document.querySelector('.hero-title .pop').textContent.trim():"Yummy's",
+      line2:document.querySelector('.hero-title .pop2')?document.querySelector('.hero-title .pop2').textContent.trim():'Donut',
+      line3:document.querySelector('.hero-title span:not(.pop):not(.pop2)')?document.querySelector('.hero-title span:not(.pop):not(.pop2)').textContent.trim():'Palace',
+    };
+    const heroTagline=document.querySelector('.hero-tagline')?document.querySelector('.hero-tagline').textContent.trim():'';
+    const heroSub=document.querySelector('.hero-sub')?document.querySelector('.hero-sub').textContent.trim():'';
+
     const settings={
       ann_enabled:document.getElementById('announcement-bar').classList.contains('visible'),
-      ann_text:document.getElementById('announcement-bar').textContent||'',
+      ann_text:document.getElementById('announcement-bar').textContent.trim()||'',
       special_enabled:document.getElementById('specials-section').classList.contains('visible'),
-      special_title:document.getElementById('specials-title').textContent||'',
-      special_desc:document.getElementById('specials-desc').textContent||'',
-      hours:document.querySelector('.hours-time')?document.querySelector('.hours-time').textContent:'Tue–Sun: 6:00 AM – 1:00 PM',
-      phone:document.querySelector('.phone-display')?document.querySelector('.phone-display').textContent:'(660) 422-7777',
-      address:document.querySelector('.address-display')?document.querySelector('.address-display').textContent:'709 S Maguire St, Warrensburg, MO 64093',
+      special_title:document.getElementById('specials-title')?document.getElementById('specials-title').textContent.trim():'',
+      special_desc:document.getElementById('specials-desc')?document.getElementById('specials-desc').textContent.trim():'',
+      hours,phone,address,
+      hero_title:JSON.stringify(heroTitle),
+      hero_tagline:heroTagline,
+      hero_sub:heroSub,
     };
     const r2=await sbUpdate('settings',settings);
     console.log('settings save:',r2?'✅':'❌');

@@ -665,13 +665,74 @@ function applySettings(d){
     document.getElementById('specials-desc').textContent=d.special_desc||'';
     sec.classList.add('visible');
   } else sec.classList.remove('visible');
-  document.querySelectorAll('.hours-display').forEach(el=>el.textContent=d.hours||'');
-  document.querySelectorAll('.footer-hours').forEach(el=>el.textContent=d.hours||'');
-  document.querySelectorAll('.phone-display').forEach(el=>{
-    el.textContent=d.phone||'';
-    el.href='tel:+1'+(d.phone||'').replace(/\D/g,'');
-  });
-  document.querySelectorAll('.address-display').forEach(el=>el.textContent=d.address||'');
+
+  // Hours — update every element that shows hours
+  if(d.hours){
+    document.querySelectorAll('.hours-display,.hours-time,.footer-hours').forEach(el=>el.textContent=d.hours);
+    // Also update the structured hours grid
+    document.querySelectorAll('.hours-grid .hours-time').forEach(el=>el.textContent=d.hours);
+    // Find any contenteditable element near a clock icon
+    document.querySelectorAll('.info-card').forEach(card=>{
+      const icon=card.querySelector('.info-icon');
+      if(icon&&icon.textContent.includes('🕐')){
+        const val=card.querySelector('.info-val');
+        if(val) val.textContent=d.hours;
+      }
+    });
+  }
+
+  // Phone
+  if(d.phone){
+    document.querySelectorAll('.phone-display').forEach(el=>{
+      el.textContent=d.phone;
+      if(el.tagName==='A') el.href='tel:+1'+d.phone.replace(/\D/g,'');
+    });
+    document.querySelectorAll('.call-cta').forEach(el=>{
+      if(el.tagName==='A') el.href='tel:+1'+d.phone.replace(/\D/g,'');
+      // Update text if it contains a phone number pattern
+      if(el.textContent.includes('422')) el.textContent=el.textContent.replace(/\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/,d.phone);
+    });
+    document.querySelectorAll('.info-card').forEach(card=>{
+      const icon=card.querySelector('.info-icon');
+      if(icon&&icon.textContent.includes('📞')){
+        const val=card.querySelector('.info-val');
+        if(val) val.textContent=d.phone;
+      }
+    });
+  }
+
+  // Address
+  if(d.address){
+    document.querySelectorAll('.address-display').forEach(el=>el.textContent=d.address);
+    document.querySelectorAll('.info-card').forEach(card=>{
+      const icon=card.querySelector('.info-icon');
+      if(icon&&icon.textContent.includes('📍')){
+        const val=card.querySelector('.info-val');
+        if(val) val.textContent=d.address;
+      }
+    });
+  }
+
+  // Hero title
+  if(d.hero_title){
+    try{
+      const t=JSON.parse(d.hero_title);
+      const pop=document.querySelector('.hero-title .pop');
+      const pop2=document.querySelector('.hero-title .pop2');
+      const pop3=document.querySelector('.hero-title span:not(.pop):not(.pop2)');
+      if(pop&&t.line1) pop.textContent=t.line1;
+      if(pop2&&t.line2) pop2.textContent=t.line2;
+      if(pop3&&t.line3) pop3.textContent=t.line3;
+    }catch(e){}
+  }
+  if(d.hero_tagline){
+    const el=document.querySelector('.hero-tagline');
+    if(el) el.textContent=d.hero_tagline;
+  }
+  if(d.hero_sub){
+    const el=document.querySelector('.hero-sub');
+    if(el) el.textContent=d.hero_sub;
+  }
 }
 
 // ── APPLY MONTHLY SPECIAL ─────────────────────────────────
