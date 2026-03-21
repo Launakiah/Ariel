@@ -841,46 +841,70 @@ async function loadSiteData(){
   initReveal();
 
   try{
-    const [pageContent,menu,hidden]=await Promise.all([
+    const [pageContent,menu]=await Promise.all([
       sbGetContent(),
       sbGet('menu'),
-      sbGet('hidden_sections'),
     ]);
 
-    // Restore full section HTML snapshots
     if(pageContent&&pageContent.content){
       const c=pageContent.content;
-      ['announcement-bar','specials-section','hero','stats-ribbon',
-       'monthly-special','why-us','about','catering',
-       'reviews','newsletter','contact','footer'].forEach(id=>{
+
+      // ── Restore all fixed sections ────────────────
+      const RESTORE_IDS=[
+        'announcement-bar','specials-section','hero','stats-ribbon',
+        'monthly-special','why-us','about','catering',
+        'reviews','newsletter','contact','footer'
+      ];
+      RESTORE_IDS.forEach(id=>{
         if(c[id]!==undefined){
           const el=document.getElementById(id);
           if(el) el.innerHTML=c[id];
         }
       });
-      // Restore visibility
+
+      // ── Restore nav ───────────────────────────────
+      if(c['nav']!==undefined){
+        const nav=document.querySelector('nav');
+        if(nav) nav.innerHTML=c['nav'];
+      }
+
+      // ── Restore visibility states ─────────────────
       const bar=document.getElementById('announcement-bar');
       if(bar) bar.classList.toggle('visible',c['_ann_visible']===true);
       const spec=document.getElementById('specials-section');
       if(spec) spec.classList.toggle('visible',c['_specials_visible']===true);
-      // Re-wire nav bar (gets wiped when hero innerHTML is restored — nav is separate)
-      document.querySelectorAll('.phone-display').forEach(el=>{
-        if(el.tagName==='A') el.href='tel:+1'+el.textContent.replace(/\D/g,'');
-      });
-    }
 
-    // Restore menu (structured data)
-    const menuData=menu&&menu.data&&menu.data.donuts&&menu.data.donuts.length>0
-      ? menu.data : DEFAULT_MENU;
-    renderMenus(menuData);
+      // ── Restore custom sections ───────────────────
+      if(c['_custom_sections']&&c['_custom_sections'].length){
+        c['_custom_sections'].forEach(entry=>{
+          const tmp=document.createElement('div');
+          tmp.innerHTML=entry.html;
+          const sec=tmp.firstElementChild;
+          if(!sec) return;
+          // Insert after the anchor section
+          const anchor=document.getElementById(entry.afterId)||document.querySelector('footer');
+          anchor.parentNode.insertBefore(sec,anchor.nextSibling);
+        });
+      }
 
-    // Apply hidden sections
-    if(hidden&&hidden.sections){
-      hidden.sections.forEach(id=>{
+      // ── Apply hidden sections ─────────────────────
+      const hiddenIds=c['_hidden_sections']||[];
+      hiddenIds.forEach(id=>{
         const el=document.getElementById(id);
         if(el) el.style.display='none';
       });
+
+      // ── Re-wire phone links ───────────────────────
+      document.querySelectorAll('a[href^="tel:"]').forEach(el=>{
+        const num=el.textContent.replace(/\D/g,'');
+        if(num.length>=10) el.href='tel:+1'+num;
+      });
     }
+
+    // ── Restore menu (always from structured data) ──
+    const menuData=menu&&menu.data&&menu.data.donuts&&menu.data.donuts.length>0
+      ? menu.data : DEFAULT_MENU;
+    renderMenus(menuData);
 
   }catch(e){
     console.warn('Supabase unavailable, using defaults.',e);

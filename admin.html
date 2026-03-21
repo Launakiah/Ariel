@@ -1818,27 +1818,55 @@ async function publishChanges(){
     await sbUpdate('mailchimp_config',{form_url:mcUrl});
 
     // ── 5. FULL PAGE CONTENT SNAPSHOT ─────────────────
-    // Save innerHTML of every editable section so ALL text changes are captured
-    const SECTIONS=[
-      'announcement-bar','specials-section','hero','stats-ribbon',
-      'monthly-special','menu','why-us','about','catering',
+    // Capture innerHTML of every section — this makes ALL text edits visible on live site
+    const SNAPSHOT_IDS=[
+      'announcement-bar','specials-section','nav','hero','stats-ribbon',
+      'monthly-special','why-us','about','catering',
       'reviews','newsletter','contact','footer'
+      // Note: 'menu' is handled by currentMenu structured data above
     ];
     const content={};
-    SECTIONS.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el){
-        // Strip admin-only elements before saving
-        const clone=el.cloneNode(true);
-        clone.querySelectorAll('.btn-hide-section,.item-controls,.drag-handle,.badge-toggle,.badge-editor,.add-item-row,.btn-ic,.btn-restore,.insta-url-input').forEach(n=>n.remove());
-        // Remove contenteditable attributes
-        clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
-        content[id]=clone.innerHTML;
-      }
-    });
-    // Save announcement visibility state
     content['_ann_visible']=document.getElementById('announcement-bar').classList.contains('visible');
     content['_specials_visible']=document.getElementById('specials-section').classList.contains('visible');
+    // Save hidden sections list so index can apply them
+    content['_hidden_sections']=[...hiddenSections];
+
+    SNAPSHOT_IDS.forEach(id=>{
+      const el=id==='nav'?document.querySelector('nav'):document.getElementById(id);
+      if(!el) return;
+      const clone=el.cloneNode(true);
+      // Remove ALL admin-only UI elements
+      const adminSelectors=[
+        '.btn-hide-section','.item-controls','.drag-handle',
+        '.badge-toggle','.badge-editor','.add-item-row',
+        '.btn-ic','.btn-restore','.insta-url-input',
+        '[data-admin-only]','.edit-hint'
+      ];
+      clone.querySelectorAll(adminSelectors.join(',')).forEach(n=>n.remove());
+      // Remove admin attributes
+      clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
+      clone.querySelectorAll('[data-custom-section]').forEach(n=>n.removeAttribute('data-custom-section'));
+      // Remove inline display:none from admin-hidden sections (index handles this)
+      clone.style&&(clone.style.display='');
+      content[id]=clone.innerHTML;
+    });
+
+    // Also save any custom sections (added via insert dividers) in order
+    const customSections=[];
+    document.querySelectorAll('.custom-section').forEach(sec=>{
+      const clone=sec.cloneNode(true);
+      const adminSelectors=['.btn-hide-section','.item-controls','.drag-handle','.drag-handle-label','.add-item-row','.btn-ic'];
+      clone.querySelectorAll(adminSelectors.join(',')).forEach(n=>n.remove());
+      clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
+      // Record position relative to previous fixed section
+      let prevFixed=sec.previousElementSibling;
+      while(prevFixed&&!prevFixed.id) prevFixed=prevFixed.previousElementSibling;
+      customSections.push({
+        html:clone.outerHTML,
+        afterId:prevFixed?prevFixed.id:'stats-ribbon'
+      });
+    });
+    content['_custom_sections']=customSections;
 
     await sbUpdate('page_content',{content});
 
