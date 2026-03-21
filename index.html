@@ -331,7 +331,7 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
 </section>
 
 <!-- STATS RIBBON -->
-<div class="stats-ribbon">
+<div class="stats-ribbon" id="stats-ribbon">
   <div class="stat"><span class="stat-n">4.7★</span><span class="stat-l">Average Rating</span></div>
   <div class="stat"><span class="stat-n">2,000+</span><span class="stat-l">Happy Customers</span></div>
   <div class="stat"><span class="stat-n">$1.89</span><span class="stat-l">From a Donut</span></div>
@@ -541,7 +541,7 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
 <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
 <!-- FOOTER -->
-<footer>
+<footer id="footer">
   <div class="footer-brand">🍩 Yummy's Donut Palace</div>
   <div class="footer-links">
     <a href="#menu">Menu</a>
@@ -854,6 +854,7 @@ async function loadSiteData(){
         'announcement-bar','specials-section','hero','stats-ribbon',
         'monthly-special','why-us','about','catering',
         'reviews','newsletter','contact','footer'
+        // 'menu' handled separately below to preserve tab structure
       ];
       RESTORE_IDS.forEach(id=>{
         if(c[id]!==undefined){
@@ -861,6 +862,22 @@ async function loadSiteData(){
           if(el) el.innerHTML=c[id];
         }
       });
+
+      // ── Restore menu section header text only (not cards — those come from currentMenu) ──
+      if(c['menu']!==undefined){
+        const menuEl=document.getElementById('menu');
+        if(menuEl){
+          // Only restore the eyebrow/title/lead — not the tab grid which renderMenus handles
+          const tmp=document.createElement('div');
+          tmp.innerHTML=c['menu'];
+          const eyebrow=tmp.querySelector('.section-eyebrow');
+          const title=tmp.querySelector('.section-title');
+          const lead=tmp.querySelector('.section-lead');
+          if(eyebrow){const t=menuEl.querySelector('.section-eyebrow');if(t)t.textContent=eyebrow.textContent;}
+          if(title){const t=menuEl.querySelector('.section-title');if(t)t.textContent=title.textContent;}
+          if(lead){const t=menuEl.querySelector('.section-lead');if(t)t.textContent=lead.textContent;}
+        }
+      }
 
       // ── Restore nav ───────────────────────────────
       if(c['nav']!==undefined){

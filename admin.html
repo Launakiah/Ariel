@@ -900,12 +900,8 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
 <!-- BACK TO TOP -->
 <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
-<!-- PRINT-ONLY HEADER -->
-<h1 class="print-title">🍩 Yummy's Donut Palace</h1>
-<div class="print-header">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777 · Tue–Sun 6:00 AM – 1:00 PM</div>
-
 <!-- FOOTER -->
-<footer>
+<footer id="footer">
   <div class="footer-brand" contenteditable="true">🍩 Yummy's Donut Palace</div>
   <div class="footer-links">
     <a href="#menu">Menu</a>
@@ -914,8 +910,8 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
     <a href="#reviews">Reviews</a>
     <a href="#contact">Find Us</a>
   </div>
-  <div class="footer-addr" contenteditable="true">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777</div>
-  <div class="footer-addr" contenteditable="true">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div>
+  <div class="footer-addr" contenteditable="true" id="footer-addr">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777</div>
+  <div class="footer-addr" contenteditable="true" id="footer-hours">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div>
   <div class="footer-copy">© 2025 Yummy's Donut Palace. All rights reserved.</div>
 </footer>
 
@@ -1236,9 +1232,28 @@ async function initEditor(){
   setupSprinkles();
   loadSubscribers();
 
-  // Mark unsaved on any contenteditable change
+  // Mark unsaved on any contenteditable change + sync footer with contact fields
   document.querySelectorAll('[contenteditable]').forEach(el=>{
-    el.addEventListener('input',markUnsaved);
+    el.addEventListener('input',()=>{
+      markUnsaved();
+      // Auto-sync footer from contact section info cards
+      document.querySelectorAll('.info-card').forEach(card=>{
+        const icon=card.querySelector('.info-icon');
+        const val=card.querySelector('.info-val');
+        if(!icon||!val) return;
+        const text=val.textContent.trim();
+        if(icon.textContent.includes('🕐')){
+          const fh=document.getElementById('footer-hours');
+          if(fh&&fh!==el) fh.textContent=text;
+        }
+        if(icon.textContent.includes('📍')){
+          const fa=document.getElementById('footer-addr');
+          // footer-addr has address + phone combined
+          const phone=document.querySelector('.info-card .info-icon + div .info-val');
+          if(fa) fa.textContent=text+(phone?' · '+phone.textContent.trim():'');
+        }
+      });
+    });
   });
   // Show hint
   setTimeout(()=>{document.getElementById('edit-hint').classList.add('show');},800);
@@ -1821,9 +1836,8 @@ async function publishChanges(){
     // Capture innerHTML of every section — this makes ALL text edits visible on live site
     const SNAPSHOT_IDS=[
       'announcement-bar','specials-section','nav','hero','stats-ribbon',
-      'monthly-special','why-us','about','catering',
+      'monthly-special','menu','why-us','about','catering',
       'reviews','newsletter','contact','footer'
-      // Note: 'menu' is handled by currentMenu structured data above
     ];
     const content={};
     content['_ann_visible']=document.getElementById('announcement-bar').classList.contains('visible');
