@@ -1794,82 +1794,58 @@ function closeEmojiModal(){document.getElementById('emoji-modal').classList.remo
 
 /* ── PUBLISH / SAVE ─────────────────────────────── */
 async function publishChanges(){
-  const btn=document.getElementById('btn-publish')||document.querySelector('.btn-publish');
+  const btn=document.getElementById('btn-publish');
   if(btn){btn.textContent='💾 Saving...';btn.disabled=true;}
 
   try{
-    // 1. Save menu
-    const r1=await sbUpdate('menu',{data:currentMenu});
-    console.log('menu save:',r1?'✅':'❌');
+    // ── 1. MENU (structured data) ─────────────────────
+    await sbUpdate('menu',{data:currentMenu});
 
-    // 2. Save settings — read from actual DOM elements
-    // Hours: find the info-card that contains the clock icon
-    let hours='Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays';
-    document.querySelectorAll('.info-card').forEach(card=>{
-      if(card.querySelector('.info-icon')&&card.querySelector('.info-icon').textContent.includes('🕐')){
-        const val=card.querySelector('.info-val,[contenteditable]');
-        if(val) hours=val.textContent.trim();
-      }
-    });
-    // Also check footer hours
-    const footerHours=document.querySelector('.footer-addr[contenteditable]');
-    let phone='(660) 422-7777';
-    document.querySelectorAll('.info-card').forEach(card=>{
-      if(card.querySelector('.info-icon')&&card.querySelector('.info-icon').textContent.includes('📞')){
-        const val=card.querySelector('.info-val,[contenteditable]');
-        if(val) phone=val.textContent.trim();
-      }
-    });
-    let address='709 S Maguire St, Warrensburg, MO 64093';
-    document.querySelectorAll('.info-card').forEach(card=>{
-      if(card.querySelector('.info-icon')&&card.querySelector('.info-icon').textContent.includes('📍')){
-        const val=card.querySelector('.info-val,[contenteditable]');
-        if(val) address=val.textContent.trim();
-      }
-    });
-    // Hero text
-    const heroTitle={
-      line1:document.querySelector('.hero-title .pop')?document.querySelector('.hero-title .pop').textContent.trim():"Yummy's",
-      line2:document.querySelector('.hero-title .pop2')?document.querySelector('.hero-title .pop2').textContent.trim():'Donut',
-      line3:document.querySelector('.hero-title span:not(.pop):not(.pop2)')?document.querySelector('.hero-title span:not(.pop):not(.pop2)').textContent.trim():'Palace',
-    };
-    const heroTagline=document.querySelector('.hero-tagline')?document.querySelector('.hero-tagline').textContent.trim():'';
-    const heroSub=document.querySelector('.hero-sub')?document.querySelector('.hero-sub').textContent.trim():'';
+    // ── 2. HIDDEN SECTIONS ────────────────────────────
+    await sbUpdate('hidden_sections',{sections:[...hiddenSections]});
 
-    const settings={
-      ann_enabled:document.getElementById('announcement-bar').classList.contains('visible'),
-      ann_text:document.getElementById('announcement-bar').textContent.trim()||'',
-      special_enabled:document.getElementById('specials-section').classList.contains('visible'),
-      special_title:document.getElementById('specials-title')?document.getElementById('specials-title').textContent.trim():'',
-      special_desc:document.getElementById('specials-desc')?document.getElementById('specials-desc').textContent.trim():'',
-      hours,phone,address,
-      hero_title:JSON.stringify(heroTitle),
-      hero_tagline:heroTagline,
-      hero_sub:heroSub,
-    };
-    const r2=await sbUpdate('settings',settings);
-    console.log('settings save:',r2?'✅':'❌');
-
-    // 3. Save monthly special
-    const monthly={
+    // ── 3. MONTHLY SPECIAL ────────────────────────────
+    await sbUpdate('monthly_special',{
       title:document.getElementById('special-month-title')?document.getElementById('special-month-title').textContent:'',
       description:document.getElementById('special-month-desc')?document.getElementById('special-month-desc').textContent:'',
       price:document.getElementById('special-month-price')?document.getElementById('special-month-price').textContent:'',
       emoji:document.getElementById('special-month-emoji')?document.getElementById('special-month-emoji').textContent:'',
       photo:specialPhotoData||'',
-    };
-    await sbUpdate('monthly_special',monthly);
+    });
 
-    // 4. Save hidden sections
-    await sbUpdate('hidden_sections',{sections:[...hiddenSections]});
-
-    // 5. Save mailchimp config
+    // ── 4. MAILCHIMP ──────────────────────────────────
     const mcUrl=(document.getElementById('mc-form-url')||{}).value||'';
     await sbUpdate('mailchimp_config',{form_url:mcUrl});
+
+    // ── 5. FULL PAGE CONTENT SNAPSHOT ─────────────────
+    // Save innerHTML of every editable section so ALL text changes are captured
+    const SECTIONS=[
+      'announcement-bar','specials-section','hero','stats-ribbon',
+      'monthly-special','menu','why-us','about','catering',
+      'reviews','newsletter','contact','footer'
+    ];
+    const content={};
+    SECTIONS.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){
+        // Strip admin-only elements before saving
+        const clone=el.cloneNode(true);
+        clone.querySelectorAll('.btn-hide-section,.item-controls,.drag-handle,.badge-toggle,.badge-editor,.add-item-row,.btn-ic,.btn-restore,.insta-url-input').forEach(n=>n.remove());
+        // Remove contenteditable attributes
+        clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
+        content[id]=clone.innerHTML;
+      }
+    });
+    // Save announcement visibility state
+    content['_ann_visible']=document.getElementById('announcement-bar').classList.contains('visible');
+    content['_specials_visible']=document.getElementById('specials-section').classList.contains('visible');
+
+    await sbUpdate('page_content',{content});
 
     document.getElementById('unsaved-dot').classList.remove('visible');
     showToast('✅ All changes saved! The live site is now updated for everyone.');
   }catch(e){
+    console.error('Save error:',e);
     showToast('❌ Save failed. Check your internet connection and try again.');
   }finally{
     if(btn){btn.textContent='💾 Save & Publish';btn.disabled=false;}

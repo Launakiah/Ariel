@@ -825,33 +825,65 @@ window.addEventListener('scroll',()=>{
 },{passive:true});
 
 // ── LOAD ALL DATA FROM SUPABASE ───────────────────────────
+async function sbGetContent(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/page_content?id=eq.main`,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    const d=await r.json();
+    return d&&d[0]?d[0]:null;
+  }catch(e){return null;}
+}
+
 async function loadSiteData(){
   // Render defaults immediately so page is never blank
   renderMenus(DEFAULT_MENU);
   initReveal();
 
   try{
-    console.log('📡 Fetching data from Supabase...');
-    const [settings,menu,special,hidden]= await Promise.all([
-      sbGet('settings'),
+    const [pageContent,menu,hidden]=await Promise.all([
+      sbGetContent(),
       sbGet('menu'),
-      sbGet('monthly_special'),
       sbGet('hidden_sections'),
     ]);
-    console.log('settings:', settings);
-    console.log('menu:', menu);
-    console.log('special:', special);
-    console.log('hidden:', hidden);
-    applySettings(settings);
-    // Use Supabase menu only if it has actual items, otherwise keep DEFAULT_MENU
+
+    // Restore full section HTML snapshots
+    if(pageContent&&pageContent.content){
+      const c=pageContent.content;
+      ['announcement-bar','specials-section','hero','stats-ribbon',
+       'monthly-special','why-us','about','catering',
+       'reviews','newsletter','contact','footer'].forEach(id=>{
+        if(c[id]!==undefined){
+          const el=document.getElementById(id);
+          if(el) el.innerHTML=c[id];
+        }
+      });
+      // Restore visibility
+      const bar=document.getElementById('announcement-bar');
+      if(bar) bar.classList.toggle('visible',c['_ann_visible']===true);
+      const spec=document.getElementById('specials-section');
+      if(spec) spec.classList.toggle('visible',c['_specials_visible']===true);
+      // Re-wire nav bar (gets wiped when hero innerHTML is restored — nav is separate)
+      document.querySelectorAll('.phone-display').forEach(el=>{
+        if(el.tagName==='A') el.href='tel:+1'+el.textContent.replace(/\D/g,'');
+      });
+    }
+
+    // Restore menu (structured data)
     const menuData=menu&&menu.data&&menu.data.donuts&&menu.data.donuts.length>0
       ? menu.data : DEFAULT_MENU;
-    console.log('Using menu data from:', menuData===DEFAULT_MENU?'DEFAULT':'Supabase');
     renderMenus(menuData);
-    applyMonthlySpecial(special);
-    applyHiddenSections(hidden);
+
+    // Apply hidden sections
+    if(hidden&&hidden.sections){
+      hidden.sections.forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.style.display='none';
+      });
+    }
+
   }catch(e){
-    console.error('❌ Supabase load error:', e);
+    console.warn('Supabase unavailable, using defaults.',e);
   }
 }
 
