@@ -232,15 +232,159 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
 @keyframes bounce2{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);}}
 @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:0;}10%{opacity:.7;}90%{opacity:.7;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
+/* ════════════════════════════════════════════════
+   TABLET (max 768px)
+   ════════════════════════════════════════════════ */
 @media(max-width:768px){
+  /* Nav */
   .nav-links{display:none;}
-  .about-grid,.contact-grid,.catering-inner,.special-inner{grid-template-columns:1fr;}
+  nav{padding:.75rem 1.25rem;}
+  .nav-name{font-size:1.15rem;}
+  .nav-order{font-size:.78rem;padding:.45rem 1rem;}
+
+  /* Hero */
+  #hero{padding:6rem 1.5rem 3.5rem;}
+  .hero-title{font-size:clamp(3rem,11vw,5rem);}
+  .hero-tagline{font-size:1rem;}
+  .hero-sub{font-size:.95rem;}
+  .hero-call{font-size:.95rem;padding:.8rem 1.75rem;}
+  .btn-pink,.btn-ghost{padding:.85rem 1.75rem;font-size:.95rem;}
+
+  /* Sections */
+  section{padding:4rem 1.5rem;}
+  .container{padding:0;}
+  .section-title{font-size:clamp(1.7rem,5vw,2.5rem);}
+  .section-lead{font-size:.95rem;}
+
+  /* Stats */
+  .stats-ribbon{gap:1.5rem;padding:1.25rem 1rem;}
+  .stat-n{font-size:2rem;}
+  .stat-l{font-size:.72rem;}
+
+  /* Grids → single column */
+  .about-grid,
+  .contact-grid,
+  .catering-inner,
+  .special-inner{grid-template-columns:1fr;gap:2rem;}
   .about-visual{aspect-ratio:16/9;}
-  .stats-ribbon{gap:2rem;}
+
+  /* Menu */
+  .menu-grid{grid-template-columns:1fr 1fr;gap:1rem;}
+  .menu-card{padding:1.1rem;}
+  .menu-emoji{font-size:2rem;}
+  .menu-name{font-size:.95rem;}
+  .menu-desc{font-size:.82rem;}
+  .menu-price{font-size:1.05rem;}
+
+  /* Why grid → 2 columns */
+  .why-grid{grid-template-columns:1fr 1fr;gap:1rem;}
+
+  /* Reviews */
+  .reviews-grid{grid-template-columns:1fr;}
+
+  /* Newsletter */
+  .newsletter-form{flex-direction:column;align-items:stretch;}
+  .newsletter-input{min-width:0;}
+
+  /* Contact map */
+  .map-wrap{aspect-ratio:16/9;}
+
+  /* Footer */
+  .footer-links{gap:1rem;}
+
+  /* Monthly special visual hidden on tablet */
+  .special-visual{aspect-ratio:16/9;font-size:4rem;}
+
+  /* Catering */
+  .catering-visual{display:none;}
 }
+
+/* ════════════════════════════════════════════════
+   MOBILE (max 480px)
+   ════════════════════════════════════════════════ */
 /* !! IMPORTANT: nav-call must ONLY be hidden at 480px, NOT at 768px !! */
 @media(max-width:480px){
+  /* Nav */
   .nav-call{display:none;}
+  nav{padding:.65rem 1rem;}
+  .nav-donut{font-size:1.4rem;}
+  .nav-name{font-size:1rem;}
+  .nav-order{font-size:.75rem;padding:.4rem .85rem;}
+
+  /* Hero — more breathing room */
+  #hero{padding:5.5rem 1rem 3rem;}
+  .hero-badge{font-size:.7rem;padding:.3rem .9rem;}
+  .hero-title{font-size:clamp(2.6rem,13vw,4rem);line-height:1.05;}
+  .hero-tagline{font-size:.9rem;}
+  .hero-sub{font-size:.88rem;padding:0 .5rem;}
+  .hero-call{font-size:.88rem;padding:.75rem 1.5rem;margin-bottom:1rem;width:100%;justify-content:center;}
+  .hero-ctas{gap:.75rem;}
+  .btn-pink,.btn-ghost{padding:.8rem 1.4rem;font-size:.9rem;width:100%;text-align:center;box-sizing:border-box;}
+
+  /* Sections */
+  section{padding:3rem 1rem;}
+  .section-title{font-size:clamp(1.5rem,7vw,2rem);}
+  .section-lead{font-size:.9rem;margin-bottom:1.75rem;}
+  .section-eyebrow{font-size:.72rem;}
+
+  /* Stats — 2x2 grid */
+  .stats-ribbon{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1rem;
+    padding:1.25rem 1rem;
+  }
+  .stat{background:rgba(255,255,255,.08);border-radius:12px;padding:.75rem .5rem;}
+  .stat-n{font-size:1.7rem;}
+  .stat-l{font-size:.65rem;}
+
+  /* Menu → single column on small phone */
+  .menu-grid{grid-template-columns:1fr;}
+  .menu-tabs{gap:.4rem;}
+  .tab{padding:.4rem .9rem;font-size:.82rem;}
+
+  /* Why grid → single column */
+  .why-grid{grid-template-columns:1fr;}
+  .why-card{padding:1.25rem 1rem;}
+
+  /* Monthly special */
+  .special-inner{padding:0 .5rem;}
+  #monthly-special{padding:3rem 1rem;}
+  .special-visual{display:none;} /* hide photo on small mobile, text is enough */
+
+  /* About pills */
+  .about-pill{padding:.85rem 1rem;}
+  .pill-icon{font-size:1.3rem;}
+
+  /* Catering */
+  #catering{padding:3rem 1rem;}
+  .catering-perks{gap:.5rem;}
+  .btn-catering{width:100%;justify-content:center;text-align:center;}
+
+  /* Reviews */
+  .review-card{padding:1.1rem;}
+  .review-text{font-size:.88rem;}
+  .rating-big{font-size:3.5rem;}
+
+  /* Newsletter */
+  #newsletter{padding:3rem 1rem;}
+  .btn-newsletter{width:100%;}
+
+  /* Contact */
+  #contact{padding:3rem 1rem;}
+  .info-card{padding:1rem;}
+  .info-icon{font-size:1.4rem;}
+  .call-cta{font-size:.95rem;padding:.9rem 1rem;}
+  .map-wrap{aspect-ratio:4/3;}
+
+  /* Footer */
+  footer{padding:2rem 1rem;}
+  .footer-brand{font-size:1.4rem;}
+  .footer-links{gap:.75rem;font-size:.8rem;}
+  .footer-addr{font-size:.8rem;}
+
+  /* Back to top */
+  #back-to-top{bottom:1.25rem;right:1.25rem;width:42px;height:42px;font-size:1.1rem;}
 }
 
 /* SCROLL-IN ANIMATIONS */

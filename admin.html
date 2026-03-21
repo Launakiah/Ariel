@@ -528,7 +528,7 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
   </ul>
   <div style="display:flex;gap:.6rem;align-items:center;">
     <a href="tel:+16604227777" class="nav-call">📞 Call Us</a>
-    <a href="#" class="nav-order">Order on DoorDash</a>
+    <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="nav-order">Order on DoorDash</a>
   </div>
 </nav>
 
@@ -1372,6 +1372,27 @@ function addCateringStat(){
   markUnsaved();
 }
 
+/* ── SOCIAL LINK HELPERS ─────────────────────────── */
+function updateFbBtn(span){
+  markUnsaved();
+  let url=span.textContent.trim();
+  if(!url.startsWith('http')) url='https://'+url;
+  const btn=span.closest('section')||span.closest('div[data-custom-section]');
+  if(btn){
+    const a=btn.querySelector('.fb-link-btn');
+    if(a) a.href=url;
+  }
+}
+function updateIgBtn(span){
+  markUnsaved();
+  let handle=span.textContent.trim().replace('@','');
+  const btn=span.closest('section')||span.closest('[data-custom-section]');
+  if(btn){
+    const a=btn.querySelector('.ig-link-btn');
+    if(a) a.href='https://instagram.com/'+handle;
+  }
+}
+
 /* ── LOAD MONTHLY SPECIAL ────────────────────────── */
 let specialPhotoData=''; // holds base64 of uploaded photo
 
@@ -1701,13 +1722,13 @@ function addSection(type){
         <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:0.75rem;">
           <span style="font-size:1.3rem;">🔗</span>
           <span style="color:rgba(255,255,255,0.7);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Facebook Page URL:</span>
-          <span style="color:#fff;font-weight:800;font-size:0.95rem;" contenteditable="true">facebook.com/YummysDonutPalace</span>
+          <span style="color:#fff;font-weight:800;font-size:0.95rem;" contenteditable="true" oninput="updateFbBtn(this)">facebook.com/YummysDonutPalace</span>
         </div>
         <br/>
-        <a style="display:inline-flex;align-items:center;gap:0.6rem;background:#fff;color:#1877F2;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:opacity 0.2s;" href="#" onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'">
+        <a style="display:inline-flex;align-items:center;gap:0.6rem;background:#fff;color:#1877F2;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:opacity 0.2s;" href="https://facebook.com/YummysDonutPalace" target="_blank" class="fb-link-btn" onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'">
           👍 Like Our Page
         </a>
-        <p style="margin-top:1.5rem;color:rgba(255,255,255,0.6);font-size:0.8rem;">ℹ️ Update the Facebook URL above, then the button will link to your real page on the live site.</p>
+        <p style="margin-top:1.5rem;color:rgba(255,255,255,0.6);font-size:0.8rem;">ℹ️ Update the Facebook URL above — the button updates automatically.</p>
       </div>`;
 
   } else if(type==='instagram'){
@@ -1721,13 +1742,13 @@ function addSection(type){
         <div style="background:var(--cream2);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:0.75rem;border:1.5px solid rgba(249,168,201,0.4);">
           <span style="font-size:1.3rem;">🔗</span>
           <span style="color:var(--text-light);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Instagram handle:</span>
-          <span style="color:var(--brown);font-weight:800;font-size:0.95rem;" contenteditable="true">@yummysdonutpalace</span>
+          <span style="color:var(--brown);font-weight:800;font-size:0.95rem;" contenteditable="true" oninput="updateIgBtn(this)">@yummysdonutpalace</span>
         </div>
         <br/>
-        <a style="display:inline-flex;align-items:center;gap:0.6rem;background:linear-gradient(135deg,#F09433,#E6683C,#DC2743,#CC2366,#BC1888);color:#fff;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;" href="#">
+        <a style="display:inline-flex;align-items:center;gap:0.6rem;background:linear-gradient(135deg,#F09433,#E6683C,#DC2743,#CC2366,#BC1888);color:#fff;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;" href="https://instagram.com/yummysdonutpalace" target="_blank" class="ig-link-btn">
           📸 Follow on Instagram
         </a>
-        <p style="margin-top:1.5rem;color:var(--text-light);font-size:0.8rem;">ℹ️ Update the Instagram handle above — the button will link to your real profile on the live site.</p>
+        <p style="margin-top:1.5rem;color:var(--text-light);font-size:0.8rem;">ℹ️ Update the Instagram handle above — the button updates automatically.</p>
 
         <div style="margin-top:2rem;border-top:1.5px dashed rgba(249,168,201,0.4);padding-top:1.5rem;text-align:left;">
           <div style="font-weight:800;font-size:0.8rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">📌 Paste up to 6 Instagram post URLs to show real posts:</div>
