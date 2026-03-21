@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Yummy's Donut Palace</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --pink:#F9A8C9;--pink-deep:#C2185B;--yellow:#FFD966;--yellow-dark:#F4B400;
+  --brown:#4A2C0A;--brown-mid:#7B4C1E;--cream:#FFF8F0;--cream2:#FEF0E3;--white:#FFFFFF;
+  --text:#2D1B09;--text-mid:#6B3F1A;--text-light:#A06030;
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream2);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+
+/* ── LOGIN ── */
+#login-screen{width:min(420px,100%);background:var(--white);border-radius:24px;padding:2.5rem;box-shadow:0 8px 40px rgba(45,27,9,0.12);text-align:center;}
+#login-screen .donut{font-size:3.5rem;margin-bottom:0.5rem;display:block;animation:spin 8s linear infinite;}
+#login-screen h1{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--pink-deep);margin-bottom:0.25rem;}
+#login-screen p{font-size:0.88rem;color:var(--text-light);margin-bottom:1.75rem;}
+.field{text-align:left;margin-bottom:1rem;}
+.field label{display:block;font-weight:800;font-size:0.78rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;}
+.field input{width:100%;padding:0.75rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.5);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);outline:none;transition:border-color 0.2s;}
+.field input:focus{border-color:var(--pink-deep);}
+.btn-login{width:100%;background:var(--pink-deep);color:#fff;border:none;padding:0.9rem;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:background 0.2s;margin-top:0.5rem;}
+.btn-login:hover{background:var(--brown-mid);}
+.login-error{color:#c0392b;font-size:0.85rem;font-weight:700;margin-top:0.75rem;display:none;}
+
+/* ── ADMIN PANEL ── */
+#admin-screen{display:none;width:min(620px,100%);}
+.admin-header{text-align:center;margin-bottom:2rem;}
+.admin-header .donut{font-size:2.5rem;display:block;margin-bottom:0.25rem;animation:spin 8s linear infinite;}
+.admin-header h1{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--pink-deep);}
+.admin-header p{font-size:0.9rem;color:var(--text-light);margin-top:0.25rem;}
+.card{background:var(--white);border-radius:20px;padding:1.75rem 2rem;box-shadow:0 4px 20px rgba(45,27,9,0.08);margin-bottom:1.25rem;}
+.card-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--brown);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
+.admin-group{margin-bottom:1.1rem;}
+.admin-group label{display:block;font-weight:800;font-size:0.78rem;color:var(--text-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;}
+.admin-group input,.admin-group textarea{width:100%;padding:0.7rem 1rem;border-radius:12px;border:2px solid rgba(249,168,201,0.4);background:var(--cream);font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);outline:none;transition:border-color 0.2s;}
+.admin-group input:focus,.admin-group textarea:focus{border-color:var(--pink-deep);}
+.admin-group textarea{resize:vertical;min-height:75px;}
+.toggle-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.9rem;padding:0.75rem 1rem;background:var(--cream2);border-radius:12px;}
+.toggle-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--pink-deep);cursor:pointer;flex-shrink:0;}
+.toggle-row span{font-weight:700;font-size:0.92rem;color:var(--brown);}
+.save-bar{position:sticky;bottom:1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;padding:1rem 0;}
+.btn-save{background:var(--pink-deep);color:#fff;border:none;padding:0.9rem 2.5rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:background 0.2s,transform 0.15s;box-shadow:0 4px 20px rgba(194,24,91,0.3);}
+.btn-save:hover{background:var(--brown-mid);transform:translateY(-2px);}
+.btn-logout{background:transparent;color:var(--text-mid);border:2px solid rgba(249,168,201,0.6);padding:0.9rem 1.8rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{border-color:var(--pink-deep);color:var(--pink-deep);}
+.success-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--brown);color:#fff;padding:0.75rem 2rem;border-radius:30px;font-weight:800;font-size:0.95rem;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+.success-toast.show{opacity:1;}
+.divider{border:none;border-top:1.5px dashed var(--pink);margin:1rem 0;}
+.hint{font-size:0.8rem;color:var(--text-light);margin-top:0.35rem;}
+.view-site{display:inline-block;margin-top:0.5rem;font-size:0.85rem;color:var(--pink-deep);font-weight:700;text-decoration:none;}
+.view-site:hover{text-decoration:underline;}
+
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+#admin-screen{animation:fadeIn 0.4s ease both;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <span class="donut">🍩</span>
+  <h1>Admin Login</h1>
+  <p>Yummy's Donut Palace — Website Manager</p>
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="pw-input" placeholder="Enter your password..." onkeydown="if(event.key==='Enter')tryLogin()"/>
+  </div>
+  <button class="btn-login" onclick="tryLogin()">Login →</button>
+  <div class="login-error" id="login-err">❌ Incorrect password. Please try again.</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-screen">
+  <div class="admin-header">
+    <span class="donut">🍩</span>
+    <h1>Website Manager</h1>
+    <p>Yummy's Donut Palace · Edit your site content below</p>
+    <a href="index.html" target="_blank" class="view-site">↗ View live website</a>
+  </div>
+
+  <!-- ANNOUNCEMENT BANNER -->
+  <div class="card">
+    <div class="card-title">📢 Announcement Banner</div>
+    <div class="toggle-row">
+      <input type="checkbox" id="ann-enabled"/>
+      <span>Show banner at the top of the website</span>
+    </div>
+    <div class="admin-group">
+      <label>Banner Message</label>
+      <input type="text" id="ann-text" placeholder="e.g. 🎉 Buy 2 dozen, get 1 FREE — today only!"/>
+      <p class="hint">This appears as a yellow bar at the very top of your site. Great for promotions and holiday notices.</p>
+    </div>
+  </div>
+
+  <!-- DAILY SPECIAL -->
+  <div class="card">
+    <div class="card-title">⭐ Daily Special</div>
+    <div class="toggle-row">
+      <input type="checkbox" id="special-enabled"/>
+      <span>Show today's special on the website</span>
+    </div>
+    <div class="admin-group">
+      <label>Special Item Name</label>
+      <input type="text" id="special-title" placeholder="e.g. 🍩 Maple Bacon Long John"/>
+    </div>
+    <div class="admin-group">
+      <label>Description</label>
+      <textarea id="special-desc" placeholder="e.g. Only $2.99 today — crispy bacon meets sweet maple glaze. Limited quantity!"></textarea>
+    </div>
+  </div>
+
+  <!-- HOURS -->
+  <div class="card">
+    <div class="card-title">🕐 Opening Hours</div>
+    <div class="admin-group">
+      <label>Hours Text</label>
+      <input type="text" id="edit-hours" placeholder="e.g. Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays"/>
+      <p class="hint">Update this for holidays, special closures, or seasonal changes.</p>
+    </div>
+  </div>
+
+  <!-- CONTACT INFO -->
+  <div class="card">
+    <div class="card-title">📞 Contact Information</div>
+    <div class="admin-group">
+      <label>Phone Number</label>
+      <input type="text" id="edit-phone" placeholder="e.g. (660) 422-7777"/>
+    </div>
+    <div class="admin-group">
+      <label>Address</label>
+      <input type="text" id="edit-address" placeholder="e.g. 709 S Maguire St, Warrensburg, MO 64093"/>
+    </div>
+  </div>
+
+  <div class="save-bar">
+    <button class="btn-save" onclick="saveAll()">💾 Save All Changes</button>
+    <button class="btn-logout" onclick="logout()">Log Out</button>
+  </div>
+</div>
+
+<div class="success-toast" id="toast">✅ Changes saved!</div>
+
+<script>
+const ADMIN_PASSWORD = 'yummys2025';
+const STORAGE_KEY    = 'yummys_admin_data';
+const DEFAULTS = {
+  annEnabled:false, annText:'',
+  specialEnabled:false, specialTitle:'', specialDesc:'',
+  hours:'Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays',
+  phone:'(660) 422-7777',
+  address:'709 S Maguire St, Warrensburg, MO 64093',
+};
+
+function loadData(){
+  try{return Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem(STORAGE_KEY)));}
+  catch(e){return Object.assign({},DEFAULTS);}
+}
+
+function tryLogin(){
+  const pw = document.getElementById('pw-input').value;
+  if(pw === ADMIN_PASSWORD){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    populateForm(loadData());
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function populateForm(d){
+  document.getElementById('ann-enabled').checked     = d.annEnabled;
+  document.getElementById('ann-text').value           = d.annText;
+  document.getElementById('special-enabled').checked  = d.specialEnabled;
+  document.getElementById('special-title').value      = d.specialTitle;
+  document.getElementById('special-desc').value       = d.specialDesc;
+  document.getElementById('edit-hours').value         = d.hours;
+  document.getElementById('edit-phone').value         = d.phone;
+  document.getElementById('edit-address').value       = d.address;
+}
+
+function saveAll(){
+  const d = {
+    annEnabled:     document.getElementById('ann-enabled').checked,
+    annText:        document.getElementById('ann-text').value.trim(),
+    specialEnabled: document.getElementById('special-enabled').checked,
+    specialTitle:   document.getElementById('special-title').value.trim(),
+    specialDesc:    document.getElementById('special-desc').value.trim(),
+    hours:          document.getElementById('edit-hours').value.trim() || DEFAULTS.hours,
+    phone:          document.getElementById('edit-phone').value.trim() || DEFAULTS.phone,
+    address:        document.getElementById('edit-address').value.trim() || DEFAULTS.address,
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 2500);
+}
+
+function logout(){
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('login-err').style.display = 'none';
+}
+
+document.getElementById('pw-input').focus();
+</script>
+</body>
+</html>
