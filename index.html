@@ -765,7 +765,7 @@ window.addEventListener('scroll',()=>{
 
 // ── LOAD ALL DATA FROM SUPABASE ───────────────────────────
 async function loadSiteData(){
-  // Render defaults immediately so page isn't blank while loading
+  // Render defaults immediately so page is never blank
   renderMenus(DEFAULT_MENU);
   initReveal();
 
@@ -777,11 +777,14 @@ async function loadSiteData(){
       sbGet('hidden_sections'),
     ]);
     applySettings(settings);
-    renderMenus(menu&&menu.data?menu.data:DEFAULT_MENU);
+    // Use Supabase menu only if it has actual items, otherwise keep DEFAULT_MENU
+    const menuData=menu&&menu.data&&menu.data.donuts&&menu.data.donuts.length>0
+      ? menu.data : DEFAULT_MENU;
+    renderMenus(menuData);
     applyMonthlySpecial(special);
     applyHiddenSections(hidden);
   }catch(e){
-    // Supabase unavailable — site still works with defaults
+    // Supabase unavailable — defaults already rendered above
     console.warn('Could not load from Supabase, using defaults.');
   }
 }

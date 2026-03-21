@@ -503,7 +503,7 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
     <button class="btn-toolbar btn-undo" id="btn-undo" onclick="undoLastMove()" disabled>↩ Undo</button>
     <button class="btn-toolbar" id="btn-hidden-sections" onclick="toggleHiddenDrawer()" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1.5px solid rgba(255,255,255,0.15);">👁 Hidden Sections <span id="hidden-count" style="display:none;background:var(--yellow-dark);color:var(--brown);border-radius:10px;padding:0 6px;font-size:0.75rem;margin-left:2px;">0</span></button>
     <button class="btn-toolbar btn-preview" onclick="window.open('index.html','_blank')">↗ View Live Site</button>
-    <button class="btn-toolbar btn-publish" onclick="publishChanges()">💾 Save & Publish</button>
+    <button id="btn-publish" class="btn-toolbar btn-publish" onclick="publishChanges()">💾 Save & Publish</button>
     <button class="btn-toolbar btn-changepw" onclick="openChangePw()" title="Change password">🔒</button>
     <button class="btn-logout-t" onclick="logout()">Log out</button>
   </div>
@@ -1177,9 +1177,13 @@ async function initEditor(){
       sbGet('mailchimp_config'),
     ]);
 
-    // Load menu
-    if(menuData&&menuData.data&&menuData.data.donuts){
+    // Load menu — seed Supabase with default if empty
+    if(menuData&&menuData.data&&menuData.data.donuts&&menuData.data.donuts.length>0){
       currentMenu=menuData.data;
+    } else {
+      // Supabase menu is empty — seed it with the default menu now
+      currentMenu=JSON.parse(JSON.stringify(DEFAULT_MENU));
+      sbUpdate('menu',{data:currentMenu}); // fire-and-forget seed
     }
 
     // Apply settings to DOM
