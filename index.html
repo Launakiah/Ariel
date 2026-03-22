@@ -16,64 +16,6 @@
 <meta property="og:type" content="restaurant"/>
 <meta property="og:url" content="https://yummys-donut-palace-warrensburg.netlify.app"/>
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Yummy's Donut Palace | Fresh Donuts in Warrensburg, MO"/>
-<meta name="twitter:description" content="Fresh handcrafted donuts every morning. Open Tue-Sun 6AM-1PM. Call (660) 422-7777!"/>
-
-<!-- Canonical URL -->
-<link rel="canonical" href="https://yummys-donut-palace-warrensburg.netlify.app"/>
-
-<!-- JSON-LD Structured Data for Local Business -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Bakery",
-  "name": "Yummy's Donut Palace",
-  "image": "https://yummys-donut-palace-warrensburg.netlify.app/og-image.jpg",
-  "@id": "https://yummys-donut-palace-warrensburg.netlify.app",
-  "url": "https://yummys-donut-palace-warrensburg.netlify.app",
-  "telephone": "+1-660-422-7777",
-  "priceRange": "$",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "709 S Maguire St",
-    "addressLocality": "Warrensburg",
-    "addressRegion": "MO",
-    "postalCode": "64093",
-    "addressCountry": "US"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 38.76295,
-    "longitude": -93.73823
-  },
-  "openingHoursSpecification": [
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      "opens": "06:00",
-      "closes": "13:00"
-    }
-  ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.7",
-    "reviewCount": "2000"
-  },
-  "servesCuisine": ["Donuts", "Breakfast", "Boba Tea", "Coffee"],
-  "potentialAction": [
-    {
-      "@type": "OrderAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/"
-      }
-    }
-  ]
-}
-</script>
-
 <!-- Donut emoji favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍩</text></svg>"/>
 
@@ -527,34 +469,9 @@ img,iframe{max-width:100%;height:auto;}
 }
 #back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:all;}
 #back-to-top:hover{background:var(--brown-mid);}
-
-/* MOBILE STICKY CTA BAR */
-.mobile-sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;padding:0.75rem 1rem;box-shadow:0 -4px 20px rgba(0,0,0,0.15);gap:0.75rem;}
-.mobile-sticky-cta .btn-pink,.mobile-sticky-cta .btn-ghost{flex:1;padding:0.85rem 1rem;font-size:0.9rem;justify-content:center;text-align:center;display:flex;align-items:center;}
-@media(max-width:480px){
-  .mobile-sticky-cta{display:flex;}
-  footer{padding-bottom:5rem;}
-}
-
-/* Skip to content link for accessibility */
-.skip-link{position:absolute;top:-40px;left:0;background:var(--pink-deep);color:#fff;padding:8px 16px;z-index:10000;transition:top 0.3s;font-weight:700;}
-.skip-link:focus{top:0;}
-
-/* Mobile menu */
-.mobile-menu-toggle{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0.5rem;color:var(--brown);}
-#mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(255,248,240,0.98);z-index:199;padding:1rem;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
-#mobile-menu a{display:block;padding:1rem;font-weight:700;color:var(--brown);text-decoration:none;border-bottom:1px solid rgba(249,168,201,0.3);}
-#mobile-menu a:last-child{border-bottom:none;}
-@media(max-width:768px){
-  .mobile-menu-toggle{display:block;}
-  .nav-links{display:none;}
-}
 </style>
 </head>
 <body>
-
-<!-- Skip to content for accessibility -->
-<a href="#hero" class="skip-link">Skip to content</a>
 
 <!-- ANNOUNCEMENT BANNER -->
 <div id="announcement-bar"></div>
@@ -584,21 +501,11 @@ img,iframe{max-width:100%;height:auto;}
     <li><a href="#reviews">Reviews</a></li>
     <li><a href="#contact">Find Us</a></li>
   </ul>
-  <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
   <div style="display:flex;gap:.6rem;align-items:center;">
     <a href="tel:+16604227777" class="nav-call">📞 Call Us</a>
     <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="nav-order">Order on DoorDash</a>
   </div>
 </nav>
-
-<!-- Mobile Menu -->
-<div id="mobile-menu">
-  <a href="#menu" onclick="toggleMobileMenu()">Menu</a>
-  <a href="#about" onclick="toggleMobileMenu()">About</a>
-  <a href="#catering" onclick="toggleMobileMenu()">Catering</a>
-  <a href="#reviews" onclick="toggleMobileMenu()">Reviews</a>
-  <a href="#contact" onclick="toggleMobileMenu()">Find Us</a>
-</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1623,6 +1530,164 @@ async function loadSiteData(){
 
 loadSiteData();
 
+</script>
+</body>
+</html>
+.asc'),
+      sbFetch('menu','?id=eq.main'),
+      sbFetch('page_content','?id=eq.main'),
+      sbFetch('design','?id=eq.main&select=primary_color,secondary_color,background_color,heading_font,body_font,button_style,mobile_font_scale,mobile_spacing_scale'),
+    ]);
+
+    const cm=buildContentMap(contentRows);
+    const lm=buildLinksMap(linksRows);
+    const sm=buildSectionsMap(sectionsRows);
+    const menu=menuRow&&menuRow[0]?menuRow[0]:null;
+
+    // Debug: log loaded content
+    console.log('Loaded content keys:', Object.keys(cm).length);
+    console.log('Loaded links:', Object.keys(lm));
+    console.log('Content sample:', Object.entries(cm).slice(0,5));
+
+    // Apply design first so colors/fonts are correct when content renders
+    if(designRow&&designRow[0]) applyDesign(designRow[0]);
+
+    renderAll(cm,lm,sm,menu);
+    console.log('Content rendered successfully');
+
+    // Apply section settings from settings panel (overrides content table)
+    // Skip when inside admin preview iframe — section reordering would affect admin DOM
+    if(window.self===window.top){
+      applySectionSettingsFromDB(sectionsRows);
+      // Restore section order from DB
+      applySectionOrder(sectionsRows);
+    }
+
+    // Restore custom sections from page_content if any
+    if(customRow&&customRow[0]&&customRow[0].content&&customRow[0].content._custom_sections){
+      customRow[0].content._custom_sections.forEach(entry=>{
+        const tmp=document.createElement('div');
+        tmp.innerHTML=entry.html;
+        const sec=tmp.firstElementChild;
+        if(!sec)return;
+        const anchor=document.getElementById(entry.afterId)||document.querySelector('footer');
+        if(anchor) anchor.parentNode.insertBefore(sec,anchor.nextSibling);
+      });
+    }
+
+  }catch(e){
+    console.warn('Supabase load failed, using defaults.',e);
+  }
+}
+
+// ── ANALYTICS TRACKING ───────────────────────────────────
+(function(){
+  if(window.self!==window.top) return;
+
+  const SB_A_URL='https://orywcjwoklirjipjmuhh.supabase.co';
+  const SB_A_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yeXdjandva2xpcmppcGptdWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwODIxMzQsImV4cCI6MjA4OTY1ODEzNH0.LWWkKX-ZhOCUxoqZuOwKbKBWC5Iln_qZSQ1IIH7r64A';
+
+  // ── Device detection ────────────────────────────────
+  function getDevice(){
+    const w=window.innerWidth;
+    if(w<=480) return 'mobile';
+    if(w<=768) return 'tablet';
+    return 'desktop';
+  }
+
+  // ── Returning visitor detection ─────────────────────
+  const VISITOR_KEY='ydp_visitor';
+  const isReturning=!!localStorage.getItem(VISITOR_KEY);
+  localStorage.setItem(VISITOR_KEY,'1');
+
+  // ── Session management ──────────────────────────────
+  let sessionId=sessionStorage.getItem('ydp_session');
+  const isNewSession=!sessionId;
+  if(isNewSession){
+    sessionId='s-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+    sessionStorage.setItem('ydp_session',sessionId);
+    fetch(`${SB_A_URL}/rest/v1/analytics_sessions`,{
+      method:'POST',
+      headers:{'apikey':SB_A_KEY,'Content-Type':'application/json','Prefer':'resolution=ignore-duplicates'},
+      body:JSON.stringify({
+        id:sessionId,
+        page_id:'main',
+        device_type:getDevice(),
+        is_returning:isReturning,
+      })
+    }).catch(()=>{});
+  }
+
+  // ── Track event helper ──────────────────────────────
+  function track(type,label){
+    fetch(`${SB_A_URL}/rest/v1/analytics_events`,{
+      method:'POST',
+      headers:{'apikey':SB_A_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        event_type:type,
+        event_label:label,
+        page_id:'main',
+        session_id:sessionId,
+        device_type:getDevice(),
+        hour_of_day:new Date().getHours(),
+      })
+    }).catch(()=>{});
+  }
+
+  // ── Track button clicks ─────────────────────────────
+  const TRACKED_SELECTORS=[
+    {sel:'.nav-call',      label:'Call Us (Nav)'},
+    {sel:'.hero-call',     label:'Call Us (Hero)'},
+    {sel:'.call-cta',      label:'Call Us (Contact)'},
+    {sel:'.nav-order',     label:'Order DoorDash (Nav)'},
+    {sel:'.call-doordash', label:'Order DoorDash (Contact)'},
+    {sel:'.google-badge',  label:'Google Reviews'},
+    {sel:'.btn-newsletter',label:'Newsletter Signup'},
+    {sel:'a.ig-link-btn',  label:'Instagram'},
+    {sel:'a.fb-link-btn',  label:'Facebook'},
+  ];
+
+  function attachClickTrackers(){
+    TRACKED_SELECTORS.forEach(({sel,label})=>{
+      document.querySelectorAll(sel).forEach(el=>{
+        if(el.dataset.tracked) return;
+        el.dataset.tracked='1';
+        el.addEventListener('click',()=>track('click',label),{passive:true});
+      });
+    });
+  }
+
+  // ── Track section views ─────────────────────────────
+  const TRACKED_SECTIONS=[
+    'hero','menu','why-us','about','catering',
+    'reviews','newsletter','contact','monthly-special'
+  ];
+  const viewedSections=new Set();
+
+  function attachSectionTrackers(){
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting&&!viewedSections.has(entry.target.id)){
+          viewedSections.add(entry.target.id);
+          track('section_view',entry.target.id);
+        }
+      });
+    },{threshold:0.4});
+    TRACKED_SECTIONS.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) observer.observe(el);
+    });
+  }
+
+  window.addEventListener('load',()=>{
+    attachClickTrackers();
+    attachSectionTrackers();
+    setTimeout(attachClickTrackers,2000);
+  });
+})();
+
+loadSiteData();
+
 // Mobile menu toggle
 function toggleMobileMenu(){
   const menu=document.getElementById('mobile-menu');
@@ -1630,9 +1695,11 @@ function toggleMobileMenu(){
   if(menu.style.display==='block'){
     menu.style.display='none';
     btn.textContent='☰';
+    btn.setAttribute('aria-expanded','false');
   }else{
     menu.style.display='block';
     btn.textContent='✕';
+    btn.setAttribute('aria-expanded','true');
   }
 }
 
@@ -1644,9 +1711,9 @@ window.addEventListener('scroll',()=>{
 </script>
 
 <!-- Mobile Sticky CTA -->
-<div class="mobile-sticky-cta">
-  <a href="tel:+16604227777" class="btn-ghost">📞 Call</a>
-  <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink">🛵 Order</a>
+<div class="mobile-sticky-cta" role="region" aria-label="Quick actions">
+  <a href="tel:+16604227777" class="btn-ghost" aria-label="Call to order">📞 Call</a>
+  <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink" aria-label="Order on DoorDash" rel="noopener noreferrer">🛵 Order</a>
 </div>
 
 </body>

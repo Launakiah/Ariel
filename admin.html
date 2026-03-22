@@ -1281,10 +1281,10 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
     <p class="section-lead" contenteditable="true">We're located right in the heart of Warrensburg. Stop by for dine-in, hit the drive-through, or order delivery via DoorDash.</p>
     <div class="contact-grid">
       <div class="info-cards">
-        <div class="info-card"><span class="info-icon">📍</span><div><div class="info-label">Address</div><div class="info-val" contenteditable="true">709 S Maguire St, Warrensburg, MO 64093</div></div></div>
-        <div class="info-card"><span class="info-icon">📞</span><div><div class="info-label">Phone</div><div class="info-val" contenteditable="true">(660) 422-7777</div></div></div>
-        <div class="info-card"><span class="info-icon">🕐</span><div><div class="info-label">Hours</div><div class="info-val" contenteditable="true">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div></div></div>
-        <div class="info-card"><span class="info-icon">🚗</span><div><div class="info-label">Options</div><div class="info-val" contenteditable="true">Dine-In · Drive-Through · DoorDash Delivery · Free Wi-Fi</div></div></div>
+        <div class="info-card"><span class="info-icon">📍</span><div><div class="info-label">Address</div><div class="info-val address-display" contenteditable="true">709 S Maguire St, Warrensburg, MO 64093</div></div></div>
+        <div class="info-card"><span class="info-icon">📞</span><div><div class="info-label">Phone</div><div class="info-val phone-display" contenteditable="true">(660) 422-7777</div></div></div>
+        <div class="info-card"><span class="info-icon">🕐</span><div><div class="info-label">Hours</div><div class="info-val hours-display" contenteditable="true">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div></div></div>
+        <div class="info-card"><span class="info-icon">🚗</span><div><div class="info-label">Options</div><div class="info-val options-display" contenteditable="true">Dine-In · Drive-Through · DoorDash Delivery · Free Wi-Fi</div></div></div>
         <a href="tel:+16604227777" class="call-cta">📞 Call Now — (660) 422-7777</a>
         <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink" style="text-align:center;margin-top:.25rem;">🛵 Order on DoorDash</a>
       </div>
@@ -2902,7 +2902,7 @@ async function publishChanges(){
     saves.push(upsertContent('contact.address',document.querySelector('#contact .address-display')?document.querySelector('#contact .address-display').textContent.trim():''));
     saves.push(upsertContent('contact.phone',document.querySelector('#contact .phone-display')?document.querySelector('#contact .phone-display').textContent.trim():''));
     saves.push(upsertContent('contact.hours',document.querySelector('#contact .hours-display')?document.querySelector('#contact .hours-display').textContent.trim():''));
-    saves.push(upsertContent('contact.options',document.querySelector('#contact .info-val:last-of-type')?document.querySelector('#contact .info-val:last-of-type').textContent.trim():''));
+    saves.push(upsertContent('contact.options',document.querySelector('#contact .options-display')?document.querySelector('#contact .options-display').textContent.trim():''));
 
     // Footer
     saves.push(upsertContent('footer.brand',document.querySelector('.footer-brand')?document.querySelector('.footer-brand').textContent.trim():''));
