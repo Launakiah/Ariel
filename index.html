@@ -16,6 +16,64 @@
 <meta property="og:type" content="restaurant"/>
 <meta property="og:url" content="https://yummys-donut-palace-warrensburg.netlify.app"/>
 
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Yummy's Donut Palace | Fresh Donuts in Warrensburg, MO"/>
+<meta name="twitter:description" content="Fresh handcrafted donuts every morning. Open Tue-Sun 6AM-1PM. Call (660) 422-7777!"/>
+
+<!-- Canonical URL -->
+<link rel="canonical" href="https://yummys-donut-palace-warrensburg.netlify.app"/>
+
+<!-- JSON-LD Structured Data for Local Business -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Bakery",
+  "name": "Yummy's Donut Palace",
+  "image": "https://yummys-donut-palace-warrensburg.netlify.app/og-image.jpg",
+  "@id": "https://yummys-donut-palace-warrensburg.netlify.app",
+  "url": "https://yummys-donut-palace-warrensburg.netlify.app",
+  "telephone": "+1-660-422-7777",
+  "priceRange": "$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "709 S Maguire St",
+    "addressLocality": "Warrensburg",
+    "addressRegion": "MO",
+    "postalCode": "64093",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.76295,
+    "longitude": -93.73823
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      "opens": "06:00",
+      "closes": "13:00"
+    }
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.7",
+    "reviewCount": "2000"
+  },
+  "servesCuisine": ["Donuts", "Breakfast", "Boba Tea", "Coffee"],
+  "potentialAction": [
+    {
+      "@type": "OrderAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/"
+      }
+    }
+  ]
+}
+</script>
+
 <!-- Donut emoji favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍩</text></svg>"/>
 
@@ -469,9 +527,34 @@ img,iframe{max-width:100%;height:auto;}
 }
 #back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:all;}
 #back-to-top:hover{background:var(--brown-mid);}
+
+/* MOBILE STICKY CTA BAR */
+.mobile-sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;padding:0.75rem 1rem;box-shadow:0 -4px 20px rgba(0,0,0,0.15);gap:0.75rem;}
+.mobile-sticky-cta .btn-pink,.mobile-sticky-cta .btn-ghost{flex:1;padding:0.85rem 1rem;font-size:0.9rem;justify-content:center;text-align:center;display:flex;align-items:center;}
+@media(max-width:480px){
+  .mobile-sticky-cta{display:flex;}
+  footer{padding-bottom:5rem;}
+}
+
+/* Skip to content link for accessibility */
+.skip-link{position:absolute;top:-40px;left:0;background:var(--pink-deep);color:#fff;padding:8px 16px;z-index:10000;transition:top 0.3s;font-weight:700;}
+.skip-link:focus{top:0;}
+
+/* Mobile menu */
+.mobile-menu-toggle{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0.5rem;color:var(--brown);}
+#mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(255,248,240,0.98);z-index:199;padding:1rem;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+#mobile-menu a{display:block;padding:1rem;font-weight:700;color:var(--brown);text-decoration:none;border-bottom:1px solid rgba(249,168,201,0.3);}
+#mobile-menu a:last-child{border-bottom:none;}
+@media(max-width:768px){
+  .mobile-menu-toggle{display:block;}
+  .nav-links{display:none;}
+}
 </style>
 </head>
 <body>
+
+<!-- Skip to content for accessibility -->
+<a href="#hero" class="skip-link">Skip to content</a>
 
 <!-- ANNOUNCEMENT BANNER -->
 <div id="announcement-bar"></div>
@@ -501,11 +584,21 @@ img,iframe{max-width:100%;height:auto;}
     <li><a href="#reviews">Reviews</a></li>
     <li><a href="#contact">Find Us</a></li>
   </ul>
+  <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
   <div style="display:flex;gap:.6rem;align-items:center;">
     <a href="tel:+16604227777" class="nav-call">📞 Call Us</a>
     <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="nav-order">Order on DoorDash</a>
   </div>
 </nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <a href="#menu" onclick="toggleMobileMenu()">Menu</a>
+  <a href="#about" onclick="toggleMobileMenu()">About</a>
+  <a href="#catering" onclick="toggleMobileMenu()">Catering</a>
+  <a href="#reviews" onclick="toggleMobileMenu()">Reviews</a>
+  <a href="#contact" onclick="toggleMobileMenu()">Find Us</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1530,6 +1623,31 @@ async function loadSiteData(){
 
 loadSiteData();
 
+// Mobile menu toggle
+function toggleMobileMenu(){
+  const menu=document.getElementById('mobile-menu');
+  const btn=document.querySelector('.mobile-menu-toggle');
+  if(menu.style.display==='block'){
+    menu.style.display='none';
+    btn.textContent='☰';
+  }else{
+    menu.style.display='block';
+    btn.textContent='✕';
+  }
+}
+
+// Back to top button visibility
+window.addEventListener('scroll',()=>{
+  const btn=document.getElementById('back-to-top');
+  if(btn) btn.classList.toggle('visible',window.scrollY>300);
+},{passive:true});
 </script>
+
+<!-- Mobile Sticky CTA -->
+<div class="mobile-sticky-cta">
+  <a href="tel:+16604227777" class="btn-ghost">📞 Call</a>
+  <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink">🛵 Order</a>
+</div>
+
 </body>
 </html>
