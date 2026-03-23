@@ -116,17 +116,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);o
   cursor:pointer;z-index:7001;box-shadow:0 4px 20px rgba(194,24,91,0.4);
 }
 
-/* ── MOBILE SETTINGS PANEL ───────────────────────── */
-#mobile-settings-panel{
-  position:fixed;right:0;top:80px;bottom:0;z-index:9000;
-  width:280px;background:var(--brown);
-  border-left:2px solid rgba(249,168,201,0.2);
-  padding:1.25rem;overflow-y:auto;
-  transform:translateX(100%);
-  transition:transform 0.3s ease;
-  box-shadow:-4px 0 30px rgba(0,0,0,0.25);
-}
-#mobile-settings-panel.open{transform:translateX(0);}
+
 .msp-title{font-family:'Fredoka One',cursive;color:var(--yellow);font-size:1.05rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;}
 .msp-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.2rem;cursor:pointer;}
 .msp-field{margin-bottom:1rem;}
@@ -828,6 +818,17 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
 #back-to-top:hover{background:var(--brown-mid);}
 
 
+
+
+
+
+
+  /* Add padding to footer to prevent content being hidden behind sticky bar */
+  footer {
+    padding-bottom: calc(2.5rem + 70px + env(safe-area-inset-bottom));
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1513,50 +1514,9 @@ footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;te
   <button class="ip-save" onclick="saveIntegrations()">💾 Save All Links</button>
 </div>
 
-<!-- MOBILE SETTINGS PANEL -->
-<div id="mobile-settings-panel">
-  <div class="msp-title">
-    <span>📱 Mobile Settings</span>
-    <button class="msp-close" onclick="closeMobileSettings()">✕</button>
-  </div>
-  <p style="font-size:0.8rem;color:rgba(255,255,255,0.45);margin-bottom:1rem;line-height:1.5;">Adjust how text and spacing appear on mobile devices (screens under 480px).</p>
 
-  <div class="msp-field">
-    <label class="msp-label">Text Size <span class="msp-value" id="msp-font-val">100%</span></label>
-    <input type="range" class="msp-range" id="msp-font-scale"
-      min="50" max="200" step="5" value="100"
-      oninput="updateMobilePreview()"/>
-    <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:rgba(255,255,255,0.3);margin-top:0.2rem;">
-      <span>50% (tiny)</span><span>100% default</span><span>200% (huge)</span>
-    </div>
-  </div>
 
-  <hr class="msp-divider"/>
 
-  <div class="msp-field">
-    <label class="msp-label">Section Spacing <span class="msp-value" id="msp-spacing-val">100%</span></label>
-    <input type="range" class="msp-range" id="msp-spacing-scale"
-      min="25" max="200" step="5" value="100"
-      oninput="updateMobilePreview()"/>
-    <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:rgba(255,255,255,0.3);margin-top:0.2rem;">
-      <span>25% (tight)</span><span>100% default</span><span>200% (airy)</span>
-    </div>
-  </div>
-
-  <hr class="msp-divider"/>
-
-  <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:0.85rem;margin-bottom:0.75rem;">
-    <div style="font-size:0.75rem;font-weight:800;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;">ℹ️ How to preview</div>
-    <div style="font-size:0.8rem;color:rgba(255,255,255,0.55);line-height:1.6;">
-      1. Click <strong style="color:white;">💾 Save Mobile Settings</strong><br/>
-      2. The mobile preview will reload automatically<br/>
-      3. Changes apply to the <strong style="color:white;">live site</strong> for real visitors too
-    </div>
-  </div>
-
-  <button class="msp-save" onclick="saveMobileSettings()">💾 Save Mobile Settings</button>
-  <button onclick="resetMobileSettings()" style="width:100%;margin-top:0.5rem;background:transparent;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:30px;padding:0.5rem;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;">↺ Reset to defaults</button>
-</div>
 
 <!-- IMAGE MANAGER -->
 <div id="image-manager">
@@ -1996,7 +1956,7 @@ async function initEditor(){
   loadSubscribers();
   initFixedSectionControls();
   loadDesign();
-  loadMobileSettings();
+  
   loadIntegrations();
 
   // Mark unsaved on any contenteditable change + sync footer with contact fields
@@ -3298,10 +3258,7 @@ function enterPreview(mode){
 
   wrap.classList.add('active');
 
-  // Show mobile settings button when in mobile mode
-  if(mode==='mobile'){
-    showMobileSettingsHint();
-  }
+  
 }
 
 function exitPreview(){
@@ -3309,443 +3266,11 @@ function exitPreview(){
   document.getElementById('btn-preview-desktop').classList.remove('active');
   document.getElementById('btn-preview-mobile').classList.remove('active');
   currentPreviewMode=null;
-  closeMobileSettings();
+  
 }
 
-function showMobileSettingsHint(){
-  // Show a small floating hint button when in mobile preview
-  let hint=document.getElementById('mobile-settings-hint');
-  if(!hint){
-    hint=document.createElement('button');
-    hint.id='mobile-settings-hint';
-    hint.onclick=openMobileSettings;
-    hint.style.cssText='position:fixed;bottom:5rem;right:1.5rem;z-index:7002;background:var(--brown);color:white;border:2px solid rgba(249,168,201,0.4);border-radius:30px;padding:0.6rem 1.1rem;font-family:Nunito,sans-serif;font-weight:800;font-size:0.82rem;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
-    hint.textContent='⚙️ Mobile Settings';
-    document.body.appendChild(hint);
-  }
-  hint.style.display='block';
-}
 
-/* ══════════════════════════════════════════════════════
-   MOBILE SETTINGS
-   ══════════════════════════════════════════════════════ */
-function openMobileSettings(){
-  document.getElementById('mobile-settings-panel').classList.add('open');
-}
-
-function closeMobileSettings(){
-  document.getElementById('mobile-settings-panel').classList.remove('open');
-  const hint=document.getElementById('mobile-settings-hint');
-  if(hint) hint.style.display='none';
-}
-
-function updateMobilePreview(){
-  const fontScale=parseInt(document.getElementById('msp-font-scale').value);
-  const spacingScale=parseInt(document.getElementById('msp-spacing-scale').value);
-  document.getElementById('msp-font-val').textContent=fontScale+'%';
-  document.getElementById('msp-spacing-val').textContent=spacingScale+'%';
-
-  // Only inject into the iframe if it's truly a different document
-  const iframe=document.getElementById('preview-iframe');
-  if(iframe&&currentPreviewMode==='mobile'){
-    try{
-      const iframeDoc=iframe.contentDocument||iframe.contentWindow.document;
-      // Guard: make sure we're not accidentally targeting the admin's own document
-      if(iframeDoc&&iframeDoc!==document){
-        injectMobileOverrides(iframeDoc,fontScale/100,spacingScale/100);
-      }
-    }catch(e){
-      // Cross-origin or not loaded yet — changes will apply via Supabase on save
-    }
-  }
-}
-
-function injectMobileOverrides(doc,fontScale,spacingScale){
-  if(!doc) return;
-  let el=doc.getElementById('mobile-overrides');
-  if(!el){el=doc.createElement('style');el.id='mobile-overrides';doc.head.appendChild(el);}
-  const baseFontPx=Math.round(14*fontScale);
-  const basePadPx=Math.round(16*spacingScale);
-  el.textContent=`
-    @media(max-width:480px){
-      body { font-size: ${baseFontPx}px !important; }
-      .section-title { font-size: clamp(${Math.round(1.4*fontScale)}rem, 7vw, ${Math.round(2*fontScale)}rem) !important; }
-      .section-lead { font-size: ${Math.round(0.9*fontScale*10)/10}rem !important; }
-      section { padding: ${Math.round(2.5*spacingScale*10)/10}rem ${Math.round(spacingScale*10)/10}rem !important; }
-      #hero { padding: ${Math.round(5*spacingScale*10)/10}rem ${Math.round(spacingScale*10)/10}rem ${Math.round(2.5*spacingScale*10)/10}rem !important; }
-      .stats-ribbon { padding: ${Math.round(1.25*spacingScale*10)/10}rem ${Math.round(spacingScale*10)/10}rem !important; }
-    }
-  `;
-}
-
-async function saveMobileSettings(){
-  const fontScale=parseInt(document.getElementById('msp-font-scale').value)/100;
-  const spacingScale=parseInt(document.getElementById('msp-spacing-scale').value)/100;
-  const btn=document.querySelector('#mobile-settings-panel .msp-save');
-  if(btn){btn.textContent='Saving...';btn.disabled=true;}
-
-  const r=await fetch(`${SB_URL}/rest/v1/design?id=eq.main`,{
-    method:'PATCH',
-    headers:{
-      'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY),
-      'Content-Type':'application/json','Prefer':'return=minimal'
-    },
-    body:JSON.stringify({
-      mobile_font_scale:fontScale,
-      mobile_spacing_scale:spacingScale,
-      updated_at:new Date().toISOString()
-    })
-  });
-
-  if(r.ok){
-    showToast('✅ Mobile settings saved!');
-    // Always reload the preview iframe so changes are visible
-    const iframe=document.getElementById('preview-iframe');
-    if(iframe){
-      iframe.src='index.html?v='+Date.now();
-    }
-    // If not in preview mode, auto-enter mobile preview to show result
-    if(!currentPreviewMode){
-      enterPreview('mobile');
-    }
-  } else {
-    showToast('❌ Could not save mobile settings.');
-  }
-  if(btn){btn.textContent='💾 Save Mobile Settings';btn.disabled=false;}
-}
-
-function resetMobileSettings(){
-  document.getElementById('msp-font-scale').value=100;
-  document.getElementById('msp-spacing-scale').value=100;
-  document.getElementById('msp-font-val').textContent='100%';
-  document.getElementById('msp-spacing-val').textContent='100%';
-  saveMobileSettings();
-}
-
-async function loadMobileSettings(){
-  try{
-    const r=await fetch(`${SB_URL}/rest/v1/design?id=eq.main&select=mobile_font_scale,mobile_spacing_scale`,{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY)}
-    });
-    const d=await r.json();
-    if(!d||!d[0]) return;
-    const {mobile_font_scale,mobile_spacing_scale}=d[0];
-    if(mobile_font_scale){
-      const v=Math.round(mobile_font_scale*100);
-      document.getElementById('msp-font-scale').value=Math.min(200,Math.max(50,v));
-      document.getElementById('msp-font-val').textContent=v+'%';
-    }
-    if(mobile_spacing_scale){
-      const v=Math.round(mobile_spacing_scale*100);
-      document.getElementById('msp-spacing-scale').value=Math.min(200,Math.max(25,v));
-      document.getElementById('msp-spacing-val').textContent=v+'%';
-    }
-  }catch(e){console.warn('Could not load mobile settings',e);}
-}
-
-/* ══════════════════════════════════════════════════════
-   VERSION HISTORY
-   ══════════════════════════════════════════════════════ */
-
-const MAX_VERSIONS=20; // keep last 20 versions
-
-function openHistory(){
-  document.getElementById('history-modal').classList.add('open');
-  loadVersions();
-}
-
-function closeHistory(){
-  document.getElementById('history-modal').classList.remove('open');
-}
-
-// ── BUILD SNAPSHOT OF CURRENT CONTENT ────────────────
-async function buildSnapshot(){
-  // Fetch all current content from Supabase
-  const headers={'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY)};
-  const [contentRows,linksRows,sectionsRows,menuRow,designRow]=await Promise.all([
-    fetch(`${SB_URL}/rest/v1/content?page_id=eq.main&select=key,value`,{headers}).then(r=>r.json()),
-    fetch(`${SB_URL}/rest/v1/links?page_id=eq.main&select=id,url`,{headers}).then(r=>r.json()),
-    fetch(`${SB_URL}/rest/v1/sections?page_id=eq.main&select=id,visible,sort_order,settings`,{headers}).then(r=>r.json()),
-    fetch(`${SB_URL}/rest/v1/menu?id=eq.main`,{headers}).then(r=>r.json()),
-    fetch(`${SB_URL}/rest/v1/design?id=eq.main`,{headers}).then(r=>r.json()),
-  ]);
-  return {
-    content:contentRows||[],
-    links:linksRows||[],
-    sections:sectionsRows||[],
-    menu:menuRow&&menuRow[0]?menuRow[0].data:null,
-    design:designRow&&designRow[0]?designRow[0]:null,
-    saved_at:new Date().toISOString(),
-  };
-}
-
-// ── SAVE A VERSION ────────────────────────────────────
-async function saveVersion(){
-  const labelInput=document.getElementById('vh-label');
-  const label=labelInput.value.trim()||'Manual save — '+new Date().toLocaleString();
-  const btn=document.querySelector('.vh-save-btn');
-  btn.textContent='Saving...';btn.disabled=true;
-
-  try{
-    const snapshot=await buildSnapshot();
-    const r=await fetch(`${SB_URL}/rest/v1/versions`,{
-      method:'POST',
-      headers:{
-        'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY),
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({page_id:'main',label,snapshot})
-    });
-    if(!r.ok) throw new Error(await r.text());
-
-    labelInput.value='';
-    showToast('✅ Version saved: "'+label+'"');
-
-    // Prune old versions (keep max 20)
-    await pruneOldVersions();
-    loadVersions();
-  }catch(e){
-    showToast('❌ Could not save version.');
-    console.error(e);
-  }finally{
-    btn.textContent='💾 Save Version';btn.disabled=false;
-  }
-}
-
-// ── AUTO-SAVE VERSION ON PUBLISH ──────────────────────
-async function autoSaveVersion(label){
-  try{
-    const snapshot=await buildSnapshot();
-    await fetch(`${SB_URL}/rest/v1/versions`,{
-      method:'POST',
-      headers:{
-        'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY),
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({page_id:'main',label,snapshot})
-    });
-    await pruneOldVersions();
-  }catch(e){console.warn('Auto-save version failed',e);}
-}
-
-// ── KEEP ONLY LAST 20 VERSIONS ────────────────────────
-async function pruneOldVersions(){
-  try{
-    const headers={'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY)};
-    // Get all versions sorted oldest first
-    const r=await fetch(`${SB_URL}/rest/v1/versions?page_id=eq.main&select=id&order=created_at.asc`,{headers});
-    const all=await r.json();
-    if(!all||all.length<=MAX_VERSIONS) return;
-    // Delete oldest ones to stay under limit
-    const toDelete=all.slice(0,all.length-MAX_VERSIONS);
-    await Promise.all(toDelete.map(v=>
-      fetch(`${SB_URL}/rest/v1/versions?id=eq.${v.id}`,{
-        method:'DELETE',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY)}
-      })
-    ));
-  }catch(e){console.warn('Prune versions failed',e);}
-}
-
-// ── LOAD VERSION LIST ─────────────────────────────────
-async function loadVersions(){
-  document.getElementById('vh-loading').style.display='block';
-  document.getElementById('vh-list-wrap').style.display='none';
-  try{
-    const r=await fetch(`${SB_URL}/rest/v1/versions?page_id=eq.main&select=id,label,created_at&order=created_at.desc`,{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY)}
-    });
-    const versions=await r.json();
-    document.getElementById('vh-loading').style.display='none';
-    document.getElementById('vh-list-wrap').style.display='block';
-
-    const count=versions?versions.length:0;
-    document.getElementById('vh-count').textContent=
-      count+' version'+(count!==1?'s':'')+' saved (max '+MAX_VERSIONS+')';
-
-    const list=document.getElementById('vh-list');
-    if(!count){
-      list.innerHTML='<div class="vh-empty">No versions saved yet.<br>Save a version before making big changes so you can restore if needed.</div>';
-      return;
-    }
-
-    list.innerHTML=versions.map((v,i)=>`
-      <div class="vh-item" id="vh-item-${v.id}">
-        <div class="vh-item-header">
-          <div>
-            <div class="vh-item-label">
-              ${i===0?'<span class="vh-current-badge">Latest</span> ':''}
-              ${escHtml(v.label)}
-            </div>
-            <div class="vh-item-date">${formatDate(v.created_at)}</div>
-          </div>
-          <div class="vh-item-btns">
-            <button class="vh-btn-restore" onclick="restoreVersion('${v.id}','${escHtml(v.label).replace(/'/g,"\\'")}')">↩ Restore</button>
-            <button class="vh-btn-delete" onclick="deleteVersion('${v.id}')">✕</button>
-          </div>
-        </div>
-      </div>`).join('');
-  }catch(e){
-    document.getElementById('vh-loading').textContent='❌ Could not load versions.';
-    console.error(e);
-  }
-}
-
-// ── RESTORE A VERSION ─────────────────────────────────
-async function restoreVersion(versionId,label){
-  if(!confirm(`Restore version "${label}"?\n\nThis will overwrite all current content with this saved version. Your current state will be auto-saved first.`)) return;
-
-  showToast('⏳ Restoring version...');
-
-  try{
-    // Auto-save current state before overwriting
-    await autoSaveVersion('Auto-save before restoring: '+label);
-
-    // Fetch the version snapshot
-    const r=await fetch(`${SB_URL}/rest/v1/versions?id=eq.${versionId}&select=snapshot`,{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY)}
-    });
-    const d=await r.json();
-    if(!d||!d[0]||!d[0].snapshot) throw new Error('Version not found');
-
-    const snap=d[0].snapshot;
-    const AUTH_HEADERS={
-      'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY),
-      'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'
-    };
-
-    const restores=[];
-
-    // Restore content rows
-    if(snap.content&&snap.content.length){
-      snap.content.forEach(row=>{
-        restores.push(fetch(`${SB_URL}/rest/v1/content`,{
-          method:'POST',headers:AUTH_HEADERS,
-          body:JSON.stringify({...row,page_id:'main'})
-        }));
-      });
-    }
-
-    // Restore links
-    if(snap.links&&snap.links.length){
-      snap.links.forEach(row=>{
-        restores.push(fetch(`${SB_URL}/rest/v1/links`,{
-          method:'POST',headers:AUTH_HEADERS,
-          body:JSON.stringify({...row,page_id:'main'})
-        }));
-      });
-    }
-
-    // Restore sections
-    if(snap.sections&&snap.sections.length){
-      snap.sections.forEach(row=>{
-        restores.push(fetch(`${SB_URL}/rest/v1/sections`,{
-          method:'POST',headers:AUTH_HEADERS,
-          body:JSON.stringify({...row,page_id:'main'})
-        }));
-      });
-    }
-
-    // Restore menu
-    if(snap.menu){
-      restores.push(fetch(`${SB_URL}/rest/v1/menu?id=eq.main`,{
-        method:'PATCH',
-        headers:{...AUTH_HEADERS,'Prefer':'return=minimal'},
-        body:JSON.stringify({data:snap.menu,updated_at:new Date().toISOString()})
-      }));
-    }
-
-    // Restore design
-    if(snap.design){
-      const {id,...designData}=snap.design;
-      restores.push(fetch(`${SB_URL}/rest/v1/design?id=eq.main`,{
-        method:'PATCH',
-        headers:{...AUTH_HEADERS,'Prefer':'return=minimal'},
-        body:JSON.stringify({...designData,updated_at:new Date().toISOString()})
-      }));
-    }
-
-    await Promise.all(restores);
-
-    closeHistory();
-    showToast('✅ Version restored! Reloading editor...');
-    setTimeout(()=>location.reload(),1500);
-
-  }catch(e){
-    showToast('❌ Restore failed: '+e.message);
-    console.error(e);
-  }
-}
-
-// ── DELETE A VERSION ──────────────────────────────────
-async function deleteVersion(versionId){
-  if(!confirm('Delete this version? This cannot be undone.')) return;
-  try{
-    await fetch(`${SB_URL}/rest/v1/versions?id=eq.${versionId}`,{
-      method:'DELETE',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(getAccessToken()||SB_KEY)}
-    });
-    document.getElementById('vh-item-'+versionId)?.remove();
-    const remaining=document.querySelectorAll('.vh-item').length;
-    document.getElementById('vh-count').textContent=
-      remaining+' version'+(remaining!==1?'s':'')+' saved (max '+MAX_VERSIONS+')';
-    if(!remaining) document.getElementById('vh-list').innerHTML=
-      '<div class="vh-empty">No versions saved yet.</div>';
-    showToast('🗑 Version deleted.');
-  }catch(e){showToast('❌ Could not delete version.');}
-}
-
-// ── UTILS ─────────────────────────────────────────────
-function escHtml(str){
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function formatDate(iso){
-  const d=new Date(iso);
-  return d.toLocaleDateString()+' at '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
-}
-
-// Close on backdrop click
-document.getElementById('history-modal').addEventListener('click',function(e){
-  if(e.target===this) closeHistory();
-});
-let analyticsDays=7;
-
-const SECTION_NAMES_MAP={
-  'hero':'Hero / Home',
-  'menu':'Menu',
-  'why-us':'Why Choose Us',
-  'about':'About Us',
-  'catering':'Catering',
-  'reviews':'Reviews',
-  'newsletter':'Newsletter',
-  'contact':'Contact / Find Us',
-  'monthly-special':"This Month's Special",
-};
-
-function openAnalytics(){
-  document.getElementById('analytics-modal').classList.add('open');
-  loadAnalytics();
-}
-
-function closeAnalytics(){
-  document.getElementById('analytics-modal').classList.remove('open');
-}
-
-function setAnalyticsPeriod(days,btn){
-  analyticsDays=days;
-  document.querySelectorAll('.an-period-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  loadAnalytics();
-}
-
-function getDateFilter(){
-  if(!analyticsDays) return '';
-  const d=new Date();
-  d.setDate(d.getDate()-analyticsDays);
-  return '&created_at=gte.'+d.toISOString();
-}
-
-async function loadAnalytics(){
+  async function loadAnalytics(){
   document.getElementById('an-loading').style.display='block';
   document.getElementById('an-content').style.display='none';
 
