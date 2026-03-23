@@ -1,518 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Yummy's Donut Palace — Fresh Donuts in Warrensburg, MO</title>
-
-<!-- SEO Meta Description -->
-<meta name="description" content="Yummy's Donut Palace — Fresh handcrafted donuts, breakfast sandwiches, boba &amp; drinks in Warrensburg, MO. Open Tue–Sun 6AM–1PM. Drive-through available. Order on DoorDash!"/>
-<meta name="keywords" content="donuts, donut shop, Warrensburg MO, breakfast, boba, fresh donuts, Yummy's Donut Palace"/>
-<meta name="author" content="Yummy's Donut Palace"/>
-
-<!-- Open Graph (Facebook/social sharing preview) -->
-<meta property="og:title" content="Yummy's Donut Palace — Warrensburg, MO"/>
-<meta property="og:description" content="Fresh handcrafted donuts every morning. Breakfast, boba &amp; drinks. Open Tue–Sun 6AM–1PM. Drive-through available!"/>
-<meta property="og:type" content="restaurant"/>
-<meta property="og:url" content="https://yummys-donut-palace-warrensburg.netlify.app"/>
-
-<!-- Donut emoji favicon -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍩</text></svg>"/>
-
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --pink:#F9A8C9;--pink-dark:#E8579A;--pink-deep:#C2185B;
-  --yellow:#FFD966;--yellow-dark:#F4B400;
-  --brown:#4A2C0A;--brown-mid:#7B4C1E;
-  --cream:#FFF8F0;--cream2:#FEF0E3;--white:#FFFFFF;
-  --text:#2D1B09;--text-mid:#6B3F1A;--text-light:#A06030;
-}
-html{scroll-behavior:smooth;}
-body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,248,240,0.96);backdrop-filter:blur(10px);border-bottom:2px dashed rgba(249,168,201,0.5);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;}
-.nav-brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none;}
-.nav-donut{font-size:1.8rem;animation:spin 6s linear infinite;}
-.nav-name{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--pink-deep);}
-.nav-name span{color:var(--yellow-dark);}
-.nav-links{display:flex;gap:1.5rem;list-style:none;}
-.nav-links a{text-decoration:none;color:var(--text-mid);font-weight:700;font-size:0.9rem;transition:color 0.2s;}
-.nav-links a:hover{color:var(--pink-deep);}
-.nav-call{display:flex;align-items:center;gap:0.4rem;background:var(--yellow-dark);color:var(--brown);padding:0.5rem 1.1rem;border-radius:30px;font-weight:800;font-size:0.82rem;text-decoration:none;transition:background 0.2s;}
-.nav-call:hover{background:var(--yellow);}
-.nav-order{background:var(--pink-deep);color:#fff;padding:0.55rem 1.4rem;border-radius:30px;font-weight:800;font-size:0.85rem;text-decoration:none;transition:background 0.2s,transform 0.15s;display:inline-block;}
-.nav-order:hover{background:var(--brown-mid);transform:scale(1.04);}
-
-/* HERO */
-#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 4rem;background:radial-gradient(circle at 15% 20%,rgba(249,168,201,.35) 0%,transparent 40%),radial-gradient(circle at 85% 80%,rgba(255,217,102,.3) 0%,transparent 40%),radial-gradient(circle at 80% 15%,rgba(94,200,242,.2) 0%,transparent 30%),var(--cream);position:relative;overflow:hidden;}
-.sprinkles{position:absolute;inset:0;pointer-events:none;}
-.sprinkle{position:absolute;width:6px;height:20px;border-radius:3px;animation:fall linear infinite;opacity:.7;}
-.hero-inner{position:relative;z-index:2;}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,217,102,.3);border:2px solid var(--yellow-dark);color:var(--brown-mid);font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1.2rem;border-radius:30px;margin-bottom:1.5rem;animation:fadeUp .6s ease both;}
-.hero-title{font-family:'Fredoka One',cursive;font-size:clamp(3.5rem,9vw,7.5rem);line-height:1;color:var(--brown);margin-bottom:.5rem;animation:fadeUp .7s ease .1s both;}
-.hero-title .pop{color:var(--pink-deep);}
-.hero-title .pop2{color:var(--yellow-dark);}
-.hero-tagline{font-size:clamp(1rem,2.5vw,1.35rem);color:var(--text-mid);font-weight:600;margin-bottom:.5rem;animation:fadeUp .7s ease .15s both;}
-.hero-sub{font-size:1rem;color:var(--text-light);font-weight:400;max-width:500px;margin:0 auto 1.5rem;animation:fadeUp .7s ease .2s both;}
-/* CLICK TO CALL HERO BUTTON */
-.hero-call{display:inline-flex;align-items:center;gap:.5rem;background:var(--yellow-dark);color:var(--brown);font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;padding:.85rem 2rem;border-radius:40px;text-decoration:none;margin-bottom:1.25rem;transition:background .2s,transform .15s;animation:fadeUp .7s ease .22s both;}
-.hero-call:hover{background:var(--yellow);transform:translateY(-2px);}
-.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s ease .3s both;}
-.btn-pink{background:var(--pink-deep);color:#fff;border:none;padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;cursor:pointer;transition:transform .15s,background .2s;display:inline-block;}
-.btn-pink:hover{background:var(--brown-mid);transform:translateY(-3px);}
-.btn-ghost{background:transparent;color:var(--brown);border:2.5px solid var(--pink);padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;cursor:pointer;transition:transform .15s,border-color .2s,color .2s;display:inline-block;}
-.btn-ghost:hover{border-color:var(--pink-deep);color:var(--pink-deep);transform:translateY(-3px);}
-.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--text-light);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;animation:bounce2 2s ease-in-out infinite;}
-.hero-scroll::after{content:'↓';font-size:1.2rem;}
-
-/* STATS RIBBON */
-.stats-ribbon{background:var(--pink-deep);padding:1.5rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;}
-.stat{text-align:center;}
-.stat-n{font-family:'Fredoka One',cursive;font-size:2.4rem;color:var(--yellow);display:block;}
-.stat-l{font-size:.78rem;color:rgba(255,255,255,.8);font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
-
-/* SECTIONS */
-section{padding:5.5rem 2rem;}
-.container{max-width:1100px;margin:0 auto;}
-.section-eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-dark);margin-bottom:.6rem;display:block;}
-.section-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--brown);line-height:1.15;margin-bottom:.8rem;}
-.section-lead{color:var(--text-mid);font-size:1rem;font-weight:400;max-width:560px;margin-bottom:2.5rem;}
-
-/* MONTHLY SPECIAL */
-#monthly-special{background:var(--brown);}
-.special-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
-.special-badge{display:inline-block;background:var(--yellow-dark);color:var(--brown);font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.35rem 1rem;border-radius:20px;margin-bottom:1rem;}
-.special-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--yellow);line-height:1.15;margin-bottom:.75rem;}
-.special-desc{color:rgba(253,246,236,.8);font-size:1rem;margin-bottom:1.5rem;line-height:1.7;}
-.special-price{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--pink);margin-bottom:1.5rem;}
-.special-visual{
-  border-radius:24px;border:2px dashed rgba(249,168,201,.3);
-  aspect-ratio:1;overflow:hidden;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.06);font-size:7rem;
-}
-.special-visual img{width:100%;height:100%;object-fit:cover;display:block;border-radius:22px;}
-
-/* MENU */
-#menu{background:var(--cream2);}
-.menu-tabs{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.5rem;}
-.tab{padding:.5rem 1.3rem;border-radius:30px;border:2px solid var(--pink);background:transparent;color:var(--brown-mid);font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;}
-.tab.active,.tab:hover{background:var(--pink-deep);border-color:var(--pink-deep);color:#fff;}
-.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;}
-.menu-section{display:none;}
-.menu-section.active{display:grid;}
-.menu-card{background:var(--white);border-radius:20px;border:2px solid rgba(249,168,201,.3);padding:1.5rem;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;gap:.5rem;}
-.menu-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(194,24,91,.12);}
-.menu-emoji{font-size:2.5rem;margin-bottom:.3rem;}
-.menu-name{font-weight:800;font-size:1.05rem;color:var(--brown);}
-.menu-desc{font-size:.88rem;color:var(--text-light);line-height:1.5;flex:1;}
-.menu-price{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--pink-deep);margin-top:.5rem;}
-.menu-badge{display:inline-block;background:rgba(255,217,102,.3);border:1px solid var(--yellow-dark);color:var(--brown-mid);font-size:.7rem;font-weight:800;letter-spacing:.08em;padding:.2rem .6rem;border-radius:20px;text-transform:uppercase;}
-
-/* WHY CHOOSE US */
-#why-us{background:var(--white);}
-.why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;margin-top:1rem;}
-.why-card{background:var(--cream2);border-radius:20px;padding:1.75rem 1.5rem;border:1.5px solid rgba(249,168,201,.25);text-align:center;transition:transform .2s,box-shadow .2s;}
-.why-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(194,24,91,.1);}
-.why-icon{font-size:2.5rem;margin-bottom:.75rem;display:block;}
-.why-title{font-weight:800;font-size:1rem;color:var(--brown);margin-bottom:.4rem;}
-.why-text{font-size:.85rem;color:var(--text-light);line-height:1.55;}
-
-/* ABOUT */
-#about{background:var(--cream2);}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
-.about-visual{background:radial-gradient(circle at 30% 40%,rgba(249,168,201,.4),transparent 60%),radial-gradient(circle at 75% 70%,rgba(255,217,102,.3),transparent 50%),var(--cream2);border-radius:24px;border:2px dashed rgba(249,168,201,.6);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:8rem;flex-direction:column;gap:.5rem;}
-.about-big-emoji{animation:wobble 3s ease-in-out infinite;}
-.about-pills{display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem;}
-.about-pill{background:var(--white);border-radius:16px;padding:1rem 1.25rem;border:1.5px solid rgba(249,168,201,.3);display:flex;align-items:flex-start;gap:1rem;}
-.pill-icon{font-size:1.6rem;flex-shrink:0;}
-.pill-title{font-weight:800;font-size:.95rem;color:var(--brown);margin-bottom:.15rem;}
-.pill-text{font-size:.85rem;color:var(--text-light);}
-
-/* CATERING */
-#catering{background:var(--pink-deep);}
-.catering-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
-.catering-text .section-eyebrow{color:rgba(255,255,255,.65);}
-.catering-text .section-title{color:var(--yellow);}
-.catering-text .section-lead{color:rgba(255,255,255,.85);max-width:480px;}
-.catering-perks{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem;}
-.catering-perk{display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600;}
-.catering-perk-icon{font-size:1.3rem;flex-shrink:0;}
-.btn-catering{display:inline-flex;align-items:center;gap:.5rem;background:var(--yellow-dark);color:var(--brown);padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:background .2s,transform .15s;}
-.btn-catering:hover{background:var(--yellow);transform:translateY(-2px);}
-.catering-visual{background:rgba(255,255,255,.08);border-radius:24px;border:2px dashed rgba(255,255,255,.2);padding:2rem;display:flex;flex-direction:column;gap:1rem;}
-.catering-stat{background:rgba(255,255,255,.1);border-radius:16px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;}
-.catering-stat-n{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);flex-shrink:0;}
-.catering-stat-l{font-size:.85rem;color:rgba(255,255,255,.8);font-weight:600;}
-
-/* REVIEWS */
-#reviews{background:var(--cream2);}
-.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;}
-.review-card{background:var(--white);border-radius:20px;padding:1.5rem;border:2px solid rgba(249,168,201,.25);transition:transform .2s;}
-.review-card:hover{transform:translateY(-3px);}
-.stars{color:var(--yellow-dark);font-size:1rem;margin-bottom:.75rem;}
-.review-text{font-size:.92rem;color:var(--text-mid);line-height:1.65;margin-bottom:1rem;font-style:italic;}
-.review-author{font-weight:800;font-size:.85rem;color:var(--brown);}
-.review-source{font-size:.78rem;color:var(--text-light);}
-.rating-highlight{background:var(--pink-deep);border-radius:20px;padding:2.5rem;text-align:center;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;}
-.rating-big{font-family:'Fredoka One',cursive;font-size:5rem;color:var(--yellow);line-height:1;}
-.rating-stars{font-size:1.5rem;color:var(--yellow);}
-.rating-label{font-size:.85rem;font-weight:700;opacity:.85;letter-spacing:.08em;text-transform:uppercase;}
-.google-badge{display:inline-flex;align-items:center;gap:.5rem;margin-top:.75rem;background:rgba(255,255,255,.15);border-radius:20px;padding:.4rem 1rem;font-size:.78rem;font-weight:700;color:rgba(255,255,255,.9);text-decoration:none;border:1px solid rgba(255,255,255,.2);transition:background .2s;}
-.google-badge:hover{background:rgba(255,255,255,.25);}
-
-/* INSTAGRAM */
-/* NEWSLETTER */
-#newsletter{background:var(--cream2);}
-.newsletter-inner{max-width:600px;margin:0 auto;text-align:center;}
-.newsletter-inner .section-title{margin-bottom:.5rem;}
-.newsletter-inner .section-lead{margin:0 auto 2rem;}
-.newsletter-form{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;}
-.newsletter-input{flex:1;min-width:220px;padding:.9rem 1.25rem;border-radius:40px;border:2px solid rgba(249,168,201,.5);background:var(--white);font-family:'Nunito',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s;}
-.newsletter-input:focus{border-color:var(--pink-deep);}
-.btn-newsletter{background:var(--pink-deep);color:#fff;border:none;padding:.9rem 2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:background .2s,transform .15s;white-space:nowrap;}
-.btn-newsletter:hover{background:var(--brown-mid);transform:translateY(-2px);}
-.newsletter-note{font-size:.78rem;color:var(--text-light);margin-top:.75rem;}
-.newsletter-success{display:none;background:rgba(39,174,96,.12);border:1.5px solid rgba(39,174,96,.3);color:#1e7e44;border-radius:16px;padding:1rem 1.5rem;font-weight:700;font-size:.95rem;margin-top:1rem;}
-
-/* CONTACT */
-#contact{background:var(--white);}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
-.info-cards{display:flex;flex-direction:column;gap:1rem;}
-.info-card{background:var(--cream2);border-radius:16px;padding:1.25rem 1.5rem;border:1.5px solid rgba(249,168,201,.3);display:flex;align-items:flex-start;gap:1rem;}
-.info-icon{font-size:1.8rem;flex-shrink:0;}
-.info-label{font-weight:800;font-size:.8rem;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;}
-.info-val{font-weight:700;font-size:1rem;color:var(--brown);}
-.info-val a{color:var(--pink-deep);text-decoration:none;}
-.hours-grid{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.5rem;font-size:.9rem;}
-.hours-day{font-weight:700;color:var(--brown);}
-.hours-time{color:var(--text-mid);}
-.hours-closed{color:var(--text-light);font-style:italic;}
-.map-wrap{border-radius:20px;overflow:hidden;border:2px solid rgba(249,168,201,.4);aspect-ratio:4/3;}
-.map-wrap iframe{width:100%;height:100%;border:none;}
-/* BIG CALL BUTTON */
-.call-cta{display:flex;align-items:center;justify-content:center;gap:.75rem;background:var(--yellow-dark);color:var(--brown);padding:1.1rem 2rem;border-radius:16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;text-decoration:none;transition:background .2s,transform .15s;margin-top:.5rem;}
-.call-cta:hover{background:var(--yellow);transform:translateY(-2px);}
-
-/* ANNOUNCEMENT / SPECIALS */
-#announcement-bar{background:var(--yellow-dark);color:var(--brown);text-align:center;padding:.55rem 1rem;font-weight:800;font-size:.9rem;display:none;}
-#announcement-bar.visible{display:block;}
-nav.has-banner{top:2.4rem;}
-#specials-section{display:none;background:var(--yellow);padding:2rem;}
-#specials-section.visible{display:block;}
-.specials-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
-.specials-label{font-size:.75rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--brown-mid);margin-bottom:.2rem;}
-.specials-title{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--brown);}
-.specials-desc{font-size:.95rem;color:var(--brown-mid);}
-
-/* FOOTER */
-footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;text-align:center;}
-.footer-brand{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);margin-bottom:.5rem;}
-.footer-links{display:flex;justify-content:center;gap:1.5rem;margin-bottom:.75rem;flex-wrap:wrap;}
-.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;font-weight:700;transition:color .2s;}
-.footer-links a:hover{color:var(--yellow);}
-.footer-addr{font-size:.88rem;margin-bottom:.3rem;}
-.footer-copy{font-size:.78rem;opacity:.5;margin-top:1rem;}
-
-/* SOCIAL SECTIONS */
-.social-section-fb h2{color:#fff;}
-.social-section-fb p{color:rgba(255,255,255,0.85);}
-.social-btn-fb{display:inline-flex;align-items:center;gap:0.6rem;background:#fff;color:#1877F2;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:opacity 0.2s;}
-.social-btn-fb:hover{opacity:0.88;}
-.social-btn-ig{display:inline-flex;align-items:center;gap:0.6rem;background:linear-gradient(135deg,#F09433,#E6683C,#DC2743,#CC2366,#BC1888);color:#fff;padding:0.9rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:opacity 0.2s;}
-.social-btn-ig:hover{opacity:0.88;}
-
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes wobble{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
-@keyframes bounce2{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);}}
-@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:0;}10%{opacity:.7;}90%{opacity:.7;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
-
-/* ════════════════════════════════════════════════
-   GLOBAL OVERFLOW FIX
-   ════════════════════════════════════════════════ */
-html{overflow-x:hidden;}
-*{max-width:100%;}
-img,iframe{max-width:100%;height:auto;}
-
-/* ════════════════════════════════════════════════
-   TABLET (max 768px)
-   ════════════════════════════════════════════════ */
-@media(max-width:768px){
-  /* Nav */
-  .nav-links{display:none;}
-  nav{padding:.75rem 1.25rem;}
-  .nav-name{font-size:1.15rem;}
-  .nav-order{font-size:.78rem;padding:.45rem 1rem;}
-
-  /* Hero */
-  #hero{padding:6rem 1.5rem 3.5rem;}
-  .hero-title{font-size:clamp(3rem,11vw,5rem);}
-  .hero-tagline{font-size:1rem;}
-  .hero-sub{font-size:.95rem;}
-  .hero-call{font-size:.95rem;padding:.8rem 1.75rem;}
-  .btn-pink,.btn-ghost{padding:.85rem 1.75rem;font-size:.95rem;}
-
-  /* Sections */
-  section{padding:4rem 1.5rem;}
-  .container{padding:0;}
-  .section-title{font-size:clamp(1.7rem,5vw,2.5rem);}
-  .section-lead{font-size:.95rem;}
-
-  /* Stats */
-  .stats-ribbon{gap:1.5rem;padding:1.25rem 1rem;}
-  .stat-n{font-size:2rem;}
-  .stat-l{font-size:.72rem;}
-
-  /* All two-column grids → single column */
-  .about-grid,
-  .contact-grid,
-  .special-inner{grid-template-columns:1fr;gap:2rem;}
-
-  /* Catering: single column, hide stats panel */
-  .catering-inner{display:block;}
-  .catering-visual{display:none;}
-
-  .about-visual{aspect-ratio:16/9;}
-
-  /* Menu */
-  .menu-grid{grid-template-columns:1fr 1fr;gap:1rem;}
-  .menu-card{padding:1.1rem;}
-  .menu-emoji{font-size:2rem;}
-  .menu-name{font-size:.95rem;}
-  .menu-desc{font-size:.82rem;}
-  .menu-price{font-size:1.05rem;}
-
-  /* Why grid → 2 columns */
-  .why-grid{grid-template-columns:1fr 1fr;gap:1rem;}
-
-  /* Reviews */
-  .reviews-grid{grid-template-columns:1fr;}
-
-  /* Newsletter */
-  .newsletter-form{flex-direction:column;align-items:stretch;}
-  .newsletter-input{min-width:0;}
-
-  /* Contact map */
-  .map-wrap{aspect-ratio:16/9;}
-
-  /* Footer */
-  .footer-links{gap:1rem;}
-  .special-visual{aspect-ratio:16/9;font-size:4rem;}
-}
-
-/* ════════════════════════════════════════════════
-   MOBILE (max 480px)
-   ════════════════════════════════════════════════ */
-/* !! IMPORTANT: nav-call must ONLY be hidden at 480px, NOT at 768px !! */
-@media(max-width:480px){
-  /* Prevent ANY element from overflowing */
-  body,section,#hero,.container,.catering-inner,
-  .special-inner,.about-grid,.contact-grid{
-    max-width:100vw;
-    overflow-x:hidden;
-    box-sizing:border-box;
-  }
-
-  /* Nav */
-  .nav-call{display:none;}
-  nav{padding:.65rem 1rem;}
-  .nav-donut{font-size:1.4rem;}
-  .nav-name{font-size:1rem;}
-  .nav-order{font-size:.75rem;padding:.4rem .85rem;white-space:nowrap;}
-
-  /* Hero */
-  #hero{padding:5.5rem 1rem 3rem;}
-  #sprinkles{display:none;} /* sprinkles cause overflow on mobile */
-  .hero-badge{font-size:.7rem;padding:.3rem .9rem;}
-  .hero-title{font-size:clamp(2.6rem,13vw,4rem);line-height:1.05;}
-  .hero-tagline{font-size:.9rem;}
-  .hero-sub{font-size:.88rem;padding:0 .5rem;}
-  .hero-call{
-    font-size:.88rem;padding:.75rem 1.5rem;
-    margin-bottom:1rem;
-    display:block;width:100%;text-align:center;
-    box-sizing:border-box;
-  }
-  .hero-ctas{gap:.75rem;flex-direction:column;align-items:stretch;}
-  .btn-pink,.btn-ghost{
-    padding:.8rem 1.4rem;font-size:.9rem;
-    width:100%;text-align:center;
-    box-sizing:border-box;display:block;
-  }
-
-  /* Sections */
-  section{padding:3rem 1rem;}
-  .section-title{font-size:clamp(1.5rem,7vw,2rem);}
-  .section-lead{font-size:.9rem;margin-bottom:1.75rem;}
-  .section-eyebrow{font-size:.72rem;}
-
-  /* Stats — 2×2 grid */
-  .stats-ribbon{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:.75rem;
-    padding:1.25rem 1rem;
-  }
-  .stat{background:rgba(255,255,255,.08);border-radius:12px;padding:.75rem .5rem;}
-  .stat-n{font-size:1.7rem;}
-  .stat-l{font-size:.65rem;}
-
-  /* Monthly special */
-  #monthly-special{padding:3rem 1rem;}
-  .special-visual{display:none;}
-
-  /* Menu → single column, compact horizontal cards */
-  .menu-grid{grid-template-columns:1fr;}
-  .menu-tabs{gap:.4rem;flex-wrap:nowrap;overflow-x:auto;}
-  .tab{padding:.4rem .9rem;font-size:.82rem;white-space:nowrap;}
-  .menu-card{
-    padding:.7rem 1rem;
-    flex-direction:row;align-items:center;gap:.75rem;
-    flex-wrap:nowrap;
-  }
-  .menu-emoji{
-    font-size:1.75rem;flex-shrink:0;
-    margin-bottom:0;width:2rem;text-align:center;
-  }
-  .menu-name{font-size:.9rem;margin-bottom:.05rem;}
-  .menu-desc{
-    font-size:.73rem;
-    display:-webkit-box;-webkit-line-clamp:1;
-    -webkit-box-orient:vertical;overflow:hidden;
-    flex:initial;
-  }
-  .menu-price{font-size:.88rem;margin-top:.1rem;}
-  .menu-badge{
-    font-size:.62rem;padding:.1rem .4rem;
-    position:static;display:inline-block;margin-bottom:.2rem;
-  }
-
-  /* Why grid → single column */
-  .why-grid{grid-template-columns:1fr;}
-  .why-card{padding:1.25rem 1rem;}
-
-  /* About */
-  .about-pill{padding:.85rem 1rem;}
-  .pill-icon{font-size:1.3rem;}
-
-  /* Catering */
-  #catering{padding:3rem 1rem;}
-  .catering-inner{padding:0;}
-  .catering-perks{gap:.5rem;}
-  .btn-catering{
-    width:100%;display:block;
-    text-align:center;box-sizing:border-box;
-  }
-
-  /* Reviews */
-  .review-card{padding:1.1rem;}
-  .review-text{font-size:.88rem;}
-  .rating-big{font-size:3.5rem;}
-
-  /* Newsletter */
-  #newsletter{padding:3rem 1rem;}
-  .btn-newsletter{width:100%;box-sizing:border-box;}
-
-  /* Contact */
-  #contact{padding:3rem 1rem;}
-  .info-card{padding:1rem;}
-  .call-cta,.call-doordash{
-    width:100%;display:block;
-    text-align:center;box-sizing:border-box;
-  }
-  .map-wrap{aspect-ratio:4/3;}
-
-  /* Footer */
-  footer{padding:2rem 1rem;}
-  .footer-brand{font-size:1.4rem;}
-  .footer-links{gap:.75rem;font-size:.8rem;}
-  .footer-addr{font-size:.8rem;}
-
-  /* Back to top */
-  #back-to-top{bottom:1.25rem;right:1.25rem;width:42px;height:42px;font-size:1.1rem;}
-
-  /* Specials strip */
-  .specials-inner{flex-direction:column;align-items:flex-start;gap:.75rem;}
-}
-
-/* SCROLL-IN ANIMATIONS */
-.reveal{
-  opacity:0;
-  transform:translateY(32px);
-  transition:opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible{
-  opacity:1;
-  transform:translateY(0);
-}
-.reveal-delay-1{transition-delay:0.1s;}
-.reveal-delay-2{transition-delay:0.2s;}
-.reveal-delay-3{transition-delay:0.3s;}
-.reveal-delay-4{transition-delay:0.4s;}
-
-/* BACK TO TOP */
-#back-to-top{
-  position:fixed;bottom:2rem;right:2rem;z-index:500;
-  width:48px;height:48px;border-radius:50%;
-  background:var(--pink-deep);color:#fff;border:none;
-  font-size:1.3rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(194,24,91,0.35);
-  opacity:0;transform:translateY(12px);
-  transition:opacity 0.3s,transform 0.3s,background 0.2s;
-  pointer-events:none;
-}
-#back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:all;}
-#back-to-top:hover{background:var(--brown-mid);}
-
-
-/* ════════════════════════════════════════════════
-   MOBILE STICKY CTA BAR
-   ════════════════════════════════════════════════ */
-.mobile-sticky-cta {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: var(--cream);
-  border-top: 2px solid rgba(249,168,201,0.5);
-  padding: 0.75rem 1rem;
-  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-  gap: 0.75rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.mobile-sticky-cta .btn-pink,
-.mobile-sticky-cta .btn-ghost {
-  flex: 1;
-  max-width: 160px;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-/* Show on mobile only */
-@media(max-width:480px){
-  .mobile-sticky-cta {
-    display: flex;
-  }
-
-  /* Add padding to footer to prevent content being hidden behind sticky bar */
-  footer {
-    padding-bottom: calc(2.5rem + 70px + env(safe-area-inset-bottom));
-  }
-}
-
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yummy's Donut Palace — Fresh Donuts in Warrensburg, MO</title>
+  
+  <meta name="description" content="Yummy's Donut Palace — Fresh handcrafted donuts, breakfast sandwiches, boba & drinks in Warrensburg, MO. Open Tue–Sun 6AM–1PM."/>
+  <meta name="keywords" content="donuts, donut shop, Warrensburg MO, breakfast, boba, fresh donuts"/>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍩</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --pink:#F9A8C9;--pink-dark:#E8579A;--pink-deep:#C2185B;
+      --yellow:#FFD966;--yellow-dark:#F4B400;
+      --brown:#4A2C0A;--brown-mid:#7B4C1E;
+      --cream:#FFF8F0;--cream2:#FEF0E3;--white:#FFFFFF;
+      --text:#2D1B09;--text-mid:#6B3F1A;--text-light:#A06030;
+    }
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
+    
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,248,240,0.96);backdrop-filter:blur(10px);border-bottom:2px dashed rgba(249,168,201,0.5);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between}
+    .nav-brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
+    .nav-donut{font-size:1.8rem;animation:spin 6s linear infinite}
+    .nav-name{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--pink-deep)}
+    .nav-name span{color:var(--yellow-dark)}
+    .nav-links{display:flex;gap:1.5rem;list-style:none}
+    .nav-links a{text-decoration:none;color:var(--text-mid);font-weight:700;font-size:0.9rem;transition:color 0.2s}
+    .nav-links a:hover{color:var(--pink-deep)}
+    .nav-call{display:flex;align-items:center;gap:0.4rem;background:var(--yellow-dark);color:var(--brown);padding:0.5rem 1.1rem;border-radius:30px;font-weight:800;font-size:0.82rem;text-decoration:none;transition:background 0.2s}
+    .nav-call:hover{background:var(--yellow)}
+    .nav-order{background:var(--pink-deep);color:#fff;padding:0.55rem 1.4rem;border-radius:30px;font-weight:800;font-size:0.85rem;text-decoration:none;transition:background 0.2s,transform 0.15s;display:inline-block}
+    .nav-order:hover{background:var(--brown-mid);transform:scale(1.04)}
+    
+    /* HERO */
+    #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 4rem;background:radial-gradient(circle at 15% 20%,rgba(249,168,201,.35) 0%,transparent 40%),radial-gradient(circle at 85% 80%,rgba(255,217,102,.3) 0%,transparent 40%),radial-gradient(circle at 80% 15%,rgba(94,200,242,.2) 0%,transparent 30%),var(--cream);position:relative;overflow:hidden}
+    .sprinkles{position:absolute;inset:0;pointer-events:none}
+    .sprinkle{position:absolute;width:6px;height:20px;border-radius:3px;animation:fall linear infinite;opacity:.7}
+    .hero-inner{position:relative;z-index:2}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,217,102,.3);border:2px solid var(--yellow-dark);color:var(--brown-mid);font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1.2rem;border-radius:30px;margin-bottom:1.5rem;animation:fadeUp .6s ease both}
+    .hero-title{font-family:'Fredoka One',cursive;font-size:clamp(3.5rem,9vw,7.5rem);line-height:1;color:var(--brown);margin-bottom:.5rem;animation:fadeUp .7s ease .1s both}
+    .hero-title .pop{color:var(--pink-deep)}
+    .hero-title .pop2{color:var(--yellow-dark)}
+    .hero-tagline{font-size:clamp(1rem,2.5vw,1.35rem);color:var(--text-mid);font-weight:600;margin-bottom:.5rem;animation:fadeUp .7s ease .15s both}
+    .hero-sub{font-size:1rem;color:var(--text-light);font-weight:400;max-width:500px;margin:0 auto 1.5rem;animation:fadeUp .7s ease .2s both}
+    .hero-call{display:inline-flex;align-items:center;gap:.5rem;background:var(--yellow-dark);color:var(--brown);font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;padding:.85rem 2rem;border-radius:40px;text-decoration:none;margin-bottom:1.25rem;transition:background .2s,transform .15s;animation:fadeUp .7s ease .22s both}
+    .hero-call:hover{background:var(--yellow);transform:translateY(-2px)}
+    .hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s ease .3s both}
+    .btn-pink{background:var(--pink-deep);color:#fff;border:none;padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;cursor:pointer;transition:transform .15s,background .2s;display:inline-block}
+    .btn-pink:hover{background:var(--brown-mid);transform:translateY(-3px)}
+    .btn-ghost{background:transparent;color:var(--brown);border:2.5px solid var(--pink);padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;cursor:pointer;transition:transform .15s,border-color .2s,color .2s;display:inline-block}
+    .btn-ghost:hover{border-color:var(--pink-deep);color:var(--pink-deep);transform:translateY(-3px)}
+    .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--text-light);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;animation:bounce2 2s ease-in-out infinite}
+    .hero-scroll::after{content:'↓';font-size:1.2rem}
+    
+    /* STATS RIBBON */
+    .stats-ribbon{background:var(--pink-deep);padding:1.5rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap}
+    .stat{text-align:center}
+    .stat-n{font-family:'Fredoka One',cursive;font-size:2.4rem;color:var(--yellow);display:block}
+    .stat-l{font-size:.78rem;color:rgba(255,255,255,.8);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+    
+    /* SECTIONS */
+    section{padding:5.5rem 2rem}
+    .container{max-width:1100px;margin:0 auto}
+    .section-eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-dark);margin-bottom:.6rem;display:block}
+    .section-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--brown);line-height:1.15;margin-bottom:.8rem}
+    .section-lead{color:var(--text-mid);font-size:1rem;font-weight:400;max-width:560px;margin-bottom:2.5rem}
+    
+    /* MONTHLY SPECIAL */
+    #monthly-special{background:var(--brown)}
+    .special-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+    .special-badge{display:inline-block;background:var(--yellow-dark);color:var(--brown);font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.35rem 1rem;border-radius:20px;margin-bottom:1rem}
+    .special-title{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3rem);color:var(--yellow);line-height:1.15;margin-bottom:.75rem}
+    .special-desc{color:rgba(253,246,236,.8);font-size:1rem;margin-bottom:1.5rem;line-height:1.7}
+    .special-price{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--pink);margin-bottom:1.5rem}
+    .special-visual{border-radius:24px;border:2px dashed rgba(249,168,201,.3);aspect-ratio:1;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);font-size:7rem}
+    .special-visual img{width:100%;height:100%;object-fit:cover;display:block;border-radius:22px}
+    .btn-catering{display:inline-flex;align-items:center;gap:.5rem;background:var(--yellow-dark);color:var(--brown);padding:1rem 2.2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;transition:background .2s,transform .15s}
+    .btn-catering:hover{background:var(--yellow);transform:translateY(-2px)}
+    
+    /* MENU */
+    #menu{background:var(--cream2)}
+    .menu-tabs{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.5rem}
+    .tab{padding:.5rem 1.3rem;border-radius:30px;border:2px solid var(--pink);background:transparent;color:var(--brown-mid);font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s}
+    .tab.active,.tab:hover{background:var(--pink-deep);border-color:var(--pink-deep);color:#fff}
+    .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem}
+    .menu-section{display:none}
+    .menu-section.active{display:grid}
+    .menu-card{background:var(--white);border-radius:20px;border:2px solid rgba(249,168,201,.3);padding:1.5rem;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;gap:.5rem}
+    .menu-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(194,24,91,.12)}
+    .menu-emoji{font-size:2.5rem;margin-bottom:.3rem}
+    .menu-name{font-weight:800;font-size:1.05rem;color:var(--brown)}
+    .menu-desc{font-size:.88rem;color:var(--text-light);line-height:1.5;flex:1}
+    .menu-price{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--pink-deep);margin-top:.5rem}
+    .menu-badge{display:inline-block;background:rgba(255,217,102,.3);border:1px solid var(--yellow-dark);color:var(--brown-mid);font-size:.7rem;font-weight:800;letter-spacing:.08em;padding:.2rem .6rem;border-radius:20px;text-transform:uppercase}
+    
+    /* WHY US */
+    #why-us{background:var(--white)}
+    .why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;margin-top:1rem}
+    .why-card{background:var(--cream2);border-radius:20px;padding:1.75rem 1.5rem;border:1.5px solid rgba(249,168,201,.25);text-align:center;transition:transform .2s,box-shadow .2s}
+    .why-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(194,24,91,.1)}
+    .why-icon{font-size:2.5rem;margin-bottom:.75rem;display:block}
+    .why-title{font-weight:800;font-size:1rem;color:var(--brown);margin-bottom:.4rem}
+    .why-text{font-size:.85rem;color:var(--text-light);line-height:1.55}
+    
+    /* ABOUT */
+    #about{background:var(--cream2)}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+    .about-visual{background:radial-gradient(circle at 30% 40%,rgba(249,168,201,.4),transparent 60%),radial-gradient(circle at 75% 70%,rgba(255,217,102,.3),transparent 50%),var(--cream2);border-radius:24px;border:2px dashed rgba(249,168,201,.6);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:8rem;flex-direction:column;gap:.5rem}
+    .about-big-emoji{animation:wobble 3s ease-in-out infinite}
+    .about-pills{display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem}
+    .about-pill{background:var(--white);border-radius:16px;padding:1rem 1.25rem;border:1.5px solid rgba(249,168,201,.3);display:flex;align-items:flex-start;gap:1rem}
+    .pill-icon{font-size:1.6rem;flex-shrink:0}
+    .pill-title{font-weight:800;font-size:.95rem;color:var(--brown);margin-bottom:.15rem}
+    .pill-text{font-size:.85rem;color:var(--text-light)}
+    
+    /* CATERING */
+    #catering{background:var(--pink-deep)}
+    .catering-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+    .catering-text .section-eyebrow{color:rgba(255,255,255,.65)}
+    .catering-text .section-title{color:var(--yellow)}
+    .catering-text .section-lead{color:rgba(255,255,255,.85);max-width:480px}
+    .catering-perks{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
+    .catering-perk{display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.9);font-size:.95rem;font-weight:600}
+    .catering-perk-icon{font-size:1.3rem;flex-shrink:0}
+    .catering-visual{background:rgba(255,255,255,.08);border-radius:24px;border:2px dashed rgba(255,255,255,.2);padding:2rem;display:flex;flex-direction:column;gap:1rem}
+    .catering-stat{background:rgba(255,255,255,.1);border-radius:16px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem}
+    .catering-stat-n{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);flex-shrink:0}
+    .catering-stat-l{font-size:.85rem;color:rgba(255,255,255,.8);font-weight:600}
+    
+    /* REVIEWS */
+    #reviews{background:var(--cream2)}
+    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem}
+    .review-card{background:var(--white);border-radius:20px;padding:1.5rem;border:2px solid rgba(249,168,201,.25);transition:transform .2s}
+    .review-card:hover{transform:translateY(-3px)}
+    .stars{color:var(--yellow-dark);font-size:1rem;margin-bottom:.75rem}
+    .review-text{font-size:.92rem;color:var(--text-mid);line-height:1.65;margin-bottom:1rem;font-style:italic}
+    .review-author{font-weight:800;font-size:.85rem;color:var(--brown)}
+    .review-source{font-size:.78rem;color:var(--text-light)}
+    .rating-highlight{background:var(--pink-deep);border-radius:20px;padding:2.5rem;text-align:center;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem}
+    .rating-big{font-family:'Fredoka One',cursive;font-size:5rem;color:var(--yellow);line-height:1}
+    .rating-stars{font-size:1.5rem;color:var(--yellow)}
+    .rating-label{font-size:.85rem;font-weight:700;opacity:.85;letter-spacing:.08em;text-transform:uppercase}
+    .google-badge{display:inline-flex;align-items:center;gap:.5rem;margin-top:.75rem;background:rgba(255,255,255,.15);border-radius:20px;padding:.4rem 1rem;font-size:.78rem;font-weight:700;color:rgba(255,255,255,.9);text-decoration:none;border:1px solid rgba(255,255,255,.2);transition:background .2s}
+    .google-badge:hover{background:rgba(255,255,255,.25)}
+    
+    /* NEWSLETTER */
+    #newsletter{background:var(--cream2)}
+    .newsletter-inner{max-width:600px;margin:0 auto;text-align:center}
+    .newsletter-inner .section-title{margin-bottom:.5rem}
+    .newsletter-inner .section-lead{margin:0 auto 2rem}
+    .newsletter-form{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center}
+    .newsletter-input{flex:1;min-width:220px;padding:.9rem 1.25rem;border-radius:40px;border:2px solid rgba(249,168,201,.5);background:var(--white);font-family:'Nunito',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s}
+    .newsletter-input:focus{border-color:var(--pink-deep)}
+    .btn-newsletter{background:var(--pink-deep);color:#fff;border:none;padding:.9rem 2rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:background .2s,transform .15s;white-space:nowrap}
+    .btn-newsletter:hover{background:var(--brown-mid);transform:translateY(-2px)}
+    .newsletter-note{font-size:.78rem;color:var(--text-light);margin-top:.75rem}
+    .newsletter-success{display:none;background:rgba(39,174,96,.12);border:1.5px solid rgba(39,174,96,.3);color:#1e7e44;border-radius:16px;padding:1rem 1.5rem;font-weight:700;font-size:.95rem;margin-top:1rem}
+    
+    /* CONTACT */
+    #contact{background:var(--white)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+    .info-cards{display:flex;flex-direction:column;gap:1rem}
+    .info-card{background:var(--cream2);border-radius:16px;padding:1.25rem 1.5rem;border:1.5px solid rgba(249,168,201,.3);display:flex;align-items:flex-start;gap:1rem}
+    .info-icon{font-size:1.8rem;flex-shrink:0}
+    .info-label{font-weight:800;font-size:.8rem;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem}
+    .info-val{font-weight:700;font-size:1rem;color:var(--brown)}
+    .info-val a{color:var(--pink-deep);text-decoration:none}
+    .hours-grid{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.5rem;font-size:.9rem}
+    .hours-day{font-weight:700;color:var(--brown)}
+    .hours-time{color:var(--text-mid)}
+    .hours-closed{color:var(--text-light);font-style:italic}
+    .map-wrap{border-radius:20px;overflow:hidden;border:2px solid rgba(249,168,201,.4);aspect-ratio:4/3}
+    .map-wrap iframe{width:100%;height:100%;border:none}
+    .call-cta{display:flex;align-items:center;justify-content:center;gap:.75rem;background:var(--yellow-dark);color:var(--brown);padding:1.1rem 2rem;border-radius:16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;text-decoration:none;transition:background .2s,transform .15s;margin-top:.5rem}
+    .call-cta:hover{background:var(--yellow);transform:translateY(-2px)}
+    
+    /* ANNOUNCEMENT */
+    #announcement-bar{background:var(--yellow-dark);color:var(--brown);text-align:center;padding:.55rem 1rem;font-weight:800;font-size:.9rem;display:none}
+    #announcement-bar.visible{display:block}
+    nav.has-banner{top:2.4rem}
+    #specials-section{display:none;background:var(--yellow);padding:2rem}
+    #specials-section.visible{display:block}
+    .specials-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+    .specials-label{font-size:.75rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--brown-mid);margin-bottom:.2rem}
+    .specials-title{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--brown)}
+    .specials-desc{font-size:.95rem;color:var(--brown-mid)}
+    
+    /* FOOTER */
+    footer{background:var(--brown);color:rgba(255,248,240,.8);padding:2.5rem 2rem;text-align:center}
+    .footer-brand{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--yellow);margin-bottom:.5rem}
+    .footer-links{display:flex;justify-content:center;gap:1.5rem;margin-bottom:.75rem;flex-wrap:wrap}
+    .footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;font-weight:700;transition:color .2s}
+    .footer-links a:hover{color:var(--yellow)}
+    .footer-addr{font-size:.88rem;margin-bottom:.3rem}
+    .footer-copy{font-size:.78rem;opacity:.5;margin-top:1rem}
+    
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes wobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+    @keyframes bounce2{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+    @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:0}10%{opacity:.7}90%{opacity:.7}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+    
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(32px);transition:opacity 0.6s ease,transform 0.6s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    
+    /* BACK TO TOP */
+    #back-to-top{position:fixed;bottom:2rem;right:2rem;z-index:500;width:48px;height:48px;border-radius:50%;background:var(--pink-deep);color:#fff;border:none;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(194,24,91,0.35);opacity:0;transform:translateY(12px);transition:opacity 0.3s,transform 0.3s,background 0.2s;pointer-events:none}
+    #back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:all}
+    #back-to-top:hover{background:var(--brown-mid)}
+    
+    /* MOBILE STICKY CTA */
+    .mobile-sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--cream);border-top:2px solid rgba(249,168,201,0.5);padding:0.75rem 1rem;padding-bottom:calc(0.75rem + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(0,0,0,0.1);gap:0.75rem;justify-content:center;align-items:center}
+    .mobile-sticky-cta .btn-pink,.mobile-sticky-cta .btn-ghost{flex:1;max-width:160px;padding:0.75rem 1rem;font-size:0.9rem;text-align:center}
+    
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .nav-links{display:none}
+      nav{padding:.75rem 1.25rem}
+      .nav-name{font-size:1.15rem}
+      .nav-order{font-size:.78rem;padding:.45rem 1rem}
+      #hero{padding:6rem 1.5rem 3.5rem}
+      .hero-title{font-size:clamp(3rem,11vw,5rem)}
+      section{padding:4rem 1.5rem}
+      .special-inner,.about-grid,.contact-grid,.catering-inner{grid-template-columns:1fr;gap:2rem}
+      .catering-visual{display:none}
+      .menu-grid{grid-template-columns:1fr 1fr;gap:1rem}
+      .why-grid{grid-template-columns:1fr 1fr;gap:1rem}
+      .reviews-grid{grid-template-columns:1fr}
+      .map-wrap{aspect-ratio:16/9}
+    }
+    @media(max-width:480px){
+      .nav-call{display:none}
+      nav{padding:.65rem 1rem}
+      .nav-donut{font-size:1.4rem}
+      .nav-name{font-size:1rem}
+      .nav-order{font-size:.75rem;padding:.4rem .85rem;white-space:nowrap}
+      #hero{padding:5.5rem 1rem 3rem}
+      #sprinkles{display:none}
+      .hero-badge{font-size:.7rem;padding:.3rem .9rem}
+      .hero-title{font-size:clamp(2.6rem,13vw,4rem);line-height:1.05}
+      .hero-tagline{font-size:.9rem}
+      .hero-sub{font-size:.88rem;padding:0 .5rem}
+      .hero-call{font-size:.88rem;padding:.75rem 1.5rem;margin-bottom:1rem;display:block;width:100%;text-align:center}
+      .hero-ctas{gap:.75rem;flex-direction:column;align-items:stretch}
+      .btn-pink,.btn-ghost{padding:.8rem 1.4rem;font-size:.9rem;width:100%;text-align:center}
+      section{padding:3rem 1rem}
+      .section-title{font-size:clamp(1.5rem,7vw,2rem)}
+      .stats-ribbon{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:1.25rem 1rem}
+      .stat{background:rgba(255,255,255,.08);border-radius:12px;padding:.75rem .5rem}
+      .stat-n{font-size:1.7rem}
+      .stat-l{font-size:.65rem}
+      .special-visual{display:none}
+      .menu-grid{grid-template-columns:1fr}
+      .menu-tabs{gap:.4rem;flex-wrap:nowrap;overflow-x:auto}
+      .tab{padding:.4rem .9rem;font-size:.82rem;white-space:nowrap}
+      .why-grid{grid-template-columns:1fr}
+      .mobile-sticky-cta{display:flex}
+      footer{padding-bottom:calc(2.5rem + 70px + env(safe-area-inset-bottom))}
+    }
+  </style>
 </head>
 <body>
 
@@ -535,7 +288,7 @@ img,iframe{max-width:100%;height:auto;}
 <nav id="main-nav">
   <a href="#hero" class="nav-brand">
     <span class="nav-donut">🍩</span>
-    <span class="nav-name">Yummy's <span>Donut Palace</span></span>
+    <span class="nav-name" id="nav-brand-text">Yummy's <span>Donut Palace</span></span>
   </a>
   <ul class="nav-links">
     <li><a href="#menu">Menu</a></li>
@@ -545,8 +298,8 @@ img,iframe{max-width:100%;height:auto;}
     <li><a href="#contact">Find Us</a></li>
   </ul>
   <div style="display:flex;gap:.6rem;align-items:center;">
-    <a href="tel:+16604227777" class="nav-call">📞 Call Us</a>
-    <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="nav-order">Order on DoorDash</a>
+    <a href="#" class="nav-call" id="nav-call-btn">📞 Call Us</a>
+    <a href="#" class="nav-order" id="nav-order-btn">Order on DoorDash</a>
   </div>
 </nav>
 
@@ -554,54 +307,49 @@ img,iframe{max-width:100%;height:auto;}
 <section id="hero">
   <div class="sprinkles" id="sprinkles"></div>
   <div class="hero-inner">
-    <div class="hero-badge">🍩 Warrensburg's Sweetest Spot</div>
+    <div class="hero-badge" id="hero-badge"></div>
     <h1 class="hero-title">
-      <span class="pop">Yummy's</span><br>
-      <span class="pop2">Donut</span> Palace
+      <span class="pop" id="hero-title-1"></span><br>
+      <span class="pop2" id="hero-title-2"></span> <span id="hero-title-3"></span>
     </h1>
-    <p class="hero-tagline">Fresh Donuts · Breakfast · Boba · Smoothies</p>
-    <p class="hero-sub">Handcrafted donuts made fresh every morning in the heart of Warrensburg, MO. Come early — they sell out fast!</p>
-    <a href="tel:+16604227777" class="hero-call">📞 (660) 422-7777 — Call to Order</a>
+    <p class="hero-tagline" id="hero-tagline"></p>
+    <p class="hero-sub" id="hero-sub"></p>
+    <a href="#" class="hero-call" id="hero-call-btn"></a>
     <div class="hero-ctas">
-      <a href="#menu" class="btn-pink">🍩 See Our Menu</a>
-      <a href="#contact" class="btn-ghost">📍 Find Us</a>
+      <a href="#menu" class="btn-pink" id="hero-btn-1">🍩 See Our Menu</a>
+      <a href="#contact" class="btn-ghost" id="hero-btn-2">📍 Find Us</a>
     </div>
   </div>
   <div class="hero-scroll">Scroll</div>
 </section>
 
 <!-- STATS RIBBON -->
-<div class="stats-ribbon" id="stats-ribbon">
-  <div class="stat"><span class="stat-n">4.7★</span><span class="stat-l">Average Rating</span></div>
-  <div class="stat"><span class="stat-n">2,000+</span><span class="stat-l">Happy Customers</span></div>
-  <div class="stat"><span class="stat-n">$1.89</span><span class="stat-l">From a Donut</span></div>
-  <div class="stat"><span class="stat-n">#1</span><span class="stat-l">Donuts in Town</span></div>
-</div>
+<div class="stats-ribbon" id="stats-ribbon"></div>
 
 <!-- MONTHLY SPECIAL -->
 <section id="monthly-special" class="reveal">
   <div class="special-inner">
     <div>
-      <div class="special-badge">🌟 This Month's Special</div>
-      <h2 class="special-title" id="special-month-title">Maple Bacon Long John</h2>
-      <p class="special-desc" id="special-month-desc">Our signature Long John donut topped with rich maple glaze and crispy bacon strips. The perfect sweet-and-savory combo — available all month while supplies last.</p>
-      <div class="special-price" id="special-month-price">Only $2.99</div>
-      <a href="#menu" class="btn-catering">🍩 See Full Menu</a>
+      <div class="special-badge" id="special-badge"></div>
+      <h2 class="special-title" id="special-title"></h2>
+      <p class="special-desc" id="special-desc"></p>
+      <div class="special-price" id="special-price"></div>
+      <a href="#menu" class="btn-catering" id="special-btn">🍩 See Full Menu</a>
     </div>
-    <div class="special-visual" id="special-month-visual">🍁</div>
+    <div class="special-visual" id="special-visual"></div>
   </div>
 </section>
 
 <!-- MENU -->
 <section id="menu" class="reveal">
   <div class="container">
-    <span class="section-eyebrow">What We Serve</span>
-    <h2 class="section-title">Our Menu</h2>
-    <p class="section-lead">From melt-in-your-mouth glazed donuts to hearty breakfast sandwiches and refreshing drinks — there's something for everyone.</p>
+    <span class="section-eyebrow" id="menu-eyebrow"></span>
+    <h2 class="section-title" id="menu-title"></h2>
+    <p class="section-lead" id="menu-lead"></p>
     <div class="menu-tabs">
-      <button class="tab active" onclick="showTab('donuts',this)">🍩 Donuts</button>
-      <button class="tab" onclick="showTab('breakfast',this)">🥐 Breakfast</button>
-      <button class="tab" onclick="showTab('drinks',this)">🧋 Drinks</button>
+      <button class="tab active" onclick="showTab('donuts',this)" id="menu-tab-1">🍩 Donuts</button>
+      <button class="tab" onclick="showTab('breakfast',this)" id="menu-tab-2">🥐 Breakfast</button>
+      <button class="tab" onclick="showTab('drinks',this)" id="menu-tab-3">🧋 Drinks</button>
     </div>
     <div class="menu-grid menu-section active" id="tab-donuts"></div>
     <div class="menu-grid menu-section" id="tab-breakfast"></div>
@@ -612,41 +360,10 @@ img,iframe{max-width:100%;height:auto;}
 <!-- WHY CHOOSE US -->
 <section id="why-us" class="reveal">
   <div class="container">
-    <span class="section-eyebrow">Why Yummy's</span>
-    <h2 class="section-title">What Makes Us Different</h2>
-    <p class="section-lead">We're not just a donut shop — we're a Warrensburg tradition.</p>
-    <div class="why-grid">
-      <div class="why-card">
-        <span class="why-icon">🌅</span>
-        <div class="why-title">Made Fresh Daily</div>
-        <div class="why-text">Every donut is baked from scratch starting at 5 AM. No reheating, no frozen dough — ever.</div>
-      </div>
-      <div class="why-card">
-        <span class="why-icon">⭐</span>
-        <div class="why-title">4.7 Star Rating</div>
-        <div class="why-text">Over 2,000 happy customers have rated us across Google, DoorDash, TripAdvisor and more.</div>
-      </div>
-      <div class="why-card">
-        <span class="why-icon">🚗</span>
-        <div class="why-title">Drive-Through & Dine-In</div>
-        <div class="why-text">Grab your order on the go via our fast drive-through, or relax in our cozy space with free Wi-Fi.</div>
-      </div>
-      <div class="why-card">
-        <span class="why-icon">🛵</span>
-        <div class="why-title">DoorDash Delivery</div>
-        <div class="why-text">Can't make it in? We deliver! Order online and get Yummy's delivered straight to your door.</div>
-      </div>
-      <div class="why-card">
-        <span class="why-icon">👨‍👩‍👧</span>
-        <div class="why-title">Family Friendly</div>
-        <div class="why-text">A welcoming spot for everyone — families, students, and early birds have called us home since day one.</div>
-      </div>
-      <div class="why-card">
-        <span class="why-icon">📍</span>
-        <div class="why-title">Now in Sedalia Too!</div>
-        <div class="why-text">Loved so much we expanded — a second Yummy's location is now open in Sedalia, MO.</div>
-      </div>
-    </div>
+    <span class="section-eyebrow" id="why-eyebrow"></span>
+    <h2 class="section-title" id="why-title"></h2>
+    <p class="section-lead" id="why-lead"></p>
+    <div class="why-grid" id="why-grid"></div>
   </div>
 </section>
 
@@ -655,19 +372,14 @@ img,iframe{max-width:100%;height:auto;}
   <div class="container">
     <div class="about-grid">
       <div class="about-visual">
-        <span class="about-big-emoji">🍩</span>
-        <span style="font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--pink-deep);">Fresh Every Morning</span>
+        <span class="about-big-emoji" id="about-emoji">🍩</span>
+        <span style="font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--pink-deep);" id="about-visual-text">Fresh Every Morning</span>
       </div>
       <div>
-        <span class="section-eyebrow">Our Story</span>
-        <h2 class="section-title">Warrensburg's Favorite Donut Shop</h2>
-        <p class="section-lead">Since opening, Yummy's Donut Palace has become the go-to morning destination for locals, students, and travelers. We make everything fresh, every single day.</p>
-        <div class="about-pills">
-          <div class="about-pill"><span class="pill-icon">🌅</span><div><div class="pill-title">Baked Fresh Daily</div><div class="pill-text">Donuts made every morning from 5 AM. Get there early — the best ones sell out fast!</div></div></div>
-          <div class="about-pill"><span class="pill-icon">😊</span><div><div class="pill-title">Famously Friendly Staff</div><div class="pill-text">Known throughout Warrensburg for warm, welcoming service. We love families, students, and everyone in between.</div></div></div>
-          <div class="about-pill"><span class="pill-icon">🚗</span><div><div class="pill-title">Drive-Through & Dine-In</div><div class="pill-text">Grab your order on the go or sit down in our cozy space with free Wi-Fi.</div></div></div>
-          <div class="about-pill"><span class="pill-icon">📍</span><div><div class="pill-title">Now in Sedalia Too!</div><div class="pill-text">Loved so much we expanded — a second location is now open in Sedalia, MO.</div></div></div>
-        </div>
+        <span class="section-eyebrow" id="about-eyebrow"></span>
+        <h2 class="section-title" id="about-title"></h2>
+        <p class="section-lead" id="about-lead"></p>
+        <div class="about-pills" id="about-pills"></div>
       </div>
     </div>
   </div>
@@ -677,101 +389,51 @@ img,iframe{max-width:100%;height:auto;}
 <section id="catering" class="reveal">
   <div class="catering-inner">
     <div class="catering-text">
-      <span class="section-eyebrow">Catering & Bulk Orders</span>
-      <h2 class="section-title">Feed Your Whole Crew 🍩</h2>
-      <p class="section-lead">Planning an office meeting, birthday party, school event, or any occasion? Yummy's is the answer. We handle bulk donut orders with ease.</p>
-      <div class="catering-perks">
-        <div class="catering-perk"><span class="catering-perk-icon">🏢</span> Office meetings & corporate events</div>
-        <div class="catering-perk"><span class="catering-perk-icon">🎂</span> Birthday parties & celebrations</div>
-        <div class="catering-perk"><span class="catering-perk-icon">🏫</span> School & university events</div>
-        <div class="catering-perk"><span class="catering-perk-icon">⛪</span> Church groups & community events</div>
-        <div class="catering-perk"><span class="catering-perk-icon">📦</span> Custom dozen boxes available</div>
-      </div>
-      <a href="tel:+16604227777" class="btn-catering">📞 Call to Place a Bulk Order</a>
+      <span class="section-eyebrow" id="catering-eyebrow"></span>
+      <h2 class="section-title" id="catering-title"></h2>
+      <p class="section-lead" id="catering-lead"></p>
+      <div class="catering-perks" id="catering-perks"></div>
+      <a href="#" class="btn-catering" id="catering-btn">📞 Call to Place a Bulk Order</a>
     </div>
-    <div class="catering-visual">
-      <div class="catering-stat"><span class="catering-stat-n">12+</span><span class="catering-stat-l">Donut varieties available for catering orders</span></div>
-      <div class="catering-stat"><span class="catering-stat-n">$18</span><span class="catering-stat-l">Starting price per dozen — best value in town</span></div>
-      <div class="catering-stat"><span class="catering-stat-n">24hr</span><span class="catering-stat-l">Advance notice recommended for large orders</span></div>
-      <div class="catering-stat"><span class="catering-stat-n">📞</span><span class="catering-stat-l">Call (660) 422-7777 to discuss your order</span></div>
-    </div>
+    <div class="catering-visual" id="catering-stats"></div>
   </div>
 </section>
 
 <!-- REVIEWS -->
 <section id="reviews" class="reveal">
   <div class="container">
-    <span class="section-eyebrow">What People Are Saying</span>
-    <h2 class="section-title">Our Customers Love Us</h2>
-    <p class="section-lead">Don't just take our word for it — Yummy's is rated 4.7 stars across thousands of reviews.</p>
-    <div class="reviews-grid">
-      <div class="rating-highlight">
-        <div class="rating-big">4.7</div>
-        <div class="rating-stars">★★★★★</div>
-        <div class="rating-label">Out of 5 · 2,000+ Ratings</div>
-        <a href="https://www.google.com/maps/search/Yummy's+Donut+Palace+Warrensburg" target="_blank" class="google-badge">⭐ See all Google Reviews</a>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <div class="review-text">"The donuts were perfect and warm, and the biscuits and gravy were right on spot and delicious. Yummy yummy yummy — good morning thanks to Yummy's!"</div>
-        <div class="review-author">Verified Customer</div><div class="review-source">via DoorDash</div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <div class="review-text">"I ordered a bacon biscuit and it was the best I have ever had. Soft biscuit, meaty bacon and perfectly cooked egg with cheese. Customer service was spot on."</div>
-        <div class="review-author">TripAdvisor Reviewer</div><div class="review-source">via TripAdvisor</div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <div class="review-text">"The donuts here are absolutely amazing, and the coffee is just as good. Their maple bacon long john is exceptional!"</div>
-        <div class="review-author">Nisha T.</div><div class="review-source">via MenuPix · Feb 2025</div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <div class="review-text">"Every time I pass through Warrensburg I stop and get 2 or 3 dozen chocolate iced doughnuts. Yummy's is the best!"</div>
-        <div class="review-author">Loyal Traveler</div><div class="review-source">via TripAdvisor</div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <div class="review-text">"Amazing service every single time! 10/10 would purchase from here again!"</div>
-        <div class="review-author">Verified Customer</div><div class="review-source">via DoorDash</div>
-      </div>
-    </div>
+    <span class="section-eyebrow" id="reviews-eyebrow"></span>
+    <h2 class="section-title" id="reviews-title"></h2>
+    <p class="section-lead" id="reviews-lead"></p>
+    <div class="reviews-grid" id="reviews-grid"></div>
   </div>
 </section>
 
 <!-- NEWSLETTER -->
 <section id="newsletter" class="reveal">
   <div class="newsletter-inner">
-    <span class="section-eyebrow">Stay in the Loop</span>
-    <h2 class="section-title">Get Notified About Specials 🍩</h2>
-    <p class="section-lead">Be the first to hear about daily specials, seasonal flavors, new menu items, and exclusive deals. No spam — just donuts.</p>
+    <span class="section-eyebrow" id="newsletter-eyebrow"></span>
+    <h2 class="section-title" id="newsletter-title"></h2>
+    <p class="section-lead" id="newsletter-lead"></p>
     <div class="newsletter-form">
       <input type="email" id="newsletter-email" class="newsletter-input" placeholder="your@email.com"/>
       <button class="btn-newsletter" onclick="subscribeNewsletter()">Notify Me!</button>
     </div>
-    <p class="newsletter-note">We'll never share your email. Unsubscribe anytime.</p>
-    <div class="newsletter-success" id="newsletter-success">🎉 You're on the list! We'll be in touch with sweet updates.</div>
+    <p class="newsletter-note" id="newsletter-note"></p>
+    <div class="newsletter-success" id="newsletter-success"></div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact" class="reveal">
   <div class="container">
-    <span class="section-eyebrow">Come Visit Us</span>
-    <h2 class="section-title">Find Yummy's</h2>
-    <p class="section-lead">We're located right in the heart of Warrensburg. Stop by for dine-in, hit the drive-through, or order delivery via DoorDash.</p>
+    <span class="section-eyebrow" id="contact-eyebrow"></span>
+    <h2 class="section-title" id="contact-title"></h2>
+    <p class="section-lead" id="contact-lead"></p>
     <div class="contact-grid">
-      <div class="info-cards">
-        <div class="info-card"><span class="info-icon">📍</span><div><div class="info-label">Address</div><div class="info-val address-display">709 S Maguire St, Warrensburg, MO 64093</div></div></div>
-        <div class="info-card"><span class="info-icon">📞</span><div><div class="info-label">Phone</div><div class="info-val phone-display">(660) 422-7777</div></div></div>
-        <div class="info-card"><span class="info-icon">🕐</span><div><div class="info-label">Hours</div><div class="info-val"><div class="hours-grid"><span class="hours-day">Monday</span><span class="hours-closed">Closed</span><span class="hours-day">Tue – Sun</span><span class="hours-time hours-display">6:00 AM – 1:00 PM</span></div></div></div></div>
-        <div class="info-card"><span class="info-icon">🚗</span><div><div class="info-label">Options</div><div class="info-val options-display">Dine-In · Drive-Through · DoorDash Delivery · Free Wi-Fi</div></div></div>
-        <a href="tel:+16604227777" class="call-cta">📞 Call Now — (660) 422-7777</a>
-        <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink call-doordash" style="text-align:center;margin-top:.25rem;">🛵 Order on DoorDash</a>
-      </div>
+      <div class="info-cards" id="contact-info"></div>
       <div class="map-wrap">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3102.847!2d-93.73823!3d38.76295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87c06b9b4a5b5b5b%3A0x1!2s709+S+Maguire+St%2C+Warrensburg%2C+MO+64093!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="width:100%;height:100%;border:none;border-radius:18px;"></iframe>
+        <iframe id="contact-map" src="" allowfullscreen loading="lazy" style="width:100%;height:100%;border:none;border-radius:18px;"></iframe>
       </div>
     </div>
   </div>
@@ -782,7 +444,7 @@ img,iframe{max-width:100%;height:auto;}
 
 <!-- FOOTER -->
 <footer id="footer">
-  <div class="footer-brand">🍩 Yummy's Donut Palace</div>
+  <div class="footer-brand" id="footer-brand"></div>
   <div class="footer-links">
     <a href="#menu">Menu</a>
     <a href="#about">About</a>
@@ -790,797 +452,614 @@ img,iframe{max-width:100%;height:auto;}
     <a href="#reviews">Reviews</a>
     <a href="#contact">Find Us</a>
   </div>
-  <div class="footer-addr address-display" id="footer-addr">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777</div>
-  <div class="footer-addr footer-hours" id="footer-hours">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div>
-  <div class="footer-copy">© 2025 Yummy's Donut Palace. All rights reserved.</div>
+  <div class="footer-addr" id="footer-addr"></div>
+  <div class="footer-addr" id="footer-hours"></div>
+  <div class="footer-copy" id="footer-copy"></div>
 </footer>
-
-<script>
-// ── SUPABASE CONFIG ───────────────────────────────────────
-const SB_URL='https://orywcjwoklirjipjmuhh.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yeXdjandva2xpcmppcGptdWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwODIxMzQsImV4cCI6MjA4OTY1ODEzNH0.LWWkKX-ZhOCUxoqZuOwKbKBWC5Iln_qZSQ1IIH7r64A';
-
-// ── SUPABASE HELPERS ──────────────────────────────────────
-async function sbFetch(table,params=''){
-  try{
-    const r=await fetch(`${SB_URL}/rest/v1/${table}${params}`,{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
-    });
-    return await r.json();
-  }catch(e){return null;}
-}
-
-// ── DEFAULT CONTENT (fallback if DB empty) ────────────────
-const DEFAULTS={
-  content:{
-    // hero
-    'hero.badge':'🍩 Warrensburg\'s Sweetest Spot',
-    'hero.title1':'Yummy\'s',
-    'hero.title2':'Donut',
-    'hero.title3':'Palace',
-    'hero.tagline':'Fresh Donuts · Breakfast · Boba · Smoothies',
-    'hero.sub':'Handcrafted donuts made fresh every morning in the heart of Warrensburg, MO. Come early — they sell out fast!',
-    // stats
-    'stats.0.n':'4.7★','stats.0.l':'Average Rating',
-    'stats.1.n':'2,000+','stats.1.l':'Happy Customers',
-    'stats.2.n':'$1.89','stats.2.l':'From a Donut',
-    'stats.3.n':'#1','stats.3.l':'Donuts in Town',
-    // monthly special
-    'special.title':'Maple Bacon Long John',
-    'special.desc':'Our signature Long John donut topped with rich maple glaze and crispy bacon strips. The perfect sweet-and-savory combo — available all month while supplies last.',
-    'special.price':'Only $2.99',
-    'special.emoji':'🍁',
-    'special.photo':'',
-    // menu section header
-    'menu.eyebrow':'What We Serve',
-    'menu.title':'Our Menu',
-    'menu.lead':'From melt-in-your-mouth glazed donuts to hearty breakfast sandwiches and refreshing drinks — there\'s something for everyone.',
-    // why us
-    'why.eyebrow':'Why Yummy\'s',
-    'why.title':'What Makes Us Different',
-    'why.lead':'We\'re not just a donut shop — we\'re a Warrensburg tradition.',
-    'why.0.icon':'🌅','why.0.title':'Made Fresh Daily','why.0.text':'Every donut is baked from scratch starting at 5 AM. No reheating, no frozen dough — ever.',
-    'why.1.icon':'⭐','why.1.title':'4.7 Star Rating','why.1.text':'Over 2,000 happy customers have rated us across Google, DoorDash, TripAdvisor and more.',
-    'why.2.icon':'🚗','why.2.title':'Drive-Through & Dine-In','why.2.text':'Grab your order on the go via our fast drive-through, or relax in our cozy space with free Wi-Fi.',
-    'why.3.icon':'🛵','why.3.title':'DoorDash Delivery','why.3.text':'Can\'t make it in? We deliver! Order online and get Yummy\'s delivered straight to your door.',
-    'why.4.icon':'👨‍👩‍👧','why.4.title':'Family Friendly','why.4.text':'A welcoming spot for everyone — families, students, and early birds have called us home since day one.',
-    'why.5.icon':'📍','why.5.title':'Now in Sedalia Too!','why.5.text':'Loved so much we expanded — a second Yummy\'s location is now open in Sedalia, MO.',
-    // about
-    'about.eyebrow':'Our Story',
-    'about.title':'Warrensburg\'s Favorite Donut Shop',
-    'about.lead':'Since opening, Yummy\'s Donut Palace has become the go-to morning destination for locals, students, and travelers. We make everything fresh, every single day.',
-    'about.0.icon':'🌅','about.0.title':'Baked Fresh Daily','about.0.text':'Donuts made every morning from 5 AM. Get there early — the best ones sell out fast!',
-    'about.1.icon':'😊','about.1.title':'Famously Friendly Staff','about.1.text':'Known throughout Warrensburg for warm, welcoming service. We love families, students, and everyone in between.',
-    'about.2.icon':'🚗','about.2.title':'Drive-Through & Dine-In','about.2.text':'Grab your order on the go or sit down in our cozy space with free Wi-Fi.',
-    'about.3.icon':'📍','about.3.title':'Now in Sedalia Too!','about.3.text':'Loved so much we expanded — a second location is now open in Sedalia, MO.',
-    // catering
-    'catering.eyebrow':'Catering & Bulk Orders',
-    'catering.title':'Feed Your Whole Crew 🍩',
-    'catering.lead':'Planning an office meeting, birthday party, school event, or any occasion? Yummy\'s handles bulk donut orders with ease.',
-    'catering.0.icon':'🏢','catering.0.text':'Office meetings & corporate events',
-    'catering.1.icon':'🎂','catering.1.text':'Birthday parties & celebrations',
-    'catering.2.icon':'🏫','catering.2.text':'School & university events',
-    'catering.3.icon':'⛪','catering.3.text':'Church groups & community events',
-    'catering.4.icon':'📦','catering.4.text':'Custom dozen boxes available',
-    'catering.stat.0.n':'12+','catering.stat.0.l':'Donut varieties for catering',
-    'catering.stat.1.n':'$18','catering.stat.1.l':'Starting price per dozen',
-    'catering.stat.2.n':'24hr','catering.stat.2.l':'Advance notice recommended',
-    // reviews
-    'reviews.eyebrow':'What People Are Saying',
-    'reviews.title':'Our Customers Love Us',
-    'reviews.lead':'Don\'t just take our word for it — Yummy\'s is rated 4.7 stars across thousands of reviews.',
-    'reviews.rating':'4.7',
-    'reviews.rating_label':'Out of 5 · 2,000+ Ratings',
-    'reviews.0.text':'"The donuts were perfect and warm, and the biscuits and gravy were right on spot and delicious. Yummy yummy yummy — good morning thanks to Yummy\'s!"',
-    'reviews.0.author':'Verified Customer','reviews.0.source':'via DoorDash',
-    'reviews.1.text':'"I ordered a bacon biscuit and it was the best I have ever had. Soft biscuit, meaty bacon and perfectly cooked egg with cheese. Customer service was spot on."',
-    'reviews.1.author':'TripAdvisor Reviewer','reviews.1.source':'via TripAdvisor',
-    'reviews.2.text':'"The donuts here are absolutely amazing, and the coffee is just as good. Their maple bacon long john is exceptional!"',
-    'reviews.2.author':'Nisha T.','reviews.2.source':'via MenuPix · Feb 2025',
-    'reviews.3.text':'"Every time I pass through Warrensburg I stop and get 2 or 3 dozen chocolate iced doughnuts. Yummy\'s is the best!"',
-    'reviews.3.author':'Loyal Traveler','reviews.3.source':'via TripAdvisor',
-    'reviews.4.text':'"Amazing service every single time! 10/10 would purchase from here again!"',
-    'reviews.4.author':'Verified Customer','reviews.4.source':'via DoorDash',
-    // newsletter
-    'newsletter.eyebrow':'Stay in the Loop',
-    'newsletter.title':'Get Notified About Specials 🍩',
-    'newsletter.lead':'Be the first to hear about daily specials, seasonal flavors, new menu items, and exclusive deals. No spam — just donuts.',
-    // contact
-    'contact.eyebrow':'Come Visit Us',
-    'contact.title':'Find Yummy\'s',
-    'contact.lead':'Right in the heart of Warrensburg. Stop by for dine-in, hit the drive-through, or order delivery.',
-    'contact.address':'709 S Maguire St, Warrensburg, MO 64093',
-    'contact.phone':'(660) 422-7777',
-    'contact.hours':'6:00 AM – 1:00 PM',
-    'contact.options':'Dine-In · Drive-Through · DoorDash · Free Wi-Fi',
-    // footer
-    'footer.brand':'🍩 Yummy\'s Donut Palace',
-    'footer.addr':'709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777',
-    'footer.hours':'Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays',
-    'footer.copy':'© 2025 Yummy\'s Donut Palace. All rights reserved.',
-    // announcement / specials
-    'announcement.text':'',
-    'announcement.visible':'false',
-    'special_strip.title':'',
-    'special_strip.desc':'',
-    'special_strip.visible':'false',
-  },
-  links:{
-    'phone':'tel:+16604227777',
-    'doordash':'https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/',
-    'google_reviews':'https://www.google.com/maps/search/Yummy\'s+Donut+Palace+Warrensburg',
-  },
-  sections:{
-    'announcement-bar':true,
-    'specials-section':true,
-    'hero':true,
-    'stats-ribbon':true,
-    'monthly-special':true,
-    'menu':true,
-    'why-us':true,
-    'about':true,
-    'catering':true,
-    'reviews':true,
-    'newsletter':true,
-    'contact':true,
-    'footer':true,
-  }
-};
-
-const DEFAULT_MENU={donuts:[{emoji:'✨',name:'Glazed',desc:'Our classic, melt-in-your-mouth glazed donut.',price:'$3.59',badge:'Most Popular'},{emoji:'🍫',name:'Chocolate',desc:'Rich chocolate icing on our fluffy donut base.',price:'$1.89',badge:''},{emoji:'🎉',name:'Sprinkle',desc:'Colorful and fun — loaded with rainbow sprinkles.',price:'$1.89',badge:''},{emoji:'🍮',name:'Long Johns (Filled)',desc:'Stuffed with smooth cream or jelly filling.',price:'$2.99',badge:'Fan Favorite'},{emoji:'🍩',name:'Long Johns',desc:'Classic long john — light, airy, glazed.',price:'$2.39',badge:''},{emoji:'🍓',name:'Jelly Donut',desc:'Fluffy donut filled with sweet jelly.',price:'$5.79',badge:''},{emoji:'🥐',name:'Cro Donut',desc:'A flaky croissant-donut hybrid.',price:'$3.25',badge:''},{emoji:'🐻',name:'Bear Claws',desc:'Sweet almond filling and crispy edges.',price:'$5.79',badge:''},{emoji:'🥐',name:'Filled Croissants',desc:'Buttery croissant stuffed with filling.',price:'$3.99 each',badge:''},{emoji:'🌿',name:'Spinach Feta Croissant',desc:'Savory croissant with spinach and feta.',price:'$4.69',badge:''},{emoji:'🍰',name:'Old Fashioned Donut',desc:'Dense cake-style donut, crispy exterior.',price:'$4.79',badge:''},{emoji:'🎂',name:'Cakes',desc:'Soft cake donuts in assorted flavors.',price:'$4.80',badge:''},{emoji:'🌀',name:'Cinnamon Rolls',desc:'Warm, gooey cinnamon rolls baked fresh.',price:'$5.79',badge:''},{emoji:'🍬',name:'Twists',desc:'Twisted, sugary pastry.',price:'$5.79',badge:''},{emoji:'🍎',name:'Apple Fritters',desc:'Chunky apple in crispy batter with cinnamon glaze.',price:'$5.79',badge:''},{emoji:'⚪',name:'Donut Holes',desc:'Bite-sized donut holes — perfect for sharing.',price:'$3.89 / dozen',badge:''},{emoji:'🎊',name:'All Small Donut Mix',desc:'A dozen assorted small donuts.',price:'$18.29 / dozen',badge:'Best Value'},{emoji:'🎉',name:'All Large Donut Mix',desc:'A dozen assorted large donuts.',price:'$26.99 / dozen',badge:''},{emoji:'🥳',name:'½ Lg ½ Sm Mix',desc:'Half large, half small.',price:'$24.99 / dozen',badge:''},{emoji:'🍰',name:'All Cakes Mixed Dozen',desc:'A dozen assorted cake donuts.',price:'$23.99 / dozen',badge:''}],breakfast:[{emoji:'🥐',name:'Sausage Roll',desc:'A savory sausage wrapped in a flaky croissant.',price:'$4.19',badge:'#1 Most Liked'},{emoji:'🥓',name:'Bacon Biscuit Sandwich',desc:'Bacon, egg, and cheese on a soft biscuit.',price:'Market Price',badge:''},{emoji:'🦃',name:'Turkey Egg & Cheese Croissant',desc:'Turkey, egg, and melted cheese on croissant.',price:'$6.99',badge:''},{emoji:'🥣',name:'Biscuits & Gravy',desc:'Creamy gravy over fresh, fluffy biscuits.',price:'Market Price',badge:''},{emoji:'🌀',name:'Cinnamon Roll',desc:'A generous cinnamon roll baked fresh.',price:'From $5.00',badge:''}],drinks:[{emoji:'☕',name:'Coffee',desc:'Freshly brewed cup of coffee.',price:'$3.30',badge:''},{emoji:'🧋',name:'Iced Coffee',desc:'Strong, flavorful iced coffee.',price:'$6.00',badge:''},{emoji:'☕',name:'Cappuccino',desc:'Smooth, frothy cappuccino.',price:'$3.99',badge:''},{emoji:'⭐',name:'Starbucks',desc:'Made with signature espresso.',price:'$4.90',badge:'Fan Favorite'},{emoji:'🍫',name:'Nesquik',desc:'Rich, creamy chocolate milk.',price:'$3.99',badge:''},{emoji:'🥛',name:'Milk',desc:'Cold, fresh milk — large.',price:'$2.99 large',badge:''},{emoji:'🟠',name:'Sunny D',desc:'Bright, citrusy drink — large.',price:'$1.59 large',badge:''},{emoji:'🍊',name:'Orange Juice',desc:'Fresh OJ — large.',price:'$2.70 large',badge:''},{emoji:'🍎',name:'Apple Juice',desc:'Sweet apple juice — large.',price:'$2.50 large',badge:''},{emoji:'🍇',name:"Welch's",desc:"Welch's grape juice — large.",price:'$2.70 large',badge:''},{emoji:'🫐',name:'Snapple',desc:'Snapple — choice of flavors, large.',price:'$2.70 large',badge:''},{emoji:'⚡',name:'Energy Drink',desc:'Large energy drink.',price:'$3.90 large',badge:''},{emoji:'🏈',name:'Gatorade',desc:'Refreshing Gatorade — large.',price:'$2.70 large',badge:''},{emoji:'🥤',name:'Bottle Soda',desc:'Bottled soda — large.',price:'$2.70 large',badge:''},{emoji:'🥫',name:'Can Soda',desc:'Canned soda.',price:'$1.35',badge:''},{emoji:'💧',name:'Bottle Water',desc:'Ice-cold bottled water.',price:'$1.25',badge:''},{emoji:'🍹',name:'Capri Sun',desc:'Capri Sun — assorted flavors.',price:'$1.35',badge:''}]};
-
-// ── CONTENT MAP (from DB rows → flat object) ──────────────
-function buildContentMap(rows){
-  const map={};
-  (rows||[]).forEach(r=>{ map[r.key]=r.value; });
-  return map;
-}
-
-function buildLinksMap(rows){
-  const map={};
-  (rows||[]).forEach(r=>{ map[r.id]=r.url; });
-  return map;
-}
-
-function buildSectionsMap(rows){
-  const map={};
-  (rows||[]).forEach(r=>{ map[r.id]=r.visible; });
-  return map;
-}
-
-function c(map,key){ return map[key]!==undefined?map[key]:DEFAULTS.content[key]||''; }
-function l(map,key){ return map[key]||DEFAULTS.links[key]||'#'; }
-
-// ── RENDER FUNCTIONS ──────────────────────────────────────
-function renderHero(cm,lm){
-  const el=document.getElementById('hero');if(!el)return;
-  document.querySelector('.hero-badge').textContent=c(cm,'hero.badge');
-  document.querySelector('.hero-title .pop').textContent=c(cm,'hero.title1');
-  document.querySelector('.hero-title .pop2').textContent=c(cm,'hero.title2');
-  document.querySelector('.hero-title span:last-child').textContent=c(cm,'hero.title3');
-  document.querySelector('.hero-tagline').textContent=c(cm,'hero.tagline');
-  document.querySelector('.hero-sub').textContent=c(cm,'hero.sub');
-  const hcall=document.querySelector('.hero-call');
-  if(hcall) hcall.href=l(lm,'phone');
-  const ncall=document.querySelector('.nav-call');
-  if(ncall) ncall.href=l(lm,'phone');
-  const norder=document.querySelector('.nav-order');
-  if(norder) norder.href=l(lm,'doordash');
-}
-
-function renderStats(cm){
-  const ribbon=document.getElementById('stats-ribbon');if(!ribbon)return;
-  const stats=ribbon.querySelectorAll('.stat');
-  [0,1,2,3].forEach(i=>{
-    if(stats[i]){
-      const n=stats[i].querySelector('.stat-n');
-      const ll=stats[i].querySelector('.stat-l');
-      if(n) n.textContent=c(cm,`stats.${i}.n`);
-      if(ll) ll.textContent=c(cm,`stats.${i}.l`);
-    }
-  });
-}
-
-function renderSpecial(cm){
-  const title=document.getElementById('special-month-title');
-  const desc=document.getElementById('special-month-desc');
-  const price=document.getElementById('special-month-price');
-  const visual=document.getElementById('special-month-visual');
-  if(title) title.textContent=c(cm,'special.title');
-  if(desc) desc.textContent=c(cm,'special.desc');
-  if(price) price.textContent=c(cm,'special.price');
-  if(visual){
-    const photo=c(cm,'special.photo');
-    if(photo) visual.innerHTML=`<img src="${photo}" alt="Monthly special" style="width:100%;height:100%;object-fit:cover;border-radius:22px;"/>`;
-    else visual.textContent=c(cm,'special.emoji')||'🍁';
-  }
-}
-
-function renderMenuSection(cm){
-  const ey=document.querySelector('#menu .section-eyebrow');
-  const ti=document.querySelector('#menu .section-title');
-  const le=document.querySelector('#menu .section-lead');
-  if(ey) ey.textContent=c(cm,'menu.eyebrow');
-  if(ti) ti.textContent=c(cm,'menu.title');
-  if(le) le.textContent=c(cm,'menu.lead');
-}
-
-function renderMenus(menu){
-  menu=menu||DEFAULT_MENU;
-  ['donuts','breakfast','drinks'].forEach(cat=>{
-    const el=document.getElementById('tab-'+cat);
-    if(!el)return;
-    el.innerHTML='';
-    (menu[cat]||[]).forEach(item=>{
-      const card=document.createElement('div');
-      card.className='menu-card';
-      card.innerHTML=(item.badge?`<div class="menu-badge">${item.badge}</div>`:'')
-        +`<div class="menu-emoji">${item.emoji}</div>`
-        +`<div class="menu-name">${item.name}</div>`
-        +`<div class="menu-desc">${item.desc}</div>`
-        +`<div class="menu-price">${item.price}</div>`;
-      el.appendChild(card);
-    });
-  });
-}
-
-function renderWhy(cm){
-  const ey=document.querySelector('#why-us .section-eyebrow');
-  const ti=document.querySelector('#why-us .section-title');
-  const le=document.querySelector('#why-us .section-lead');
-  if(ey) ey.textContent=c(cm,'why.eyebrow');
-  if(ti) ti.textContent=c(cm,'why.title');
-  if(le) le.textContent=c(cm,'why.lead');
-  const cards=document.querySelectorAll('#why-us .why-card');
-  [0,1,2,3,4,5].forEach(i=>{
-    if(cards[i]){
-      const icon=cards[i].querySelector('.why-icon');
-      const title=cards[i].querySelector('.why-title');
-      const text=cards[i].querySelector('.why-text');
-      if(icon) icon.textContent=c(cm,`why.${i}.icon`);
-      if(title) title.textContent=c(cm,`why.${i}.title`);
-      if(text) text.textContent=c(cm,`why.${i}.text`);
-    }
-  });
-}
-
-function renderAbout(cm){
-  const ey=document.querySelector('#about .section-eyebrow');
-  const ti=document.querySelector('#about .section-title');
-  const le=document.querySelector('#about .section-lead');
-  if(ey) ey.textContent=c(cm,'about.eyebrow');
-  if(ti) ti.textContent=c(cm,'about.title');
-  if(le) le.textContent=c(cm,'about.lead');
-  const pills=document.querySelectorAll('#about .about-pill');
-  [0,1,2,3].forEach(i=>{
-    if(pills[i]){
-      const icon=pills[i].querySelector('.pill-icon');
-      const title=pills[i].querySelector('.pill-title');
-      const text=pills[i].querySelector('.pill-text');
-      if(icon) icon.textContent=c(cm,`about.${i}.icon`);
-      if(title) title.textContent=c(cm,`about.${i}.title`);
-      if(text) text.textContent=c(cm,`about.${i}.text`);
-    }
-  });
-}
-
-function renderCatering(cm,lm){
-  const ey=document.querySelector('#catering .section-eyebrow');
-  const ti=document.querySelector('#catering .section-title');
-  const le=document.querySelector('#catering .section-lead');
-  if(ey) ey.textContent=c(cm,'catering.eyebrow');
-  if(ti) ti.textContent=c(cm,'catering.title');
-  if(le) le.textContent=c(cm,'catering.lead');
-  const perks=document.querySelectorAll('#catering .catering-perk');
-  [0,1,2,3,4].forEach(i=>{
-    if(perks[i]){
-      const icon=perks[i].querySelector('.catering-perk-icon');
-      if(icon) icon.textContent=c(cm,`catering.${i}.icon`);
-      const txt=perks[i].childNodes;
-      txt.forEach(n=>{ if(n.nodeType===3&&n.textContent.trim()) n.textContent=' '+c(cm,`catering.${i}.text`); });
-    }
-  });
-  const stats=document.querySelectorAll('#catering .catering-stat');
-  [0,1,2].forEach(i=>{
-    if(stats[i]){
-      const n=stats[i].querySelector('.catering-stat-n');
-      const ll=stats[i].querySelector('.catering-stat-l');
-      if(n) n.textContent=c(cm,`catering.stat.${i}.n`);
-      if(ll) ll.textContent=c(cm,`catering.stat.${i}.l`);
-    }
-  });
-  const btn=document.querySelector('#catering .btn-catering');
-  if(btn) btn.href=l(lm,'phone');
-}
-
-function renderReviews(cm,lm){
-  const ey=document.querySelector('#reviews .section-eyebrow');
-  const ti=document.querySelector('#reviews .section-title');
-  const le=document.querySelector('#reviews .section-lead');
-  if(ey) ey.textContent=c(cm,'reviews.eyebrow');
-  if(ti) ti.textContent=c(cm,'reviews.title');
-  if(le) le.textContent=c(cm,'reviews.lead');
-  const big=document.querySelector('.rating-big');
-  const lbl=document.querySelector('.rating-label');
-  if(big) big.textContent=c(cm,'reviews.rating');
-  if(lbl) lbl.textContent=c(cm,'reviews.rating_label');
-  const badge=document.querySelector('.google-badge');
-  if(badge) badge.href=l(lm,'google_reviews');
-  const cards=document.querySelectorAll('#reviews .review-card');
-  [0,1,2,3,4].forEach(i=>{
-    if(cards[i]){
-      const text=cards[i].querySelector('.review-text');
-      const author=cards[i].querySelector('.review-author');
-      const source=cards[i].querySelector('.review-source');
-      if(text) text.textContent=c(cm,`reviews.${i}.text`);
-      if(author) author.textContent=c(cm,`reviews.${i}.author`);
-      if(source) source.textContent=c(cm,`reviews.${i}.source`);
-    }
-  });
-}
-
-function renderNewsletter(cm){
-  const ey=document.querySelector('#newsletter .section-eyebrow');
-  const ti=document.querySelector('#newsletter .section-title');
-  const le=document.querySelector('#newsletter .section-lead');
-  if(ey) ey.textContent=c(cm,'newsletter.eyebrow');
-  if(ti) ti.textContent=c(cm,'newsletter.title');
-  if(le) le.textContent=c(cm,'newsletter.lead');
-}
-
-function renderContact(cm,lm){
-  const ey=document.querySelector('#contact .section-eyebrow');
-  const ti=document.querySelector('#contact .section-title');
-  const le=document.querySelector('#contact .section-lead');
-  if(ey) ey.textContent=c(cm,'contact.eyebrow');
-  if(ti) ti.textContent=c(cm,'contact.title');
-  if(le) le.textContent=c(cm,'contact.lead');
-  const addr=document.querySelector('#contact .address-display');
-  if(addr) addr.textContent=c(cm,'contact.address');
-  const phone=document.querySelector('#contact .phone-display');
-  if(phone){phone.textContent=c(cm,'contact.phone');phone.href=l(lm,'phone');}
-  const hours=document.querySelector('#contact .hours-display');
-  if(hours) hours.textContent=c(cm,'contact.hours');
-  const opts=document.querySelector('#contact .options-display');
-  if(opts) opts.textContent=c(cm,'contact.options');
-  const callcta=document.querySelector('.call-cta');
-  if(callcta){callcta.href=l(lm,'phone');callcta.textContent='📞 Call Now — '+c(cm,'contact.phone');}
-  const ddcta=document.querySelector('.call-doordash');
-  if(ddcta) ddcta.href=l(lm,'doordash');
-}
-
-function renderFooter(cm,lm){
-  const brand=document.querySelector('.footer-brand');
-  const addr=document.querySelector('#footer .footer-addr:first-of-type');
-  const hours=document.querySelector('#footer .footer-hours');
-  const copy=document.querySelector('.footer-copy');
-  if(brand) brand.textContent=c(cm,'footer.brand');
-  if(addr) addr.textContent=c(cm,'footer.addr');
-  if(hours) hours.textContent=c(cm,'footer.hours');
-  if(copy) copy.textContent=c(cm,'footer.copy');
-}
-
-function renderAnnouncement(cm){
-  const bar=document.getElementById('announcement-bar');
-  const nav=document.getElementById('main-nav');
-  if(!bar)return;
-  const visible=c(cm,'announcement.visible')==='true';
-  const text=c(cm,'announcement.text');
-  if(visible&&text){bar.textContent=text;bar.classList.add('visible');if(nav)nav.classList.add('has-banner');}
-  else{bar.classList.remove('visible');if(nav)nav.classList.remove('has-banner');}
-}
-
-function renderSpecialStrip(cm){
-  const sec=document.getElementById('specials-section');
-  if(!sec)return;
-  const visible=c(cm,'special_strip.visible')==='true';
-  const title=c(cm,'special_strip.title');
-  if(visible&&title){
-    const t=document.getElementById('specials-title');
-    const d=document.getElementById('specials-desc');
-    if(t) t.textContent=title;
-    if(d) d.textContent=c(cm,'special_strip.desc');
-    sec.classList.add('visible');
-  } else sec.classList.remove('visible');
-}
-
-function applySectionVisibility(sm){
-  Object.entries(sm).forEach(([id,visible])=>{
-    const el=document.getElementById(id);
-    if(el) el.style.display=visible?'':'none';
-  });
-}
-
-// Restore section order from DB sort_order
-function applySectionOrder(sectionsRows){
-  if(!sectionsRows||!sectionsRows.length) return;
-  // Sort by sort_order ascending
-  const sorted=[...sectionsRows].filter(r=>r.sort_order!=null).sort((a,b)=>a.sort_order-b.sort_order);
-  if(!sorted.length) return;
-  const footer=document.getElementById('footer');
-  if(!footer) return;
-  // Reorder sections in DOM before footer
-  sorted.forEach(row=>{
-    const el=document.getElementById(row.id);
-    if(el&&el!==footer) footer.parentNode.insertBefore(el,footer);
-  });
-}
-
-// Apply section settings from DB (title, text overrides from settings panel)
-function applySectionSettingsFromDB(sectionsRows){
-  (sectionsRows||[]).forEach(row=>{
-    if(!row.settings||!Object.keys(row.settings).length) return;
-    const el=document.getElementById(row.id);
-    if(!el) return;
-    const s=row.settings;
-    // Apply each setting field to DOM
-    if(s.badge&&el.querySelector('.hero-badge')) el.querySelector('.hero-badge').textContent=s.badge;
-    if(s.title1&&el.querySelector('.hero-title .pop')) el.querySelector('.hero-title .pop').textContent=s.title1;
-    if(s.title2&&el.querySelector('.hero-title .pop2')) el.querySelector('.hero-title .pop2').textContent=s.title2;
-    if(s.title3&&el.querySelector('.hero-title span:not(.pop):not(.pop2)')) el.querySelector('.hero-title span:not(.pop):not(.pop2)').textContent=s.title3;
-    if(s.tagline&&el.querySelector('.hero-tagline')) el.querySelector('.hero-tagline').textContent=s.tagline;
-    if(s.sub&&el.querySelector('.hero-sub')) el.querySelector('.hero-sub').textContent=s.sub;
-    const ey=el.querySelector('.section-eyebrow');const ti=el.querySelector('.section-title');const le=el.querySelector('.section-lead');
-    if(ey&&s.eyebrow) ey.textContent=s.eyebrow;
-    if(ti&&s.title) ti.textContent=s.title;
-    if(le&&s.lead) le.textContent=s.lead;
-    [0,1,2,3].forEach(i=>{
-      const stat=el.querySelectorAll&&el.querySelectorAll('.stat')[i];
-      if(!stat) return;
-      if(s['stat'+i+'n']&&stat.querySelector('.stat-n')) stat.querySelector('.stat-n').textContent=s['stat'+i+'n'];
-      if(s['stat'+i+'l']&&stat.querySelector('.stat-l')) stat.querySelector('.stat-l').textContent=s['stat'+i+'l'];
-    });
-    if(s.rating&&el.querySelector('.rating-big')) el.querySelector('.rating-big').textContent=s.rating;
-    if(s.ratingLabel&&el.querySelector('.rating-label')) el.querySelector('.rating-label').textContent=s.ratingLabel;
-    if(s.address&&el.querySelector('.address-display')) el.querySelector('.address-display').textContent=s.address;
-    if(s.phone) el.querySelectorAll('.phone-display').forEach(p=>{p.textContent=s.phone;if(p.tagName==='A')p.href='tel:+1'+s.phone.replace(/\D/g,'');});
-    if(s.hours&&el.querySelector('.hours-display')) el.querySelector('.hours-display').textContent=s.hours;
-  });
-}
-
-function renderSocialLinks(lm){
-  // Phone — update all phone-linked elements
-  const phone=l(lm,'phone');
-  if(phone){
-    document.querySelectorAll('a.nav-call,a.hero-call,a.call-cta,a.phone-display').forEach(el=>{
-      el.href=phone;
-    });
-    document.querySelectorAll('.phone-display').forEach(el=>{
-      if(el.tagName!=='A') el.textContent=phone.replace('tel:+1','').replace(/(\d{3})(\d{3})(\d{4})/,'($1) $2-$3');
-    });
-  }
-
-  // DoorDash
-  const dd=l(lm,'doordash');
-  if(dd&&dd!=='#'){
-    document.querySelectorAll('a.nav-order,a.call-doordash').forEach(el=>el.href=dd);
-  }
-
-  // Instagram — custom section buttons
-  const ig=l(lm,'instagram');
-  if(ig&&ig!=='#'){
-    document.querySelectorAll('a.ig-link-btn').forEach(el=>el.href=ig);
-  }
-
-  // Facebook — custom section buttons
-  const fb=l(lm,'facebook');
-  if(fb&&fb!=='#'){
-    document.querySelectorAll('a.fb-link-btn').forEach(el=>el.href=fb);
-  }
-
-  // Google Reviews
-  const gr=l(lm,'google_reviews');
-  if(gr&&gr!=='#'){
-    document.querySelectorAll('a.google-badge').forEach(el=>el.href=gr);
-  }
-
-  // Google Maps
-  const maps=l(lm,'google_maps');
-  if(maps&&maps!=='#'){
-    document.querySelectorAll('a[href*="maps.google"],a[href*="google.com/maps"]').forEach(el=>el.href=maps);
-  }
-}
-
-function renderAll(cm,lm,sm,menu){
-  renderAnnouncement(cm);
-  renderSpecialStrip(cm);
-  renderHero(cm,lm);
-  renderStats(cm);
-  renderSpecial(cm);
-  renderMenuSection(cm);
-  renderMenus(menu&&menu.data&&menu.data.donuts&&menu.data.donuts.length>0?menu.data:DEFAULT_MENU);
-  renderWhy(cm);
-  renderAbout(cm);
-  renderCatering(cm,lm);
-  renderReviews(cm,lm);
-  renderNewsletter(cm);
-  renderContact(cm,lm);
-  renderFooter(cm,lm);
-  renderSocialLinks(lm);
-  if(sm&&Object.keys(sm).length) applySectionVisibility(sm);
-}
-
-function showTab(id,btn){
-  document.querySelectorAll('.menu-section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-}
-
-// ── NEWSLETTER ────────────────────────────────────────────
-async function subscribeNewsletter(){
-  const emailEl=document.getElementById('newsletter-email');
-  const email=emailEl.value.trim();
-  if(!email||!email.includes('@')){
-    emailEl.style.borderColor='#e74c3c';
-    setTimeout(()=>emailEl.style.borderColor='',2000);
-    return;
-  }
-  try{
-    await fetch(`${SB_URL}/rest/v1/subscribers`,{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=ignore-duplicates'},
-      body:JSON.stringify({email})
-    });
-  }catch(e){}
-  try{
-    const mc=await sbFetch('mailchimp_config','?id=eq.main');
-    if(mc&&mc[0]&&mc[0].form_url){
-      fetch(mc[0].form_url.replace('/post?','/post-json?')+'&c=?&EMAIL='+encodeURIComponent(email),{method:'GET',mode:'no-cors'}).catch(()=>{});
-    }
-  }catch(e){}
-  document.querySelector('.newsletter-form').style.display='none';
-  document.getElementById('newsletter-success').style.display='block';
-}
-
-// ── SPRINKLES ─────────────────────────────────────────────
-const colors=['#F9A8C9','#FFD966','#5EC8F2','#A78BFA','#F87171','#34D399'];
-const container=document.getElementById('sprinkles');
-for(let i=0;i<30;i++){
-  const s=document.createElement('div');s.className='sprinkle';
-  s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
-  s.style.background=colors[Math.floor(Math.random()*colors.length)];
-  s.style.transform='rotate('+Math.random()*360+'deg)';
-  s.style.animationDuration=(8+Math.random()*12)+'s';
-  s.style.animationDelay=(-Math.random()*12)+'s';
-  container.appendChild(s);
-}
-
-// ── SCROLL REVEAL ─────────────────────────────────────────
-function initReveal(){
-  const observer=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
-  },{threshold:0.12});
-  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-}
-
-// ── BACK TO TOP ───────────────────────────────────────────
-window.addEventListener('scroll',()=>{
-  const btn=document.getElementById('back-to-top');
-  if(btn)btn.classList.toggle('visible',window.scrollY>400);
-},{passive:true});
-
-// ── MAIN LOAD ─────────────────────────────────────────────
-// ── APPLY DESIGN ──────────────────────────────────────────
-function applyDesign(design){
-  if(!design) return;
-  const BTN_RADIUS={rounded:'20px',pill:'40px',square:'6px'};
-  const btnRadius=BTN_RADIUS[design.button_style]||BTN_RADIUS.rounded;
-
-  // Mobile scale values (default 1.0)
-  const fontScale=parseFloat(design.mobile_font_scale)||1.0;
-  const spacingScale=parseFloat(design.mobile_spacing_scale)||1.0;
-
-  let styleEl=document.getElementById('design-overrides');
-  if(!styleEl){
-    styleEl=document.createElement('style');
-    styleEl.id='design-overrides';
-    document.head.appendChild(styleEl);
-  }
-  styleEl.textContent=`
-    :root {
-      --pink-deep: ${design.primary_color||'#C2185B'};
-      --yellow-dark: ${design.secondary_color||'#F4B400'};
-      --cream: ${design.background_color||'#FFF8F0'};
-    }
-    body { font-family: '${design.body_font||'Nunito'}', sans-serif !important; }
-    .hero-title, .section-title, .footer-brand, .rating-big,
-    .special-title, .stat-n, .catering-stat-n, h1, h2, h3 {
-      font-family: '${design.heading_font||'Fredoka One'}', cursive !important;
-    }
-    .btn-pink, .btn-ghost, .btn-catering, .btn-newsletter,
-    .hero-call, .call-cta, .nav-order, .google-badge,
-    a[class*="btn"], button[class*="btn"] {
-      border-radius: ${btnRadius} !important;
-    }
-    @media(max-width:480px){
-      body { font-size: ${Math.round(14*fontScale)}px !important; }
-      .section-title { font-size: clamp(${(1.4*fontScale).toFixed(2)}rem,7vw,${(2*fontScale).toFixed(2)}rem) !important; }
-      .section-lead { font-size: ${(0.9*fontScale).toFixed(2)}rem !important; }
-      section { padding: ${(2.5*spacingScale).toFixed(2)}rem ${spacingScale.toFixed(2)}rem !important; }
-      #hero { padding: ${(5*spacingScale).toFixed(2)}rem ${spacingScale.toFixed(2)}rem ${(2.5*spacingScale).toFixed(2)}rem !important; }
-      .stats-ribbon { padding: ${(1.25*spacingScale).toFixed(2)}rem ${spacingScale.toFixed(2)}rem !important; }
-      .hero-title { font-size: clamp(${(2.6*fontScale).toFixed(2)}rem,13vw,${(4*fontScale).toFixed(2)}rem) !important; }
-    }
-  `;
-
-  // Load Google Fonts
-  [design.heading_font, design.body_font].filter(Boolean).forEach(font=>{
-    const id='gfont-'+font.replace(/\s+/g,'-').toLowerCase();
-    if(document.getElementById(id)) return;
-    const link=document.createElement('link');
-    link.id=id; link.rel='stylesheet';
-    link.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@400;700;800&display=swap`;
-    document.head.appendChild(link);
-  });
-}
-
-async function loadSiteData(){
-  // Render with defaults immediately — no blank page
-  renderAll({},[],{},null);
-  initReveal();
-
-  try{
-    const [contentRows,linksRows,sectionsRows,menuRow,customRow,designRow]=await Promise.all([
-      sbFetch('content','?page_id=eq.main&select=key,value'),
-      sbFetch('links','?page_id=eq.main&select=id,url'),
-      sbFetch('sections','?page_id=eq.main&select=id,visible,sort_order,settings&order=sort_order.asc'),
-      sbFetch('menu','?id=eq.main'),
-      sbFetch('page_content','?id=eq.main'),
-      sbFetch('design','?id=eq.main&select=primary_color,secondary_color,background_color,heading_font,body_font,button_style,mobile_font_scale,mobile_spacing_scale'),
-    ]);
-
-    const cm=buildContentMap(contentRows);
-    const lm=buildLinksMap(linksRows);
-    const sm=buildSectionsMap(sectionsRows);
-    const menu=menuRow&&menuRow[0]?menuRow[0]:null;
-
-    // Apply design first so colors/fonts are correct when content renders
-    if(designRow&&designRow[0]) applyDesign(designRow[0]);
-
-    renderAll(cm,lm,sm,menu);
-
-    // Apply section settings from settings panel (overrides content table)
-    // Skip when inside admin preview iframe — section reordering would affect admin DOM
-    if(window.self===window.top){
-      applySectionSettingsFromDB(sectionsRows);
-      // Restore section order from DB
-      applySectionOrder(sectionsRows);
-    }
-
-    // Restore custom sections from page_content if any
-    if(customRow&&customRow[0]&&customRow[0].content&&customRow[0].content._custom_sections){
-      customRow[0].content._custom_sections.forEach(entry=>{
-        const tmp=document.createElement('div');
-        tmp.innerHTML=entry.html;
-        const sec=tmp.firstElementChild;
-        if(!sec)return;
-        const anchor=document.getElementById(entry.afterId)||document.querySelector('footer');
-        if(anchor) anchor.parentNode.insertBefore(sec,anchor.nextSibling);
-      });
-    }
-
-  }catch(e){
-    console.warn('Supabase load failed, using defaults.',e);
-  }
-}
-
-// ── ANALYTICS TRACKING ───────────────────────────────────
-(function(){
-  if(window.self!==window.top) return;
-
-  const SB_A_URL='https://orywcjwoklirjipjmuhh.supabase.co';
-  const SB_A_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yeXdjandva2xpcmppcGptdWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwODIxMzQsImV4cCI6MjA4OTY1ODEzNH0.LWWkKX-ZhOCUxoqZuOwKbKBWC5Iln_qZSQ1IIH7r64A';
-
-  // ── Device detection ────────────────────────────────
-  function getDevice(){
-    const w=window.innerWidth;
-    if(w<=480) return 'mobile';
-    if(w<=768) return 'tablet';
-    return 'desktop';
-  }
-
-  // ── Returning visitor detection ─────────────────────
-  const VISITOR_KEY='ydp_visitor';
-  const isReturning=!!localStorage.getItem(VISITOR_KEY);
-  localStorage.setItem(VISITOR_KEY,'1');
-
-  // ── Session management ──────────────────────────────
-  let sessionId=sessionStorage.getItem('ydp_session');
-  const isNewSession=!sessionId;
-  if(isNewSession){
-    sessionId='s-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
-    sessionStorage.setItem('ydp_session',sessionId);
-    fetch(`${SB_A_URL}/rest/v1/analytics_sessions`,{
-      method:'POST',
-      headers:{'apikey':SB_A_KEY,'Content-Type':'application/json','Prefer':'resolution=ignore-duplicates'},
-      body:JSON.stringify({
-        id:sessionId,
-        page_id:'main',
-        device_type:getDevice(),
-        is_returning:isReturning,
-      })
-    }).catch(()=>{});
-  }
-
-  // ── Track event helper ──────────────────────────────
-  function track(type,label){
-    fetch(`${SB_A_URL}/rest/v1/analytics_events`,{
-      method:'POST',
-      headers:{'apikey':SB_A_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({
-        event_type:type,
-        event_label:label,
-        page_id:'main',
-        session_id:sessionId,
-        device_type:getDevice(),
-        hour_of_day:new Date().getHours(),
-      })
-    }).catch(()=>{});
-  }
-
-  // ── Track button clicks ─────────────────────────────
-  const TRACKED_SELECTORS=[
-    {sel:'.nav-call',      label:'Call Us (Nav)'},
-    {sel:'.hero-call',     label:'Call Us (Hero)'},
-    {sel:'.call-cta',      label:'Call Us (Contact)'},
-    {sel:'.nav-order',     label:'Order DoorDash (Nav)'},
-    {sel:'.call-doordash', label:'Order DoorDash (Contact)'},
-    {sel:'.google-badge',  label:'Google Reviews'},
-    {sel:'.btn-newsletter',label:'Newsletter Signup'},
-    {sel:'a.ig-link-btn',  label:'Instagram'},
-    {sel:'a.fb-link-btn',  label:'Facebook'},
-  ];
-
-  function attachClickTrackers(){
-    TRACKED_SELECTORS.forEach(({sel,label})=>{
-      document.querySelectorAll(sel).forEach(el=>{
-        if(el.dataset.tracked) return;
-        el.dataset.tracked='1';
-        el.addEventListener('click',()=>track('click',label),{passive:true});
-      });
-    });
-  }
-
-  // ── Track section views ─────────────────────────────
-  const TRACKED_SECTIONS=[
-    'hero','menu','why-us','about','catering',
-    'reviews','newsletter','contact','monthly-special'
-  ];
-  const viewedSections=new Set();
-
-  function attachSectionTrackers(){
-    const observer=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting&&!viewedSections.has(entry.target.id)){
-          viewedSections.add(entry.target.id);
-          track('section_view',entry.target.id);
-        }
-      });
-    },{threshold:0.4});
-    TRACKED_SECTIONS.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) observer.observe(el);
-    });
-  }
-
-  window.addEventListener('load',()=>{
-    attachClickTrackers();
-    attachSectionTrackers();
-    setTimeout(attachClickTrackers,2000);
-  });
-})();
-
-loadSiteData();
-
-</script>
 
 <!-- MOBILE STICKY CTA -->
 <div class="mobile-sticky-cta">
-  <a href="tel:+16604227777" class="btn-pink">📞 Call Now</a>
-  <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-ghost">🛵 Order</a>
+  <a href="#" class="btn-pink" id="mobile-call-btn">📞 Call Now</a>
+  <a href="#" class="btn-ghost" id="mobile-order-btn">🛵 Order</a>
 </div>
 
+<script>
+// ============================================
+// DEFAULT WEBSITE DATA - Everything editable
+// ============================================
+const DEFAULT_DATA = {
+  // Section visibility
+  visibility: {
+    announcement: false,
+    specialsStrip: false,
+    hero: true,
+    stats: true,
+    monthlySpecial: true,
+    menu: true,
+    whyUs: true,
+    about: true,
+    catering: true,
+    reviews: true,
+    newsletter: true,
+    contact: true,
+    footer: true
+  },
+  
+  // Links & URLs
+  links: {
+    phone: "tel:+16604227777",
+    phoneDisplay: "(660) 422-7777",
+    doordash: "https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/",
+    googleReviews: "https://www.google.com/maps/search/Yummy's+Donut+Palace+Warrensburg",
+    googleMaps: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3102.847!2d-93.73823!3d38.76295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87c06b9b4a5b5b5b%3A0x1!2s709+S+Maguire+St%2C+Warrensburg%2C+MO+64093!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+  },
+  
+  // Announcement banner
+  announcement: {
+    text: "🎉 Now open in Sedalia too! Visit our second location!"
+  },
+  
+  // Daily specials strip
+  specialsStrip: {
+    title: "Maple Bacon Long John",
+    desc: "Try our featured donut today!"
+  },
+  
+  // Navigation
+  nav: {
+    brandText: "Yummy's <span>Donut Palace</span>",
+    callBtnText: "📞 Call Us",
+    orderBtnText: "Order on DoorDash"
+  },
+  
+  // Hero section
+  hero: {
+    badge: "🍩 Warrensburg's Sweetest Spot",
+    title1: "Yummy's",
+    title2: "Donut",
+    title3: "Palace",
+    tagline: "Fresh Donuts · Breakfast · Boba · Smoothies",
+    sub: "Handcrafted donuts made fresh every morning in the heart of Warrensburg, MO. Come early — they sell out fast!",
+    callBtnText: "📞 (660) 422-7777 — Call to Order",
+    btn1Text: "🍩 See Our Menu",
+    btn2Text: "📍 Find Us"
+  },
+  
+  // Stats ribbon
+  stats: [
+    { n: "4.7★", l: "Average Rating" },
+    { n: "2,000+", l: "Happy Customers" },
+    { n: "$1.89", l: "From a Donut" },
+    { n: "#1", l: "Donuts in Town" }
+  ],
+  
+  // Monthly special
+  monthlySpecial: {
+    badge: "🌟 This Month's Special",
+    title: "Maple Bacon Long John",
+    desc: "Our signature Long John donut topped with rich maple glaze and crispy bacon strips. The perfect sweet-and-savory combo — available all month while supplies last.",
+    price: "Only $2.99",
+    btnText: "🍩 See Full Menu",
+    emoji: "🍁",
+    photo: ""
+  },
+  
+  // Menu section
+  menu: {
+    eyebrow: "What We Serve",
+    title: "Our Menu",
+    lead: "From melt-in-your-mouth glazed donuts to hearty breakfast sandwiches and refreshing drinks — there's something for everyone.",
+    tab1: "🍩 Donuts",
+    tab2: "🥐 Breakfast",
+    tab3: "🧋 Drinks",
+    items: {
+      donuts: [
+        { emoji: "✨", name: "Glazed", desc: "Our classic, melt-in-your-mouth glazed donut.", price: "$3.59", badge: "Most Popular" },
+        { emoji: "🍫", name: "Chocolate", desc: "Rich chocolate icing on our fluffy donut base.", price: "$1.89", badge: "" },
+        { emoji: "🎉", name: "Sprinkle", desc: "Colorful and fun — loaded with rainbow sprinkles.", price: "$1.89", badge: "" },
+        { emoji: "🍮", name: "Long Johns (Filled)", desc: "Stuffed with smooth cream or jelly filling.", price: "$2.99", badge: "Fan Favorite" },
+        { emoji: "🍩", name: "Long Johns", desc: "Classic long john — light, airy, glazed.", price: "$2.39", badge: "" },
+        { emoji: "🍓", name: "Jelly Donut", desc: "Fluffy donut filled with sweet jelly.", price: "$5.79", badge: "" },
+        { emoji: "🥐", name: "Cro Donut", desc: "A flaky croissant-donut hybrid.", price: "$3.25", badge: "" },
+        { emoji: "🐻", name: "Bear Claws", desc: "Sweet almond filling and crispy edges.", price: "$5.79", badge: "" },
+        { emoji: "🥐", name: "Filled Croissants", desc: "Buttery croissant stuffed with filling.", price: "$3.99 each", badge: "" },
+        { emoji: "🌿", name: "Spinach Feta Croissant", desc: "Savory croissant with spinach and feta.", price: "$4.69", badge: "" },
+        { emoji: "🍰", name: "Old Fashioned Donut", desc: "Dense cake-style donut, crispy exterior.", price: "$4.79", badge: "" },
+        { emoji: "🎂", name: "Cakes", desc: "Soft cake donuts in assorted flavors.", price: "$4.80", badge: "" },
+        { emoji: "🌀", name: "Cinnamon Rolls", desc: "Warm, gooey cinnamon rolls baked fresh.", price: "$5.79", badge: "" },
+        { emoji: "🍬", name: "Twists", desc: "Twisted, sugary pastry with a satisfying chew.", price: "$5.79", badge: "" },
+        { emoji: "🍎", name: "Apple Fritters", desc: "Chunky apple in crispy batter with cinnamon glaze.", price: "$5.79", badge: "" },
+        { emoji: "⚪", name: "Donut Holes", desc: "Bite-sized donut holes — perfect for sharing.", price: "$3.89 / dozen", badge: "" },
+        { emoji: "🎊", name: "All Small Donut Mix", desc: "A dozen assorted small donuts.", price: "$18.29 / dozen", badge: "Best Value" },
+        { emoji: "🎉", name: "All Large Donut Mix", desc: "A dozen assorted large donuts.", price: "$26.99 / dozen", badge: "" },
+        { emoji: "🥳", name: "½ Lg ½ Sm Mix", desc: "Half large, half small — best of both worlds.", price: "$24.99 / dozen", badge: "" },
+        { emoji: "🍰", name: "All Cakes Mixed Dozen", desc: "A dozen assorted cake donuts.", price: "$23.99 / dozen", badge: "" }
+      ],
+      breakfast: [
+        { emoji: "🥐", name: "Sausage Roll", desc: "A savory sausage wrapped in a flaky croissant.", price: "$4.19", badge: "#1 Most Liked" },
+        { emoji: "🥓", name: "Bacon Biscuit Sandwich", desc: "Bacon, egg, and cheese on a soft biscuit.", price: "Market Price", badge: "" },
+        { emoji: "🦃", name: "Turkey Egg & Cheese Croissant", desc: "Turkey, egg, and melted cheese on croissant.", price: "$6.99", badge: "" },
+        { emoji: "🥣", name: "Biscuits & Gravy", desc: "Creamy gravy over fresh, fluffy biscuits.", price: "Market Price", badge: "" },
+        { emoji: "🌀", name: "Cinnamon Roll", desc: "A generous cinnamon roll baked fresh.", price: "From $5.00", badge: "" }
+      ],
+      drinks: [
+        { emoji: "☕", name: "Coffee", desc: "Freshly brewed cup of coffee.", price: "$3.30", badge: "" },
+        { emoji: "🧋", name: "Iced Coffee", desc: "Strong, flavorful iced coffee.", price: "$6.00", badge: "" },
+        { emoji: "☕", name: "Cappuccino", desc: "Smooth, frothy cappuccino made to order.", price: "$3.99", badge: "" },
+        { emoji: "⭐", name: "Starbucks", desc: "Made with signature espresso.", price: "$4.90", badge: "Fan Favorite" },
+        { emoji: "🍫", name: "Nesquik", desc: "Rich, creamy chocolate milk.", price: "$3.99", badge: "" },
+        { emoji: "🥛", name: "Milk", desc: "Cold, fresh milk — large size.", price: "$2.99 large", badge: "" },
+        { emoji: "🟠", name: "Sunny D", desc: "Bright, citrusy drink — large.", price: "$1.59 large", badge: "" },
+        { emoji: "🍊", name: "Orange Juice", desc: "Fresh orange juice — large.", price: "$2.70 large", badge: "" },
+        { emoji: "🍎", name: "Apple Juice", desc: "Sweet apple juice — large.", price: "$2.50 large", badge: "" },
+        { emoji: "🍇", name: "Welch's", desc: "Welch's grape juice — large.", price: "$2.70 large", badge: "" },
+        { emoji: "🫐", name: "Snapple", desc: "Snapple in choice of flavors — large.", price: "$2.70 large", badge: "" },
+        { emoji: "⚡", name: "Energy Drink", desc: "Large energy drink.", price: "$3.90 large", badge: "" },
+        { emoji: "🏈", name: "Gatorade", desc: "Refreshing Gatorade — large.", price: "$2.70 large", badge: "" },
+        { emoji: "🥤", name: "Bottle Soda", desc: "Bottled soda — large.", price: "$2.70 large", badge: "" },
+        { emoji: "🥫", name: "Can Soda", desc: "Canned soda in your favorite flavors.", price: "$1.35", badge: "" },
+        { emoji: "💧", name: "Bottle Water", desc: "Ice-cold bottled water.", price: "$1.25", badge: "" },
+        { emoji: "🍹", name: "Capri Sun", desc: "Capri Sun in assorted fruit flavors.", price: "$1.35", badge: "" }
+      ]
+    }
+  },
+  
+  // Why Us section
+  whyUs: {
+    eyebrow: "Why Yummy's",
+    title: "What Makes Us Different",
+    lead: "We're not just a donut shop — we're a Warrensburg tradition.",
+    cards: [
+      { icon: "🌅", title: "Made Fresh Daily", text: "Every donut is baked from scratch starting at 5 AM. No reheating, no frozen dough — ever." },
+      { icon: "⭐", title: "4.7 Star Rating", text: "Over 2,000 happy customers have rated us across Google, DoorDash, TripAdvisor and more." },
+      { icon: "🚗", title: "Drive-Through & Dine-In", text: "Grab your order on the go via our fast drive-through, or relax in our cozy space with free Wi-Fi." },
+      { icon: "🛵", title: "DoorDash Delivery", text: "Can't make it in? We deliver! Order online and get Yummy's delivered straight to your door." },
+      { icon: "👨‍👩‍👧", title: "Family Friendly", text: "A welcoming spot for everyone — families, students, and early birds have called us home since day one." },
+      { icon: "📍", title: "Now in Sedalia Too!", text: "Loved so much we expanded — a second Yummy's location is now open in Sedalia, MO." }
+    ]
+  },
+  
+  // About section
+  about: {
+    eyebrow: "Our Story",
+    title: "Warrensburg's Favorite Donut Shop",
+    lead: "Since opening, Yummy's Donut Palace has become the go-to morning destination for locals, students, and travelers. We make everything fresh, every single day.",
+    emoji: "🍩",
+    visualText: "Fresh Every Morning",
+    pills: [
+      { icon: "🌅", title: "Baked Fresh Daily", text: "Donuts made every morning from 5 AM. Get there early — the best ones sell out fast!" },
+      { icon: "😊", title: "Famously Friendly Staff", text: "Known throughout Warrensburg for warm, welcoming service. We love families, students, and everyone in between." },
+      { icon: "🚗", title: "Drive-Through & Dine-In", text: "Grab your order on the go or sit down in our cozy space with free Wi-Fi." },
+      { icon: "📍", title: "Now in Sedalia Too!", text: "Loved so much we expanded — a second location is now open in Sedalia, MO." }
+    ]
+  },
+  
+  // Catering section
+  catering: {
+    eyebrow: "Catering & Bulk Orders",
+    title: "Feed Your Whole Crew 🍩",
+    lead: "Planning an office meeting, birthday party, school event, or any occasion? Yummy's handles bulk donut orders with ease.",
+    btnText: "📞 Call to Place a Bulk Order",
+    perks: [
+      { icon: "🏢", text: "Office meetings & corporate events" },
+      { icon: "🎂", text: "Birthday parties & celebrations" },
+      { icon: "🏫", text: "School & university events" },
+      { icon: "📦", text: "Custom dozen boxes available" }
+    ],
+    stats: [
+      { n: "12+", l: "Donut varieties available for catering orders" },
+      { n: "$18", l: "Starting price per dozen — best value in town" },
+      { n: "24hr", l: "Advance notice recommended for large orders" }
+    ]
+  },
+  
+  // Reviews section
+  reviews: {
+    eyebrow: "What People Are Saying",
+    title: "Our Customers Love Us",
+    lead: "Don't just take our word for it — Yummy's is rated 4.7 stars across thousands of reviews.",
+    rating: "4.7",
+    ratingLabel: "Out of 5 · 2,000+ Ratings",
+    googleBadgeText: "⭐ See all Google Reviews",
+    cards: [
+      { text: '"The donuts were perfect and warm, and the biscuits and gravy were right on spot and delicious. Yummy yummy yummy — good morning thanks to Yummy\'s!"', author: "Verified Customer", source: "via DoorDash" },
+      { text: '"I ordered a bacon biscuit and it was the best I have ever had. Soft biscuit, meaty bacon and perfectly cooked egg with cheese. Customer service was spot on."', author: "TripAdvisor Reviewer", source: "via TripAdvisor" },
+      { text: '"The donuts here are absolutely amazing, and the coffee is just as good. Their maple bacon long john is exceptional!"', author: "Nisha T.", source: "via MenuPix · Feb 2025" },
+      { text: '"Every time I pass through Warrensburg I stop and get 2 or 3 dozen chocolate iced doughnuts. Yummy\'s is the best!"', author: "Loyal Traveler", source: "via TripAdvisor" },
+      { text: '"Amazing service every single time! 10/10 would purchase from here again!"', author: "Verified Customer", source: "via DoorDash" }
+    ]
+  },
+  
+  // Newsletter section
+  newsletter: {
+    eyebrow: "Stay in the Loop",
+    title: "Get Notified About Specials 🍩",
+    lead: "Be the first to hear about daily specials, seasonal flavors, new menu items, and exclusive deals. No spam — just donuts.",
+    note: "We'll never share your email. Unsubscribe anytime.",
+    successMsg: "🎉 You're on the list! We'll be in touch with sweet updates.",
+    inputPlaceholder: "your@email.com",
+    btnText: "Notify Me!"
+  },
+  
+  // Contact section
+  contact: {
+    eyebrow: "Come Visit Us",
+    title: "Find Yummy's",
+    lead: "We're located right in the heart of Warrensburg. Stop by for dine-in, hit the drive-through, or order delivery via DoorDash.",
+    infoCards: [
+      { icon: "📍", label: "Address", value: "709 S Maguire St, Warrensburg, MO 64093" },
+      { icon: "📞", label: "Phone", value: "(660) 422-7777" },
+      { icon: "🕐", label: "Hours", value: "Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays" },
+      { icon: "🚗", label: "Options", value: "Dine-In · Drive-Through · DoorDash Delivery · Free Wi-Fi" }
+    ],
+    callBtnText: "📞 Call Now — (660) 422-7777",
+    orderBtnText: "🛵 Order on DoorDash"
+  },
+  
+  // Footer
+  footer: {
+    brand: "🍩 Yummy's Donut Palace",
+    addr: "709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777",
+    hours: "Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays",
+    copy: "© 2025 Yummy's Donut Palace. All rights reserved."
+  }
+};
+
+// ============================================
+// DATA LOADING
+// ============================================
+let siteData = null;
+
+function loadData() {
+  // Try to load from localStorage first
+  const saved = localStorage.getItem('yummys_site_data');
+  if (saved) {
+    try {
+      siteData = JSON.parse(saved);
+      // Merge with defaults to ensure all fields exist
+      siteData = deepMerge(DEFAULT_DATA, siteData);
+    } catch (e) {
+      siteData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    }
+  } else {
+    siteData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+}
+
+function deepMerge(defaults, saved) {
+  const result = JSON.parse(JSON.stringify(defaults));
+  for (const key in saved) {
+    if (saved[key] !== null && typeof saved[key] === 'object' && !Array.isArray(saved[key])) {
+      result[key] = deepMerge(result[key] || {}, saved[key]);
+    } else {
+      result[key] = saved[key];
+    }
+  }
+  return result;
+}
+
+// ============================================
+// RENDER FUNCTIONS
+// ============================================
+function renderAll() {
+  renderVisibility();
+  renderAnnouncement();
+  renderSpecialsStrip();
+  renderNav();
+  renderHero();
+  renderStats();
+  renderMonthlySpecial();
+  renderMenu();
+  renderWhyUs();
+  renderAbout();
+  renderCatering();
+  renderReviews();
+  renderNewsletter();
+  renderContact();
+  renderFooter();
+  renderMobileSticky();
+  setupSprinkles();
+  initReveal();
+}
+
+function renderVisibility() {
+  const v = siteData.visibility;
+  setVisibility('announcement-bar', v.announcement);
+  setVisibility('specials-section', v.specialsStrip);
+  setVisibility('hero', v.hero);
+  setVisibility('stats-ribbon', v.stats);
+  setVisibility('monthly-special', v.monthlySpecial);
+  setVisibility('menu', v.menu);
+  setVisibility('why-us', v.whyUs);
+  setVisibility('about', v.about);
+  setVisibility('catering', v.catering);
+  setVisibility('reviews', v.reviews);
+  setVisibility('newsletter', v.newsletter);
+  setVisibility('contact', v.contact);
+  setVisibility('footer', v.footer);
+  
+  if (v.announcement) {
+    document.getElementById('main-nav').classList.add('has-banner');
+  }
+}
+
+function setVisibility(id, visible) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = visible ? '' : 'none';
+}
+
+function renderAnnouncement() {
+  const bar = document.getElementById('announcement-bar');
+  bar.textContent = siteData.announcement.text;
+  if (siteData.visibility.announcement) bar.classList.add('visible');
+}
+
+function renderSpecialsStrip() {
+  document.getElementById('specials-title').textContent = siteData.specialsStrip.title;
+  document.getElementById('specials-desc').textContent = siteData.specialsStrip.desc;
+  if (siteData.visibility.specialsStrip) {
+    document.getElementById('specials-section').classList.add('visible');
+  }
+}
+
+function renderNav() {
+  document.getElementById('nav-brand-text').innerHTML = siteData.nav.brandText;
+  document.getElementById('nav-call-btn').textContent = siteData.nav.callBtnText;
+  document.getElementById('nav-call-btn').href = siteData.links.phone;
+  document.getElementById('nav-order-btn').textContent = siteData.nav.orderBtnText;
+  document.getElementById('nav-order-btn').href = siteData.links.doordash;
+}
+
+function renderHero() {
+  const h = siteData.hero;
+  document.getElementById('hero-badge').textContent = h.badge;
+  document.getElementById('hero-title-1').textContent = h.title1;
+  document.getElementById('hero-title-2').textContent = h.title2;
+  document.getElementById('hero-title-3').textContent = h.title3;
+  document.getElementById('hero-tagline').textContent = h.tagline;
+  document.getElementById('hero-sub').textContent = h.sub;
+  document.getElementById('hero-call-btn').textContent = h.callBtnText;
+  document.getElementById('hero-call-btn').href = siteData.links.phone;
+  document.getElementById('hero-btn-1').textContent = h.btn1Text;
+  document.getElementById('hero-btn-2').textContent = h.btn2Text;
+}
+
+function renderStats() {
+  const ribbon = document.getElementById('stats-ribbon');
+  ribbon.innerHTML = siteData.stats.map(stat => `
+    <div class="stat">
+      <span class="stat-n">${stat.n}</span>
+      <span class="stat-l">${stat.l}</span>
+    </div>
+  `).join('');
+}
+
+function renderMonthlySpecial() {
+  const s = siteData.monthlySpecial;
+  document.getElementById('special-badge').textContent = s.badge;
+  document.getElementById('special-title').textContent = s.title;
+  document.getElementById('special-desc').textContent = s.desc;
+  document.getElementById('special-price').textContent = s.price;
+  document.getElementById('special-btn').textContent = s.btnText;
+  
+  const visual = document.getElementById('special-visual');
+  if (s.photo) {
+    visual.innerHTML = `<img src="${s.photo}" alt="${s.title}" style="width:100%;height:100%;object-fit:cover;border-radius:22px;"/>`;
+  } else {
+    visual.textContent = s.emoji;
+  }
+}
+
+function renderMenu() {
+  const m = siteData.menu;
+  document.getElementById('menu-eyebrow').textContent = m.eyebrow;
+  document.getElementById('menu-title').textContent = m.title;
+  document.getElementById('menu-lead').textContent = m.lead;
+  document.getElementById('menu-tab-1').textContent = m.tab1;
+  document.getElementById('menu-tab-2').textContent = m.tab2;
+  document.getElementById('menu-tab-3').textContent = m.tab3;
+  
+  renderMenuTab('tab-donuts', m.items.donuts);
+  renderMenuTab('tab-breakfast', m.items.breakfast);
+  renderMenuTab('tab-drinks', m.items.drinks);
+}
+
+function renderMenuTab(tabId, items) {
+  const container = document.getElementById(tabId);
+  container.innerHTML = items.map(item => `
+    <div class="menu-card">
+      ${item.badge ? `<div class="menu-badge">${item.badge}</div>` : ''}
+      <div class="menu-emoji">${item.emoji}</div>
+      <div class="menu-name">${item.name}</div>
+      <div class="menu-desc">${item.desc}</div>
+      <div class="menu-price">${item.price}</div>
+    </div>
+  `).join('');
+}
+
+function renderWhyUs() {
+  const w = siteData.whyUs;
+  document.getElementById('why-eyebrow').textContent = w.eyebrow;
+  document.getElementById('why-title').textContent = w.title;
+  document.getElementById('why-lead').textContent = w.lead;
+  document.getElementById('why-grid').innerHTML = w.cards.map(card => `
+    <div class="why-card">
+      <span class="why-icon">${card.icon}</span>
+      <div class="why-title">${card.title}</div>
+      <div class="why-text">${card.text}</div>
+    </div>
+  `).join('');
+}
+
+function renderAbout() {
+  const a = siteData.about;
+  document.getElementById('about-eyebrow').textContent = a.eyebrow;
+  document.getElementById('about-title').textContent = a.title;
+  document.getElementById('about-lead').textContent = a.lead;
+  document.getElementById('about-emoji').textContent = a.emoji;
+  document.getElementById('about-visual-text').textContent = a.visualText;
+  document.getElementById('about-pills').innerHTML = a.pills.map(pill => `
+    <div class="about-pill">
+      <span class="pill-icon">${pill.icon}</span>
+      <div>
+        <div class="pill-title">${pill.title}</div>
+        <div class="pill-text">${pill.text}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCatering() {
+  const c = siteData.catering;
+  document.getElementById('catering-eyebrow').textContent = c.eyebrow;
+  document.getElementById('catering-title').textContent = c.title;
+  document.getElementById('catering-lead').textContent = c.lead;
+  document.getElementById('catering-btn').textContent = c.btnText;
+  document.getElementById('catering-btn').href = siteData.links.phone;
+  
+  document.getElementById('catering-perks').innerHTML = c.perks.map(perk => `
+    <div class="catering-perk">
+      <span class="catering-perk-icon">${perk.icon}</span>
+      <span>${perk.text}</span>
+    </div>
+  `).join('');
+  
+  document.getElementById('catering-stats').innerHTML = c.stats.map(stat => `
+    <div class="catering-stat">
+      <span class="catering-stat-n">${stat.n}</span>
+      <span class="catering-stat-l">${stat.l}</span>
+    </div>
+  `).join('');
+}
+
+function renderReviews() {
+  const r = siteData.reviews;
+  document.getElementById('reviews-eyebrow').textContent = r.eyebrow;
+  document.getElementById('reviews-title').textContent = r.title;
+  document.getElementById('reviews-lead').textContent = r.lead;
+  
+  const cardsHtml = r.cards.map(card => `
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <div class="review-text">${card.text}</div>
+      <div class="review-author">${card.author}</div>
+      <div class="review-source">${card.source}</div>
+    </div>
+  `).join('');
+  
+  document.getElementById('reviews-grid').innerHTML = `
+    <div class="rating-highlight">
+      <div class="rating-big">${r.rating}</div>
+      <div class="rating-stars">★★★★★</div>
+      <div class="rating-label">${r.ratingLabel}</div>
+      <a href="${siteData.links.googleReviews}" target="_blank" class="google-badge">${r.googleBadgeText}</a>
+    </div>
+    ${cardsHtml}
+  `;
+}
+
+function renderNewsletter() {
+  const n = siteData.newsletter;
+  document.getElementById('newsletter-eyebrow').textContent = n.eyebrow;
+  document.getElementById('newsletter-title').textContent = n.title;
+  document.getElementById('newsletter-lead').textContent = n.lead;
+  document.getElementById('newsletter-note').textContent = n.note;
+  document.getElementById('newsletter-success').textContent = n.successMsg;
+  document.getElementById('newsletter-email').placeholder = n.inputPlaceholder;
+  document.querySelector('.btn-newsletter').textContent = n.btnText;
+}
+
+function renderContact() {
+  const c = siteData.contact;
+  document.getElementById('contact-eyebrow').textContent = c.eyebrow;
+  document.getElementById('contact-title').textContent = c.title;
+  document.getElementById('contact-lead').textContent = c.lead;
+  document.getElementById('contact-map').src = siteData.links.googleMaps;
+  
+  document.getElementById('contact-info').innerHTML = c.infoCards.map(card => `
+    <div class="info-card">
+      <span class="info-icon">${card.icon}</span>
+      <div>
+        <div class="info-label">${card.label}</div>
+        <div class="info-val">${card.value}</div>
+      </div>
+    </div>
+  `).join('') + `
+    <a href="${siteData.links.phone}" class="call-cta">${c.callBtnText}</a>
+    <a href="${siteData.links.doordash}" target="_blank" class="btn-pink" style="text-align:center;margin-top:.25rem;">${c.orderBtnText}</a>
+  `;
+}
+
+function renderFooter() {
+  const f = siteData.footer;
+  document.getElementById('footer-brand').textContent = f.brand;
+  document.getElementById('footer-addr').textContent = f.addr;
+  document.getElementById('footer-hours').textContent = f.hours;
+  document.getElementById('footer-copy').textContent = f.copy;
+}
+
+function renderMobileSticky() {
+  document.getElementById('mobile-call-btn').href = siteData.links.phone;
+  document.getElementById('mobile-order-btn').href = siteData.links.doordash;
+}
+
+// ============================================
+// INTERACTIVE FUNCTIONS
+// ============================================
+function showTab(id, btn) {
+  document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function subscribeNewsletter() {
+  const email = document.getElementById('newsletter-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('newsletter-email').style.borderColor = '#e74c3c';
+    setTimeout(() => document.getElementById('newsletter-email').style.borderColor = '', 2000);
+    return;
+  }
+  document.querySelector('.newsletter-form').style.display = 'none';
+  document.getElementById('newsletter-success').style.display = 'block';
+}
+
+function setupSprinkles() {
+  const colors = ['#F9A8C9', '#FFD966', '#5EC8F2', '#A78BFA', '#F87171', '#34D399'];
+  const container = document.getElementById('sprinkles');
+  if (!container) return;
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement('div');
+    s.className = 'sprinkle';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.background = colors[Math.floor(Math.random() * colors.length)];
+    s.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+    s.style.animationDuration = (8 + Math.random() * 12) + 's';
+    s.style.animationDelay = (-Math.random() * 12) + 's';
+    container.appendChild(s);
+  }
+}
+
+function initReveal() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// Back to top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('back-to-top');
+  if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
+
+// ============================================
+// INITIALIZE
+// ============================================
+loadData();
+renderAll();
+</script>
 
 </body>
 </html>
