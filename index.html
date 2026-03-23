@@ -469,6 +469,49 @@ img,iframe{max-width:100%;height:auto;}
 }
 #back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:all;}
 #back-to-top:hover{background:var(--brown-mid);}
+
+
+/* ════════════════════════════════════════════════
+   MOBILE STICKY CTA BAR
+   ════════════════════════════════════════════════ */
+.mobile-sticky-cta {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--cream);
+  border-top: 2px solid rgba(249,168,201,0.5);
+  padding: 0.75rem 1rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile-sticky-cta .btn-pink,
+.mobile-sticky-cta .btn-ghost {
+  flex: 1;
+  max-width: 160px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Show on mobile only */
+@media(max-width:480px){
+  .mobile-sticky-cta {
+    display: flex;
+  }
+
+  /* Add padding to footer to prevent content being hidden behind sticky bar */
+  footer {
+    padding-bottom: calc(2.5rem + 70px + env(safe-area-inset-bottom));
+  }
+}
+
 </style>
 </head>
 <body>
@@ -717,13 +760,13 @@ img,iframe{max-width:100%;height:auto;}
   <div class="container">
     <span class="section-eyebrow">Come Visit Us</span>
     <h2 class="section-title">Find Yummy's</h2>
-    <p class="section-lead">Right in the heart of Warrensburg. Stop by for dine-in, hit the drive-through, or order delivery.</p>
+    <p class="section-lead">We're located right in the heart of Warrensburg. Stop by for dine-in, hit the drive-through, or order delivery via DoorDash.</p>
     <div class="contact-grid">
       <div class="info-cards">
         <div class="info-card"><span class="info-icon">📍</span><div><div class="info-label">Address</div><div class="info-val address-display">709 S Maguire St, Warrensburg, MO 64093</div></div></div>
-        <div class="info-card"><span class="info-icon">📞</span><div><div class="info-label">Phone</div><div class="info-val"><a href="tel:+16604227777" class="phone-display">(660) 422-7777</a></div></div></div>
+        <div class="info-card"><span class="info-icon">📞</span><div><div class="info-label">Phone</div><div class="info-val phone-display">(660) 422-7777</div></div></div>
         <div class="info-card"><span class="info-icon">🕐</span><div><div class="info-label">Hours</div><div class="info-val"><div class="hours-grid"><span class="hours-day">Monday</span><span class="hours-closed">Closed</span><span class="hours-day">Tue – Sun</span><span class="hours-time hours-display">6:00 AM – 1:00 PM</span></div></div></div></div>
-        <div class="info-card"><span class="info-icon">🚗</span><div><div class="info-label">Options</div><div class="info-val options-display">Dine-In · Drive-Through · DoorDash · Free Wi-Fi</div></div></div>
+        <div class="info-card"><span class="info-icon">🚗</span><div><div class="info-label">Options</div><div class="info-val options-display">Dine-In · Drive-Through · DoorDash Delivery · Free Wi-Fi</div></div></div>
         <a href="tel:+16604227777" class="call-cta">📞 Call Now — (660) 422-7777</a>
         <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink call-doordash" style="text-align:center;margin-top:.25rem;">🛵 Order on DoorDash</a>
       </div>
@@ -747,8 +790,8 @@ img,iframe{max-width:100%;height:auto;}
     <a href="#reviews">Reviews</a>
     <a href="#contact">Find Us</a>
   </div>
-  <div class="footer-addr address-display">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777</div>
-  <div class="footer-addr footer-hours">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div>
+  <div class="footer-addr address-display" id="footer-addr">709 S Maguire St, Warrensburg, MO 64093 · (660) 422-7777</div>
+  <div class="footer-addr footer-hours" id="footer-hours">Tue–Sun: 6:00 AM – 1:00 PM · Closed Mondays</div>
   <div class="footer-copy">© 2025 Yummy's Donut Palace. All rights reserved.</div>
 </footer>
 
@@ -1531,190 +1574,13 @@ async function loadSiteData(){
 loadSiteData();
 
 </script>
-</body>
-</html>
-.asc'),
-      sbFetch('menu','?id=eq.main'),
-      sbFetch('page_content','?id=eq.main'),
-      sbFetch('design','?id=eq.main&select=primary_color,secondary_color,background_color,heading_font,body_font,button_style,mobile_font_scale,mobile_spacing_scale'),
-    ]);
 
-    const cm=buildContentMap(contentRows);
-    const lm=buildLinksMap(linksRows);
-    const sm=buildSectionsMap(sectionsRows);
-    const menu=menuRow&&menuRow[0]?menuRow[0]:null;
-
-    // Debug: log loaded content
-    console.log('Loaded content keys:', Object.keys(cm).length);
-    console.log('Loaded links:', Object.keys(lm));
-    console.log('Content sample:', Object.entries(cm).slice(0,5));
-
-    // Apply design first so colors/fonts are correct when content renders
-    if(designRow&&designRow[0]) applyDesign(designRow[0]);
-
-    renderAll(cm,lm,sm,menu);
-    console.log('Content rendered successfully');
-
-    // Apply section settings from settings panel (overrides content table)
-    // Skip when inside admin preview iframe — section reordering would affect admin DOM
-    if(window.self===window.top){
-      applySectionSettingsFromDB(sectionsRows);
-      // Restore section order from DB
-      applySectionOrder(sectionsRows);
-    }
-
-    // Restore custom sections from page_content if any
-    if(customRow&&customRow[0]&&customRow[0].content&&customRow[0].content._custom_sections){
-      customRow[0].content._custom_sections.forEach(entry=>{
-        const tmp=document.createElement('div');
-        tmp.innerHTML=entry.html;
-        const sec=tmp.firstElementChild;
-        if(!sec)return;
-        const anchor=document.getElementById(entry.afterId)||document.querySelector('footer');
-        if(anchor) anchor.parentNode.insertBefore(sec,anchor.nextSibling);
-      });
-    }
-
-  }catch(e){
-    console.warn('Supabase load failed, using defaults.',e);
-  }
-}
-
-// ── ANALYTICS TRACKING ───────────────────────────────────
-(function(){
-  if(window.self!==window.top) return;
-
-  const SB_A_URL='https://orywcjwoklirjipjmuhh.supabase.co';
-  const SB_A_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yeXdjandva2xpcmppcGptdWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwODIxMzQsImV4cCI6MjA4OTY1ODEzNH0.LWWkKX-ZhOCUxoqZuOwKbKBWC5Iln_qZSQ1IIH7r64A';
-
-  // ── Device detection ────────────────────────────────
-  function getDevice(){
-    const w=window.innerWidth;
-    if(w<=480) return 'mobile';
-    if(w<=768) return 'tablet';
-    return 'desktop';
-  }
-
-  // ── Returning visitor detection ─────────────────────
-  const VISITOR_KEY='ydp_visitor';
-  const isReturning=!!localStorage.getItem(VISITOR_KEY);
-  localStorage.setItem(VISITOR_KEY,'1');
-
-  // ── Session management ──────────────────────────────
-  let sessionId=sessionStorage.getItem('ydp_session');
-  const isNewSession=!sessionId;
-  if(isNewSession){
-    sessionId='s-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
-    sessionStorage.setItem('ydp_session',sessionId);
-    fetch(`${SB_A_URL}/rest/v1/analytics_sessions`,{
-      method:'POST',
-      headers:{'apikey':SB_A_KEY,'Content-Type':'application/json','Prefer':'resolution=ignore-duplicates'},
-      body:JSON.stringify({
-        id:sessionId,
-        page_id:'main',
-        device_type:getDevice(),
-        is_returning:isReturning,
-      })
-    }).catch(()=>{});
-  }
-
-  // ── Track event helper ──────────────────────────────
-  function track(type,label){
-    fetch(`${SB_A_URL}/rest/v1/analytics_events`,{
-      method:'POST',
-      headers:{'apikey':SB_A_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({
-        event_type:type,
-        event_label:label,
-        page_id:'main',
-        session_id:sessionId,
-        device_type:getDevice(),
-        hour_of_day:new Date().getHours(),
-      })
-    }).catch(()=>{});
-  }
-
-  // ── Track button clicks ─────────────────────────────
-  const TRACKED_SELECTORS=[
-    {sel:'.nav-call',      label:'Call Us (Nav)'},
-    {sel:'.hero-call',     label:'Call Us (Hero)'},
-    {sel:'.call-cta',      label:'Call Us (Contact)'},
-    {sel:'.nav-order',     label:'Order DoorDash (Nav)'},
-    {sel:'.call-doordash', label:'Order DoorDash (Contact)'},
-    {sel:'.google-badge',  label:'Google Reviews'},
-    {sel:'.btn-newsletter',label:'Newsletter Signup'},
-    {sel:'a.ig-link-btn',  label:'Instagram'},
-    {sel:'a.fb-link-btn',  label:'Facebook'},
-  ];
-
-  function attachClickTrackers(){
-    TRACKED_SELECTORS.forEach(({sel,label})=>{
-      document.querySelectorAll(sel).forEach(el=>{
-        if(el.dataset.tracked) return;
-        el.dataset.tracked='1';
-        el.addEventListener('click',()=>track('click',label),{passive:true});
-      });
-    });
-  }
-
-  // ── Track section views ─────────────────────────────
-  const TRACKED_SECTIONS=[
-    'hero','menu','why-us','about','catering',
-    'reviews','newsletter','contact','monthly-special'
-  ];
-  const viewedSections=new Set();
-
-  function attachSectionTrackers(){
-    const observer=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting&&!viewedSections.has(entry.target.id)){
-          viewedSections.add(entry.target.id);
-          track('section_view',entry.target.id);
-        }
-      });
-    },{threshold:0.4});
-    TRACKED_SECTIONS.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) observer.observe(el);
-    });
-  }
-
-  window.addEventListener('load',()=>{
-    attachClickTrackers();
-    attachSectionTrackers();
-    setTimeout(attachClickTrackers,2000);
-  });
-})();
-
-loadSiteData();
-
-// Mobile menu toggle
-function toggleMobileMenu(){
-  const menu=document.getElementById('mobile-menu');
-  const btn=document.querySelector('.mobile-menu-toggle');
-  if(menu.style.display==='block'){
-    menu.style.display='none';
-    btn.textContent='☰';
-    btn.setAttribute('aria-expanded','false');
-  }else{
-    menu.style.display='block';
-    btn.textContent='✕';
-    btn.setAttribute('aria-expanded','true');
-  }
-}
-
-// Back to top button visibility
-window.addEventListener('scroll',()=>{
-  const btn=document.getElementById('back-to-top');
-  if(btn) btn.classList.toggle('visible',window.scrollY>300);
-},{passive:true});
-</script>
-
-<!-- Mobile Sticky CTA -->
-<div class="mobile-sticky-cta" role="region" aria-label="Quick actions">
-  <a href="tel:+16604227777" class="btn-ghost" aria-label="Call to order">📞 Call</a>
-  <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-pink" aria-label="Order on DoorDash" rel="noopener noreferrer">🛵 Order</a>
+<!-- MOBILE STICKY CTA -->
+<div class="mobile-sticky-cta">
+  <a href="tel:+16604227777" class="btn-pink">📞 Call Now</a>
+  <a href="https://www.doordash.com/store/yummy%E2%80%99s-donut-palace-warrensburg-692539/" target="_blank" class="btn-ghost">🛵 Order</a>
 </div>
+
 
 </body>
 </html>
